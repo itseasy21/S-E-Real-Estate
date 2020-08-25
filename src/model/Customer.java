@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -12,6 +14,12 @@ public class Customer extends User{
 
     public Customer(String email, String password, String name, String address, double phoneNo, Date dob, String gender, String profilePic, String nationality, double income) {
         super(++postCounter, email, password, name, address, phoneNo, dob, gender, profilePic);
+        this.nationality = nationality;
+        this.income = income;
+    }
+
+    public void updateUser(String email, String password, String name, String address, double phoneNo, Date dob, String gender, String profilePic, String nationality, double income){
+        updateUser(email, password, name, address, phoneNo, dob, gender, profilePic);
         this.nationality = nationality;
         this.income = income;
     }
