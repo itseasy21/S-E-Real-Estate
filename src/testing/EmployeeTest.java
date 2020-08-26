@@ -38,15 +38,27 @@ public class EmployeeTest {
     }
 
     @Test
-    public void testCase2(){
+    public void testCase2() throws UserException {
         c1.setSalary(10000);
         assertEquals(10000.0, c1.getSalary());
     }
 
     @Test
     public void testCase3() throws UserException {
+        c1.setSalary(0);
+        assertEquals(0, c1.getSalary());
+    }
+
+    @Test
+    public void testCase4() throws UserException {
         c1.setWorkingHours(20);
         assertEquals(20, c1.getWorkingHours());
+    }
+
+    @Test
+    public void testCase5() throws UserException {
+        c2.setWorkingHours(20.5);
+        assertEquals(20.5, c2.getWorkingHours());
     }
 
     @After

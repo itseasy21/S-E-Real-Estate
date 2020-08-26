@@ -51,8 +51,12 @@ public class Employee extends User{
         this.empType = empType;
     }
 
-    public void setSalary(double salary) {
-        this.salary = salary;
+    public void setSalary(double salary) throws UserException {
+        if(salary <= 0){
+            throw new UserException("Salary Cannot be 0 or less!");
+        }else {
+            this.salary = salary;
+        }
     }
 
     public void setWorkingHours(double workingHours) throws UserException {
