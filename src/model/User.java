@@ -5,12 +5,11 @@ import java.util.Date;
 public abstract class User {
 
 //  Common Variables to All User
-    protected String email, password, name, address, profilePic, gender;
+    protected String email, password, name, address, profilePic, gender, phoneNo;
     protected int id;
-    protected double phoneNo;
     protected Date dob;
 
-    public User(int id, String email, String password, String name, String address, double phoneNo, Date dob, String gender, String profilePic){
+    public User(int id, String email, String password, String name, String address, String phoneNo, Date dob, String gender, String profilePic){
         this.id = id;
         this.email = email;
         this.password = password;
@@ -22,7 +21,7 @@ public abstract class User {
         this.profilePic = profilePic;
     }
 
-    void updateUser(String email, String password, String name, String address, double phoneNo, Date dob, String gender, String profilePic){
+    void updateUser(String email, String password, String name, String address, String phoneNo, Date dob, String gender, String profilePic){
         this.email = email;
         this.password = password;
         this.name = name;
@@ -41,7 +40,7 @@ public abstract class User {
         return this.dob;
     }
 
-    public double getPhoneNo() {
+    public String getPhoneNo() {
         return this.phoneNo;
     }
 
