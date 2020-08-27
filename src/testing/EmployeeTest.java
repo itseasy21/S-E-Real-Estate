@@ -28,34 +28,29 @@ public class EmployeeTest {
     }
 
     @Test
-    public void testCase1(){
-        System.out.println("lol");
-        System.out.println(c1.showDetails());
-        c1.updateUser("itseasy19@gmail.com","pa33w0rd","Shubham",
-                "673 La Trobe","401717860",new Date(),"Male",
-                "abc.jpg",EmployeeType.PartTime,22000,10);
-    }
-
-    @Test
-    public void testCase2() throws UserException {
+    public void testCase1() throws UserException {
+        System.out.println("updating salary to 10000");
         c1.setSalary(10000);
         assertEquals(10000.0, c1.getSalary());
     }
 
     @Test
-    public void testCase3() throws UserException {
+    public void testCase2() throws UserException {
+        System.out.println("updating salary to 0");
         c1.setSalary(0);
         assertEquals(0, c1.getSalary());
     }
 
     @Test
-    public void testCase4() throws UserException {
+    public void testCase3() throws UserException {
+        System.out.println("testing updating of working hours for full time employee");
         c1.setWorkingHours(20);
         assertEquals(20, c1.getWorkingHours());
     }
 
     @Test
-    public void testCase5() throws UserException {
+    public void testCase4() throws UserException {
+        System.out.println("testing updating of working hours for part time employee");
         c2.setWorkingHours(20.5);
         assertEquals(20.5, c2.getWorkingHours());
     }

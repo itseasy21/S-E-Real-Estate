@@ -3,6 +3,7 @@ package testing;
 
 import model.Property;
 import model.PropertyException;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ public class PropertyTest {
     Property rentalProperty;
     Property saleProperty;
 
-    @BeforeClass
+    @Before
     public void setUp() throws Exception{
         System.out.println("Before Class");
         rentalProperty = new Property(123, "Green Brigade", 1,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);

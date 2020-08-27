@@ -18,10 +18,10 @@ public class Customer extends User{
         this.income = income;
     }
 
-    public void updateUser(String email, String password, String name, String address, String phoneNo, Date dob, String gender, String profilePic, String nationality, double income){
+    public void updateUser(String email, String password, String name, String address, String phoneNo, Date dob, String gender, String profilePic, String nationality, double income) throws UserException {
         updateUser(email, password, name, address, phoneNo, dob, gender, profilePic);
-        this.nationality = nationality;
-        this.income = income;
+        setNationality(nationality);
+        setIncome(income);
     }
 
     public String getNationality() {
@@ -38,5 +38,21 @@ public class Customer extends User{
         printDetails += "\nIncome:\t"+getIncome();
 
         return printDetails;
+    }
+
+    public void setNationality(String nationality) throws UserException {
+        if(nationality.isEmpty()){
+            throw new UserException("Nationality is required, and should be full name of country.");
+        }else{
+            this.nationality = nationality;
+        }
+    }
+
+    public void setIncome(double income) throws UserException {
+        if(income <= 0){
+            throw new UserException("Income Cannot be 0 or less!");
+        }else{
+            this.income = income;
+        }
     }
 }
