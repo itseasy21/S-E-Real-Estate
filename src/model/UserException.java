@@ -8,7 +8,7 @@ public class UserException extends Throwable {
 
     @Override
     public String toString() {
-        return "PropertyException{" +
+        return "UserException{" +
                 "message='" + message + '\'' +
                 '}';
     }
