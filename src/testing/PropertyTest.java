@@ -3,6 +3,7 @@ package testing;
 
 import model.Property;
 import model.PropertyException;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -10,11 +11,11 @@ import static junit.framework.TestCase.*;
 
 
 public class PropertyTest {
-    Property rentalProperty;
-    Property saleProperty;
+    static Property rentalProperty;
+    static Property saleProperty;
 
     @BeforeClass
-    public void setUp() throws Exception{
+    public static void setUp() throws Exception{
         System.out.println("Before Class");
         rentalProperty = new Property(123, "Green Brigade", 1,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);
         saleProperty = new Property(123, "Green Brigade", 2,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);
@@ -53,7 +54,7 @@ public class PropertyTest {
     @Test
     public void setRentalPrice() throws Exception{
         rentalProperty.setRentalPrice(23_4_450.00);
-        assertEquals(23_4_450.00,saleProperty.getRentalPrice(),0);
+        assertEquals(23_4_450.00,rentalProperty.getRentalPrice(),0);
 
 
     }
@@ -65,6 +66,14 @@ public class PropertyTest {
         assertEquals(0,rentalProperty.getRentalPrice(),0);
 
     }
+
+    @AfterClass
+    public static void tearDown(){
+        System.out.println("Test case executed !");
+    }
+
+
+
 
 
 }
