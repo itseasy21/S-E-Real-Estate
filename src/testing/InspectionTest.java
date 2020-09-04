@@ -1,13 +1,12 @@
 package testing;
 
-import model.Inspection;
+import static org.junit.jupiter.api.Assertions.*;
+import model.*;
+import java.util.Date;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class InspectionTest {
 
