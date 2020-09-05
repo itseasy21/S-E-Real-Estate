@@ -5,12 +5,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class mainModel {
 
     public static ArrayList<User> userDB = new ArrayList<User>();
     Statement stmt = null;
     Connection conn = null;
+    public static HashMap<String, Property> propertyDB = new HashMap<>();
 
     public mainModel() {
         dbConnect dbHandler = new dbConnect();
@@ -39,4 +41,17 @@ public class mainModel {
         }
         return false;
     }
+    public void addProperty(Property property){
+        String propertyId = "P"+(propertyDB.size() + 1);
+        propertyDB.put(propertyId,property);
+    }
+    public void listProperty(String propertyId) throws PropertyException {
+        if(propertyDB.containsKey(propertyId)){
+            propertyDB.get(propertyId).toString();
+        } else {
+            throw new PropertyException("Invalid property ID");
+        }
+
+    }
+
 }

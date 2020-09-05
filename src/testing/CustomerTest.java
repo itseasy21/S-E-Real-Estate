@@ -1,6 +1,6 @@
 package testing;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,30 +27,12 @@ public class CustomerTest {
     }
 
     @Test
-    public void testCase1() throws UserException {
+    public void testCase1(){
+        System.out.println("lol");
         System.out.println(c1.showDetails());
         c1.updateUser("itseasy19@gmail.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",new Date(),"Male",
                 "abc.jpg","Indian",45000);
-    }
-
-    @Test
-    public void testCase2() throws UserException {
-        System.out.println("lol");
-        System.out.println(c1.showDetails());
-        c1.updateUser("itseasy19@gmail.com","pa33w0rd","Shubham",
-                "673 La Trobe","401717860",new Date(),"Male",
-                "abc.jpg","",45000);
-    }
-
-    @Test
-    public void testCase3() throws UserException {
-        System.out.println("lol");
-        System.out.println(c1.showDetails());
-        c1.updateUser("itseasy19@gmail.com","pa33w0rd","Shubham",
-                "673 La Trobe","401717860",new Date(),"Male",
-                "abc.jpg","Australian",25000);
-        assertEquals(25000.0, c1.getIncome());
     }
 
     @After
