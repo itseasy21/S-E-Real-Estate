@@ -61,7 +61,7 @@ public class Employee extends User{
 
     public void setWorkingHours(double workingHours) throws UserException {
         if(this.empType == EmployeeType.FullTIme){
-            throw new UserException("Full TIme Employee Cannot Change Working Hours!");
+            throw new UserException("Full Time Employee Cannot Change Working Hours!");
         }else{
             this.workingHours = workingHours;
         }

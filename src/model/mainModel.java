@@ -1,15 +1,20 @@
 package model;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class mainModel {
 
     public static ArrayList<User> userDB = new ArrayList<User>();
-//    public static ArrayList<Post> tempPostDB = new ArrayList<Post>();
+    Statement stmt = null;
+    Connection conn = null;
 
     public mainModel() {
-//        dbConnect dbHandler = new dbConnect();
-//        this.conn = dbHandler.getConn();
+        dbConnect dbHandler = new dbConnect();
+        this.conn = dbHandler.getConn();
     }
 
     public void syncDB() {
@@ -17,6 +22,21 @@ public class mainModel {
     }
 
     public boolean isValidUser(String check_user) {
-        return true;
+        try {
+            stmt = this.conn.createStatement();
+            String loginQuery = "select count(*) from user where username = '"+ check_user +"'";
+            ResultSet rsLogin = stmt.executeQuery(loginQuery);
+            rsLogin.next();
+            int count = rsLogin.getInt(1);
+            rsLogin.close();
+
+            if(count == 1){
+                return true;
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
     }
 }
