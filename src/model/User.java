@@ -32,6 +32,10 @@ public abstract class User {
         this.profilePic = profilePic;
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     public String getName() {
         return this.name;
     }
