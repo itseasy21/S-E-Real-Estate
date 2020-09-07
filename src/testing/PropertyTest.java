@@ -1,7 +1,11 @@
 package testing;
 
 
-import model.*;
+import model.PropertyCategory;
+import model.PropertyException;
+import model.PropertyType;
+import model.mainModel;
+import model.Property;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -11,7 +15,7 @@ import static junit.framework.TestCase.*;
 
 public class PropertyTest {
     static Property rentalProperty;
-    static Property saleProperty;
+    static Property saleProperty,salePropertyOne,salePropertyTwo;
     static mainModel realEstate;
 
     @BeforeClass
@@ -19,6 +23,8 @@ public class PropertyTest {
         System.out.println("Before Class");
         rentalProperty = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Flat);
         saleProperty = new Property( "Green Brigade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
+        salePropertyOne = new Property( "Green Brigade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
+        salePropertyTwo = new Property( "Green Brigade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
         realEstate = new mainModel();
 
     }
@@ -72,7 +78,7 @@ public class PropertyTest {
     @Test
     public void testAddProperty() throws  Exception{
         assertTrue(realEstate.isPropertyDBEmpty());
-        realEstate.addProperty(rentalProperty);
+        realEstate.addProperty(saleProperty);
         assertFalse(realEstate.isPropertyDBEmpty());
     }
     // List Property test case
@@ -81,9 +87,17 @@ public class PropertyTest {
         assertTrue(realEstate.isPropertyDBEmpty());
         realEstate.addProperty(saleProperty);
         assertEquals(1,realEstate.getPropertyDBSize());
-        realEstate.addProperty(rentalProperty);
+
+        realEstate.addProperty(salePropertyOne);
+        salePropertyOne.setEmployeeId("E2");
         assertEquals(2,realEstate.getPropertyDBSize());
+        realEstate.addProperty(rentalProperty);
+        rentalProperty.setEmployeeId("E3");
         assertEquals(saleProperty,realEstate.listProperty("P1"));
+
+        salePropertyTwo.setEmployeeId("E1");
+        realEstate.addProperty(salePropertyTwo);
+        realEstate.listProperties();
     }
 
     // List Property test case

@@ -13,6 +13,7 @@ public class Property {
     private int parkingCount;
     private double sellingPrice;
     private double rentalPrice;
+    private String employeeId;
 
 
     public Property( String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
@@ -42,6 +43,17 @@ public class Property {
 
     public void setPropertyId(String propertyId) {
         this.propertyId = propertyId;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+    public boolean isEmployeeAssigned(){
+        return this.employeeId != null;
     }
 
     public String getPropertyName() {
@@ -137,18 +149,19 @@ public class Property {
 
     @Override
     public String toString() {
-        return "Property{" +
-                "propertyId=" + propertyId +
-                ", propertyName='" + propertyName + '\'' +
-                ", propertyType RENTAL ='" +isPropertyTypeRental() + '\'' +
-                ", propertyAddress='" + propertyAddress + '\'' +
-                ", minPrice=" + minPrice +
-                ", suburb='" + suburb + '\'' +
-                ", bedroomCount=" + bedroomCount +
-                ", bathroomCount=" + bathroomCount +
-                ", parkingCount=" + parkingCount +
-                ", sellingPrice=" + sellingPrice +
-                ", rentalPrice=" + rentalPrice +
-                '}';
+        return "Property Details------------------------" + '\n' +'\n'+
+                "propertyId=" + getPropertyId() + '\n'+
+                "propertyName='" + getPropertyName() + '\n' +
+                "propertyType='" +propertyType + '\n' +
+                "propertyAddress='" + getPropertyAddress() + '\n' +
+                "minPrice=" + getMinPrice() + '\n'+
+                "suburb=" + getSuburb() + '\n' +
+                "propertyCategory="+ getPropertyCategory()+ '\n' +
+                "bedroomCount=" + getBedroomCount() + '\n' +
+                "bathroomCount=" + getBathroomCount() + '\n' +
+                "parkingCount=" + getParkingCount() + '\n' +
+                "sellingPrice=" + getSellingPrice() + '\n' +
+                "rentalPrice=" + getRentalPrice()+ '\n';
+
     }
 }

@@ -1,9 +1,7 @@
 package model;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,6 +39,8 @@ public class mainModel {
         }
         return false;
     }
+
+
     public void addProperty(Property property){
         String propertyId = "P"+(propertyDB.size() + 1);
         property.setPropertyId(propertyId);
@@ -54,6 +54,55 @@ public class mainModel {
         }
 
     }
+    public void listPropertiesForSale() {
+        try {
+            System.out.println(" ");
+            System.out.println("***********Properties For Sale*********");
+            System.out.println(" ");
+            //lists only properties that are assigned with single employee
+            propertyDB.values()
+                    .stream()
+                    .filter(e -> e.isPropertyTypeSale() && e.isEmployeeAssigned())
+                    .forEach(p -> System.out.println(p.toString()));
+        } catch(NullPointerException e){
+            System.out.println("None");
+           return;
+        }
+    }
+
+    public void listPropertiesForRent() {
+        try {
+            System.out.println(" ");
+            System.out.println("******Properties For Rent*******:");
+            System.out.println(" ");
+            propertyDB.values()
+                    .stream()
+                    .filter(i -> i.isPropertyTypeRental() && i.isEmployeeAssigned())
+                    .forEach(p -> System.out.println(p.toString()));
+        } catch(NullPointerException e){
+            System.out.println("None");
+            return;
+        }
+    }
+    public void listUnassignedProperties() {
+        try {
+            System.out.println(" ");
+            System.out.println("*********Unassigned Properties*******:");
+            propertyDB.values()
+                    .stream()
+                    .filter(i -> !i.isEmployeeAssigned())
+                    .forEach(p -> System.out.println(p.toString()));
+        } catch(NullPointerException e){
+            System.out.println("None");
+            return;
+        }
+    }
+    public void listProperties(){
+        listPropertiesForSale();
+        listPropertiesForRent();
+        listUnassignedProperties();
+    }
+
    public boolean isPropertyDBEmpty(){
         return propertyDB.isEmpty();
    }
