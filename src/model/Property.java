@@ -1,9 +1,10 @@
 package model;
 
 public class Property {
-    private int propertyId;
+    private String propertyId;
     private String propertyName;
-    private int propertyType;
+    private PropertyType propertyType;
+    private PropertyCategory propertyCategory;
     private String propertyAddress;
     private double minPrice;
     private String suburb;
@@ -12,11 +13,9 @@ public class Property {
     private int parkingCount;
     private double sellingPrice;
     private double rentalPrice;
-    public static final int RENT = 1;
-    public static final int  SALE = 2;
 
-    public Property(int propertyId, String propertyName, int propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing) {
-        this.propertyId = propertyId;
+
+    public Property( String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
         this.propertyName = propertyName;
         this.propertyType = propertyType;
         this.propertyAddress = propertyAddress;
@@ -25,7 +24,8 @@ public class Property {
         this.bedroomCount = bedroomCount;
         this.bathroomCount = bathroomCount;
         this.parkingCount = parkingCount;
-        if (propertyType == RENT) {
+        this.propertyCategory = propertyCategory;
+        if (propertyType == PropertyType.Rent) {
             this.rentalPrice = pricing;
             this.sellingPrice = 0;
         } else {
@@ -36,8 +36,12 @@ public class Property {
     }
 
 
-    public int getPropertyId() {
+    public String getPropertyId() {
         return propertyId;
+    }
+
+    public void setPropertyId(String propertyId) {
+        this.propertyId = propertyId;
     }
 
     public String getPropertyName() {
@@ -45,13 +49,13 @@ public class Property {
     }
 
     public boolean isPropertyTypeRental(){
-        return propertyType == RENT;
+        return propertyType == PropertyType.Rent;
     }
     public boolean isPropertyTypeSale(){
-        return propertyType == SALE;
+        return propertyType == PropertyType.Sale;
     }
 
-    public void setPropertyType(int propertyType) {
+    public void setPropertyType(PropertyType propertyType) {
         this.propertyType = propertyType;
     }
 
@@ -123,6 +127,13 @@ public class Property {
         }
     }
 
+    public PropertyCategory getPropertyCategory() {
+        return propertyCategory;
+    }
+
+    public void setPropertyCategory(PropertyCategory propertyCategory) {
+        this.propertyCategory = propertyCategory;
+    }
 
     @Override
     public String toString() {
