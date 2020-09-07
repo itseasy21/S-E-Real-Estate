@@ -3,7 +3,7 @@ package config;
 public class Config {
 
     String dir = System.getProperty("user.dir");
-    String dbName = "sereal.db";
+    String dbName = "/sereal.db";
 
     public String getDir() {
         return this.dir;

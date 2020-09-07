@@ -39,8 +39,8 @@ public class mainLauncher extends Application {
             loginController controller = loader.getController();
             controller.initializeModel("",model);
 
-            Scene scene = new Scene(root, 547, 249);
-            stage.setTitle("Login - UniLink");
+            Scene scene = new Scene(root, 747, 349);
+            stage.setTitle("Login - S&E Real Estate");
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

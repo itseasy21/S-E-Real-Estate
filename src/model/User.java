@@ -71,7 +71,7 @@ public abstract class User {
     public String showDetails(){
         String printDetails = "";
 
-        printDetails += "ID:\t"+this.id;
+        printDetails += "ID:\t"+getId();
         printDetails += "\nName:\t"+getName();
         printDetails += "\nEmail:\t"+getEmail();
         printDetails += "\nGender:\t"+getGender();

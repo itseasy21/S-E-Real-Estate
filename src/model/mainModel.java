@@ -23,10 +23,10 @@ public class mainModel {
         //TODO syncronize data in memory with data from sqliteDB
     }
 
-    public boolean isValidUser(String check_user) {
+    public boolean isValidUser(String check_user, String check_pass) {
         try {
             stmt = this.conn.createStatement();
-            String loginQuery = "select count(*) from user where username = '"+ check_user +"'";
+            String loginQuery = "select count(*) from Customer where email = '"+ check_user +"' and password='"+ check_pass +"'";
             ResultSet rsLogin = stmt.executeQuery(loginQuery);
             rsLogin.next();
             int count = rsLogin.getInt(1);
@@ -41,10 +41,14 @@ public class mainModel {
         }
         return false;
     }
+
+
+
     public void addProperty(Property property){
         String propertyId = "P"+(propertyDB.size() + 1);
         propertyDB.put(propertyId,property);
     }
+
     public void listProperty(String propertyId) throws PropertyException {
         if(propertyDB.containsKey(propertyId)){
             propertyDB.get(propertyId).toString();
