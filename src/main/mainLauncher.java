@@ -7,6 +7,7 @@ import model.SERException;
 import model.mainModel;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,7 +21,7 @@ public class mainLauncher {
         renderMainMenu(model); //Render Main Menu
     }
 
-    private static void renderMainMenu(mainModel model) throws IOException, SERException {
+    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException {
         int choiceMainMenu = 0;
         Scanner scanChoice = new Scanner(System.in);
 
@@ -53,7 +54,7 @@ public class mainLauncher {
         scanChoice.close();
     }
 
-    private static void register(Scanner scanChoice,mainModel model) {
+    private static void register(Scanner scanChoice,mainModel model) throws ParseException {
         System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
         int registerChoice = 0;
@@ -78,7 +79,7 @@ public class mainLauncher {
         System.out.println("Registering as "+type+"\nPlease Enter Details Below");
 
         //Start taking all the values to register in the portal
-        String[] requiredDetails = {"Name", "Email", "Password", "Phone No.", "Address", "Gender", "DOB", "Nationality", "Income"};
+        String[] requiredDetails = {"Name", "Email", "Password", "Phone No.", "Address", "Gender (Male/Female/TransGender)", "DOB (eg: 21/11/1991)", "Nationality", "Income"};
         ArrayList<String> details = new ArrayList<String>();
         for(String ask : requiredDetails){
             System.out.print(ask + ": ");
@@ -120,9 +121,10 @@ public class mainLauncher {
         System.out.println("Welcome "+username+" to S&E Real Estate");
         int choiceLoggedInMenu = 0;
         do {
-            System.out.println("Pick an option. 1 2 or 3.");
-            System.out.println("1. " + menuOptions.LOGIN);
-            System.out.println("2. " + menuOptions.REGISTER);
+            System.out.println("Pick an option.");
+            for(int i = 0; i < loggedInMenuOptions.values().length; i++){
+                System.out.println(i+1 + ". " + loggedInMenuOptions.values()[i]);
+            }
             System.out.println("Please press q to quit.");
 
             String input = scanChoice.nextLine();
@@ -137,16 +139,12 @@ public class mainLauncher {
             }
 
             //Handling Choice
-            switch(choiceLoggedInMenu){
-//                case 1:
-//                    login(scanChoice, model);
-//                    break;
-//                case 2:
-//                    register();
-//                    break;
+            switch (choiceLoggedInMenu) {
+                case 1 -> System.out.println("test");//Add Property TODO
+                case 2 -> System.out.println("test");//List Property TODO
             }
 
-        } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > 3);
+        } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > loggedInMenuOptions.values().length);
 
     }
 

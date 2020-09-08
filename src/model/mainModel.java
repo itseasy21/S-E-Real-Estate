@@ -1,10 +1,15 @@
 package model;
 
+import config.CustomerType;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class mainModel {
@@ -21,6 +26,27 @@ public class mainModel {
 
     public void syncDB() {
         //TODO syncronize data in memory with data from sqliteDB
+    }
+
+
+
+    public boolean isEmailAvailable(String email){
+        try {
+            Statement stmt = this.conn.createStatement();
+            String loginQuery = "select count(*) from Customer where email = '"+ email + "'";
+            ResultSet rsLogin = stmt.executeQuery(loginQuery);
+            rsLogin.next();
+            int count = rsLogin.getInt(1);
+            rsLogin.close();
+
+            if(count == 1){
+                return false;
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return true;
     }
 
     public boolean isValidUser(String check_user, String check_pass) {
@@ -114,4 +140,17 @@ public class mainModel {
    public int getPropertyDBSize(){
         return propertyDB.size();
    }
+
+    public String registerCustomer(String name, String email, String password, String phoneNo, String address, String gender, String dob, String nationality, String income, CustomerType type) throws ParseException {
+        String customerID = null;
+        SimpleDateFormat sdfrmt = new SimpleDateFormat("dd/MM/yyyy");
+        sdfrmt.setLenient(false);
+        Date dobUpdated = sdfrmt.parse(dob);
+        Customer newCustomer = new Customer(email, password, name, address, phoneNo, dobUpdated, gender, nationality, Double.parseDouble(income), type);
+        if(!String.valueOf(newCustomer.getId()).isEmpty()){
+            customerID = String.valueOf(newCustomer.getId());
+            userDB.add(newCustomer);
+        }
+        return customerID;
+    }
 }
