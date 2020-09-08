@@ -1,7 +1,7 @@
 package model;
 
 public class Property {
-    private String propertyId;
+    private int propertyId;
     private String propertyName;
     private PropertyType propertyType;
     private PropertyCategory propertyCategory;
@@ -36,12 +36,32 @@ public class Property {
 
     }
 
+    public Property(int propertyId, String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
+        this.propertyId = propertyId;
+        this.propertyName = propertyName;
+        this.propertyType = propertyType;
+        this.propertyAddress = propertyAddress;
+        this.minPrice = minPrice;
+        this.suburb = suburb;
+        this.bedroomCount = bedroomCount;
+        this.bathroomCount = bathroomCount;
+        this.parkingCount = parkingCount;
+        this.propertyCategory = propertyCategory;
+        if (propertyType == PropertyType.Rent) {
+            this.rentalPrice = pricing;
+            this.sellingPrice = 0;
+        } else {
+            this.rentalPrice = 0;
+            this.sellingPrice = pricing;
+        }
 
-    public String getPropertyId() {
+    }
+
+    public int getPropertyId() {
         return propertyId;
     }
 
-    public void setPropertyId(String propertyId) {
+    public void setPropertyId(int propertyId) {
         this.propertyId = propertyId;
     }
 

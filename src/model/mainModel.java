@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class mainModel {
 
     public static ArrayList<User> userDB = new ArrayList<User>();
-    public static HashMap<String, Property> propertyDB;
+    public static HashMap<Integer, Property> propertyDB;
     Connection conn;
 
     public mainModel() {
@@ -46,8 +46,9 @@ public class mainModel {
 
 
     public void addProperty(Property property){
-        String propertyId = "P"+(propertyDB.size() + 1);
-        property.setPropertyId(propertyId);
+        int propertyId = propertyDB.size() + 1;
+        if(property.getPropertyId() == 0)
+            property.setPropertyId(propertyId);
         propertyDB.put(propertyId,property);
     }
 
