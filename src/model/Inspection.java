@@ -41,7 +41,8 @@ public class Inspection {
     public void createInspection(Property pid) throws PropertyException {
         int propertyid=pid.getPropertyId();
         setpid(propertyid);
-        setEid(pid.getEmployeeId());
+        //setEid(pid.getEmployeeId());
+        setEid(1);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Calendar cal = Calendar.getInstance();
         for (int i = 0; i < dates.length; i++) {
@@ -54,13 +55,13 @@ public class Inspection {
         Scanner sc = new Scanner(System.in);
         //System.out.println("create 5 time slots");
         //for(int i=0;i<timeslots1.length;i++){
-            String[] timeslots1 = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"}; //for test case
-            //timeslots1[i]=sc.nextLine();
-            for(int i=0;i<timeslots1.length;i++) {
-               // System.out.println("timeslot" + timeslots1[i]);
-                setTimeSlot(timeslots1);
-            }
-       // }
+        String[] timeslots1 = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"}; //for test case
+        //timeslots1[i]=sc.nextLine();
+        for(int i=0;i<timeslots1.length;i++) {
+            // System.out.println("timeslot" + timeslots1[i]);
+            setTimeSlot(timeslots1);
+        }
+        // }
         setStatus("Created");
 
     }
@@ -170,12 +171,12 @@ public class Inspection {
         }
         return print; }
 
-        public String[] getdatearray(){
+    public String[] getdatearray(){
         for(int i=0;i<dates.length;i++) {
 
         }
-            return dates;
-        }
+        return dates;
+    }
 
     public void setId(String id) { this.id = id; }
 

@@ -16,8 +16,10 @@ public class Inspectionmain {
         int propertyid=pid.getPropertyId();
         String id="I" +1;
         a.setId(a.getId());
-        a.setpid(propertyid);
-        a.setEid(pid.getEmployeeId());
+       // a.setpid(propertyid);
+        a.setpid(1);
+        //a.setEid(pid.getEmployeeId());
+        a.setEid(1);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Calendar cal = Calendar.getInstance();
         for (int i = 0; i < a.getdatesize(); i++) {
