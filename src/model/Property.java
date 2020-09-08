@@ -13,7 +13,7 @@ public class Property {
     private int parkingCount;
     private double sellingPrice;
     private double rentalPrice;
-    private String employeeId;
+    private int employeeId;
 
 
     public Property( String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
@@ -65,15 +65,15 @@ public class Property {
         this.propertyId = propertyId;
     }
 
-    public String getEmployeeId() {
+    public int getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(String employeeId) {
+    public void setEmployeeId(int employeeId) {
         this.employeeId = employeeId;
     }
     public boolean isEmployeeAssigned(){
-        return this.employeeId != null;
+        return this.employeeId == 0;
     }
 
     public String getPropertyName() {
