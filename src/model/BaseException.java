@@ -9,7 +9,6 @@ public class BaseException extends RuntimeException{
     }
     //Message can be retrieved using this accessor method
     public String getMessage() {
-
         return message;
     }
 

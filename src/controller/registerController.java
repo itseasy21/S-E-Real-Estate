@@ -1,76 +1,64 @@
 package controller;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import model.SERException;
+import config.CustomerType;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class registerController extends baseController implements Initializable {
+public class registerController extends baseController{
 
-    @FXML
-    private Pane logo;
-    @FXML private TextField username, password;
+    public boolean registerhandler(String name, String email, String password, String phoneNo, String address, String gender, String dob, String nationality, String income, CustomerType type) {
 
-    @FXML
-    private void loginHandler(ActionEvent actionEvent) throws IOException, SERException.InputException {
-        String check_user = username.getText();
-        String check_pass = password.getText();
+        int error = 0;
+        String errorMsg = "";
 
-        if(model.isValidUser(check_user, check_pass)){
-            System.out.println("valid user");
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/activity_main.fxml"));
-            Parent mainController = loader.load();
-            Scene mainScene = new Scene(mainController);
-
-            //Call controller and send username
-            baseController controller = loader.getController();
-            controller.initializeModel(check_user, this.model);
-
-            Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-            window.setTitle("S & E Real Estate");
-            window.setScene(mainScene);
-            window.show();
-
-        }else{
-            throw new SERException.InputException("Username You Entered is not Valid");
+        //all checks here and pass to model for add
+        //Name check
+        if(name.length() < 3){
+            error = 1;
+            errorMsg += "Name is Invalid, Please Enter Full Name\n";
+        }
+        //Email check
+        String regex = "^(.+)@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        if(!matcher.matches()){
+            error = 1;
+            errorMsg += "Email ID is invalid\n";
         }
 
+        //Password Validate
+        if(password.length() < 8){
+            error = 1;
+            errorMsg += "Password Needs to Be at-least 8 characters or more\n";
+        }
+
+        //Phone Validate
+        if(phoneNo.length() < 10){
+            error = 1;
+            errorMsg += "Phone Number Should be Starting from 0 and of 10 Digits\n";
+        }
+
+        //Password Validate
+        if(address.length() < 8){
+            error = 1;
+            errorMsg += "Please Enter Complete Address\n";
+        }
+
+        if(gender.length() < 4){
+
+        }
+
+        //gender, String dob, String nationality, String income, CustomerType type
+
+//        if(model.isValidUser(check_user, check_pass)){
+//            return true;
+//        }else{
+//            return false;
+//        }
+
+        return false;
     }
 
-    @FXML
-    private void registerHandler(ActionEvent actionEvent) throws IOException, SERException.InputException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/activity_register.fxml"));
-        Parent mainController = loader.load();
-        Scene mainScene = new Scene(mainController);
-
-        //Call controller and send username
-        baseController controller = loader.getController();
-        controller.initializeModel("",this.model);
-
-        Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        window.setTitle("S & E Real Estate");
-        window.setScene(mainScene);
-        window.show();
-
-//    }else{
-        throw new SERException.InputException("Username You Entered is not Valid");
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-    }
 }
