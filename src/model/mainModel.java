@@ -1,19 +1,21 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class mainModel {
 
     public static ArrayList<User> userDB = new ArrayList<User>();
-//    public static ArrayList<Post> tempPostDB = new ArrayList<Post>();
     public static HashMap<String, Property> propertyDB;
+    Connection conn;
 
     public mainModel() {
-//        dbConnect dbHandler = new dbConnect();
-//        this.conn = dbHandler.getConn();
+        dbConnect dbHandler = new dbConnect();
+        this.conn = dbHandler.getConn();
         this.propertyDB = new HashMap<>();
     }
 
@@ -23,7 +25,7 @@ public class mainModel {
 
     public boolean isValidUser(String check_user, String check_pass) {
         try {
-            stmt = this.conn.createStatement();
+            Statement stmt = this.conn.createStatement();
             String loginQuery = "select count(*) from Customer where email = '"+ check_user +"' and password='"+ check_pass +"'";
             ResultSet rsLogin = stmt.executeQuery(loginQuery);
             rsLogin.next();
@@ -32,6 +34,8 @@ public class mainModel {
 
             if(count == 1){
                 return true;
+            }else{
+                return false;
             }
 
         } catch (SQLException throwables) {
@@ -46,6 +50,7 @@ public class mainModel {
         property.setPropertyId(propertyId);
         propertyDB.put(propertyId,property);
     }
+
     public Property listProperty(String propertyId) throws PropertyException {
         if(propertyDB.containsKey(propertyId)){
             return propertyDB.get(propertyId);
