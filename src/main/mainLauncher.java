@@ -7,6 +7,7 @@ import model.SERException;
 import model.mainModel;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -15,13 +16,18 @@ public class mainLauncher {
 
     private static mainModel model;
 
-    public static void main(String[] args) throws IOException, SERException, ParseException {
+    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException {
         model = new mainModel(); //Initialize Model
         model.syncDB(); //Synchronize the data into memory from DB
         renderMainMenu(model); //Render Main Menu
     }
 
-    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException {
+    public static void quitApp(mainModel model) throws SQLException {
+        model.savetoDB();
+        System.exit(0);
+    }
+
+    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException {
         int choiceMainMenu = 0;
         Scanner scanChoice = new Scanner(System.in);
 
@@ -34,7 +40,7 @@ public class mainLauncher {
 
             String input = scanChoice.nextLine();
             if(input.equals("q") || input.isEmpty())
-                break;
+                quitApp(model);
             else {
                 try {
                     choiceMainMenu = Integer.parseInt(input.trim());
@@ -54,7 +60,7 @@ public class mainLauncher {
         scanChoice.close();
     }
 
-    private static void register(Scanner scanChoice,mainModel model) throws ParseException {
+    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException {
         System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
         int registerChoice = 0;
@@ -65,7 +71,7 @@ public class mainLauncher {
             System.out.println("Please press q to quit.");
             input = scanChoice.nextLine();
             if(input.equals("q"))
-                break;
+                renderMainMenu(model);
             else {
                 try {
                     registerChoice = Integer.parseInt(input.trim());
@@ -89,14 +95,19 @@ public class mainLauncher {
             }while(userInput.isEmpty());
             details.add(userInput);
         }
-        System.out.println(details);
+
         registerController registerNew = new registerController();
-        registerNew.registerhandler(details.get(0),details.get(0),details.get(0),details.get(0),details.get(0),details.get(0),details.get(0),details.get(0),details.get(0),type);
+        registerNew.initializeModel("", model);
+        Boolean registered = registerNew.registerhandler(details.get(0),details.get(1),details.get(2),details.get(3),details.get(4),details.get(5),details.get(6),details.get(7),details.get(8),type);
+        if(!registered)
+            register(scanChoice, model);
+        else
+            renderMainMenu(model);
 
     }
 
-    private static void login(Scanner scanChoice,mainModel model) throws IOException, SERException, ParseException {
-        System.out.println("Please Enter Your Registered Email ID and Password to Login! Press");
+    private static void login(Scanner scanChoice,mainModel model) throws IOException, SERException, ParseException, SQLException {
+        System.out.println("Please Enter Your Registered Email ID and Password to Login! ");
         System.out.print("Email: ");
         String email = scanChoice.nextLine();
         System.out.print("Password: ");
@@ -106,8 +117,9 @@ public class mainLauncher {
             lg.initializeModel("",model);
             boolean loggedin = lg.loginHandler(email,password);
             if(!loggedin){
-                throw new SERException("Username You Entered is not Valid");
-//                renderMainMenu(model);
+//                throw new SERException("Username You Entered is not Valid");
+                System.out.println("\u001B[31m" + "Invalid Credentials! Please Retry" + "\u001B[0m");
+                login(scanChoice, model);
             }else{
                 renderLoggedInMenu(email,scanChoice,model);
             }
@@ -117,7 +129,7 @@ public class mainLauncher {
         }
     }
 
-    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model){
+    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException {
         System.out.println("Welcome "+username+" to S&E Real Estate");
         int choiceLoggedInMenu = 0;
         do {
@@ -129,7 +141,7 @@ public class mainLauncher {
 
             String input = scanChoice.nextLine();
             if(input.equals("q") || input.isEmpty())
-                break;
+                renderMainMenu(model);
             else {
                 try {
                     choiceLoggedInMenu = Integer.parseInt(input.trim());

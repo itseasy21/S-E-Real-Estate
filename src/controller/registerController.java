@@ -22,12 +22,15 @@ public class registerController extends baseController{
             errorMsg += "Name is Invalid, Please Enter Full Name\n";
         }
         //Email check
-        String regex = "^(.+)@(.+)$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
-        if(!matcher.matches() && model.isEmailAvailable(email)){
-            error = 1;
-            errorMsg += "Email ID is invalid\n";
+        if(!email.isEmpty()) {
+            String regex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(email);
+            if (!matcher.matches()) {
+//            if (!matcher.matches() && model.isEmailAvailable(email)) {
+                error = 1;
+                errorMsg += "Email ID is invalid\n";
+            }
         }
 
         //Password Validate
@@ -50,38 +53,44 @@ public class registerController extends baseController{
 
         if(gender.length() < 4){
             error = 1;
-            errorMsg += "Please Enter Gender as Male/Female/TransGender";
+            errorMsg += "Please Enter Gender as Male/Female/TransGender\n";
         }
 
         if(dob.length() < 11 && !validateJavaDate(dob)){
             error = 1;
-            errorMsg += "A Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020";
+            errorMsg += "A Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020\n";
         }
 
         if(nationality.length() < 4){
             error = 1;
-            errorMsg += "Please enter Complete Country Name";
+            errorMsg += "Please enter Complete Country Name\n";
         }
 
-        if(Double.parseDouble(income) < 0){
+
+        try{
+            if(Double.parseDouble(income) < 0){
+                error = 1;
+                errorMsg += "Income should be 0 or more then that!\n";
+            }
+        }catch(NumberFormatException exp){
             error = 1;
-            errorMsg += "Income should be 0 or more then that!";
+            errorMsg += "Income should be a number and more then 0!\n";
         }
 
         if(String.valueOf(type).isEmpty()){
             error = 1;
-            errorMsg += "An Error Occured in the System!";
+            errorMsg += "An Error Occured in the System!\n";
         }
 
         if(error == 0) {
             String custID = model.registerCustomer(name, email, password, phoneNo, address, gender, dob, nationality, income, type);
 
             if (!custID.isEmpty() || custID != null) {
-                System.out.println("Registration Successful with Customer ID: " + custID);
+                System.out.println("\u001B[32m" + "Registration Successful with Customer ID: CUST-" + custID + "\nYou could proceed to login now!\u001B[0m");
                 return true;
             }
         }else{
-            System.out.println("The following error(s) occurred:\n" +errorMsg);
+            System.out.println("\u001B[31m" + "The following error(s) occurred:\n" +errorMsg + "\u001B[0m");
             return false;
         }
 

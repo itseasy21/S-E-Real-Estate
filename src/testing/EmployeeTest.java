@@ -17,19 +17,17 @@ public class EmployeeTest {
 
     @Before
     public void setUp() throws Exception{
-        System.out.println("before");
         c1 = new Employee("itseasy21@gmail.com","pa33w0rd","Shubham",
-                "673 La Trobe","401717860",new Date(),"Male",
+                "673 La Trobe","401717860",(new Date()).toString(),"Male",
                  EmployeeType.FullTIme,45000,0);
         c2 = new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
-                "673 La Trobe","401717860",new Date(),"Male",
+                "673 La Trobe","401717860",(new Date()).toString(),"Male",
                 EmployeeType.PartTime,22000,10);
-
     }
 
     @Test
     public void testCase1() throws UserException {
-//        assertEquals(45000.0, c1.getSalary());
+        assertEquals(45000.0, c1.getSalary());
         System.out.println("updating salary to 10000");
         c1.setSalary(10000);
         assertEquals(10000.0, c1.getSalary());
@@ -37,9 +35,9 @@ public class EmployeeTest {
 
     @Test(expected = UserException.class)
     public void testCase2() throws UserException {
-//        assertEquals(45000.0, c1.getSalary());
-        System.out.println("updating salary to 0");
-        c1.setSalary(0);
+        assertEquals(45000.0, c1.getSalary());
+        System.out.println("updating salary to negative");
+        c1.setSalary(-1);
         assertEquals(0, c1.getSalary());
     }
 
@@ -47,12 +45,12 @@ public class EmployeeTest {
     public void testCase3() throws UserException {
         System.out.println("testing updating of working hours for full time employee");
         c1.setWorkingHours(20);
-        assertEquals(20, c1.getWorkingHours());
     }
 
     @Test
     public void testCase4() throws UserException {
-        System.out.println("testing updating of working hours for part time employee");
+        System.out.println("testing updating of working hours for part time employee to 20");
+        assertEquals(10.0, c2.getWorkingHours());
         System.out.println("before changing:" + c2.getWorkingHours());
         c2.setWorkingHours(20);
         System.out.println("after changing:" + c2.getWorkingHours());

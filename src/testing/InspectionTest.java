@@ -22,7 +22,7 @@ public class InspectionTest {
         i1= new Inspection("1",0,0," "," " ," ");
         i2= new Inspection("2",0,0," "," " ," ");
         c1 = new Customer("itseasy21@gmail.com","pa33w0rd","Shubham",
-                "673 La Trobe","401717860",new Date(),"Male",
+                "673 La Trobe","401717860",(new Date()).toString(),"Male",
                 "Indian",45000, CustomerType.CUSTOMER);
 
       //  p = new Property(123, 1,"Green Brigade", 2,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);

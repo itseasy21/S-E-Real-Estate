@@ -13,14 +13,14 @@ public class Employee extends User{
     double salary = 0;
     double workingHours = 0;
 
-    public Employee(String email, String password, String name, String address, String phoneNo, Date dob, String gender, EmployeeType empType, double salary, double workingHours) {
+    public Employee(String email, String password, String name, String address, String phoneNo, String dob, String gender, EmployeeType empType, double salary, double workingHours) {
         super(++employeeCounter, email, password, name, address, phoneNo, dob, gender);
         this.empType = empType;
         this.salary = salary;
         this.workingHours = workingHours;
     }
 
-    public void updateUser(String email, String password, String name, String address, String phoneNo, Date dob, String gender, EmployeeType empType, double salary, double workingHours){
+    public void updateUser(String email, String password, String name, String address, String phoneNo, String dob, String gender, EmployeeType empType, double salary, double workingHours){
         updateUser(email, password, name, address, phoneNo, dob, gender);
         this.empType = empType;
         this.salary = salary;
