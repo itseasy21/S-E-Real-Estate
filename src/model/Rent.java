@@ -30,7 +30,7 @@ public class Rent {
             String id="R" +1;
             setId(id);
             setpid(propertyid);
-            setEid(p.getEmployeeId());
+            setEid(String.valueOf(p.getEmployeeId()));
             setMinPrice(p.getMinPrice());
           //  setLandlordIdid();
             setStatus("Available");

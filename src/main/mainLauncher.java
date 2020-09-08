@@ -15,7 +15,7 @@ public class mainLauncher {
 
     private static mainModel model;
 
-    public static void main(String[] args) throws IOException, SERException {
+    public static void main(String[] args) throws IOException, SERException, ParseException {
         model = new mainModel(); //Initialize Model
         model.syncDB(); //Synchronize the data into memory from DB
         renderMainMenu(model); //Render Main Menu
@@ -95,7 +95,7 @@ public class mainLauncher {
 
     }
 
-    private static void login(Scanner scanChoice,mainModel model) throws IOException, SERException {
+    private static void login(Scanner scanChoice,mainModel model) throws IOException, SERException, ParseException {
         System.out.println("Please Enter Your Registered Email ID and Password to Login! Press");
         System.out.print("Email: ");
         String email = scanChoice.nextLine();
