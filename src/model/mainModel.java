@@ -129,7 +129,7 @@ public class mainModel {
                             "'" + thisCustomer.getEmail() + "', '" + thisCustomer.getPassword() + "', '" + thisCustomer.getPhoneNo() + "'" +
                             ", '" + thisCustomer.getAddress() + "', '" + thisCustomer.getGender() + "', '" + thisCustomer.getDob() + "'" +
                             ", '" + thisCustomer.getNationality() + "', " + thisCustomer.getIncome() + ", '" + thisCustomer.getType().toString() + "')";
-                    System.out.println(insertQuery);
+//                    System.out.println(insertQuery);
                     stmt.executeUpdate(insertQuery);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -143,20 +143,12 @@ public class mainModel {
 
 
     public boolean isEmailAvailable(String email){
-        try {
-            Statement stmt = this.conn.createStatement();
-            String loginQuery = "select count(*) from Customer where email = '"+ email + "'";
-            ResultSet rsLogin = stmt.executeQuery(loginQuery);
-            rsLogin.next();
-            int count = rsLogin.getInt(1);
-            rsLogin.close();
-
-            if(count == 1){
-                return false;
+        for(User user : userDB){
+            if(user instanceof Customer) {
+                if(user.getEmail().equals(email)){
+                    return false;
+                }
             }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
         return true;
     }

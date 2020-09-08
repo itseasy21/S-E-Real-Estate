@@ -24,6 +24,7 @@ public class Customer extends User{
 
     public Customer(int id, String email, String password, String name, String address, String phoneNo, String dob, String gender, String nationality, double income, CustomerType type) {
         super(id, email, password, name, address, phoneNo, dob, gender);
+        ++customerCounter;
         this.nationality = nationality;
         this.income = income;
         this.type = type;

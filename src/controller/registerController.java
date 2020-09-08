@@ -26,10 +26,10 @@ public class registerController extends baseController{
             String regex = "^(.+)@(.+)$";
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(email);
-            if (!matcher.matches()) {
-//            if (!matcher.matches() && model.isEmailAvailable(email)) {
+//            if (!matcher.matches()) {
+            if (!matcher.matches() || !model.isEmailAvailable(email)) {
                 error = 1;
-                errorMsg += "Email ID is invalid\n";
+                errorMsg += "Email ID is invalid or already in use, please try another one!\n";
             }
         }
 

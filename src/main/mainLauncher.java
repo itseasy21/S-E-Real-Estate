@@ -70,7 +70,7 @@ public class mainLauncher {
             }
             System.out.println("Please press q to quit.");
             input = scanChoice.nextLine();
-            if(input.equals("q"))
+            if(input.equals("q") || input.trim().isEmpty())
                 renderMainMenu(model);
             else {
                 try {
