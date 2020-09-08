@@ -14,7 +14,7 @@ class RentTest {
     @BeforeAll
     static void setUpBeforeClass() throws Exception {
         System.out.println("before");
-        r = new Rent(1,12,200.00,500.00);
+       // r = new Rent(1,12,200.00,500.00);
         System.out.print(r.showDetails());
     }
 

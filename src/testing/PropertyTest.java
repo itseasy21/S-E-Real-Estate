@@ -17,8 +17,8 @@ public class PropertyTest {
     @BeforeClass
     public static void setUp() throws Exception{
         System.out.println("Before Class");
-        rentalProperty = new Property(123, "Green Brigade", 1,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);
-        saleProperty = new Property(123, "Green Brigade", 2,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);
+        rentalProperty = new Property(123, 1,"Green Brigade", 1,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);
+        saleProperty = new Property(123, 2,"Green Brigade", 2,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);
     }
 
 
