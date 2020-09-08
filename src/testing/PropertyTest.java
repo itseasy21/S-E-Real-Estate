@@ -89,13 +89,13 @@ public class PropertyTest {
         assertEquals(1,realEstate.getPropertyDBSize());
 
         realEstate.addProperty(salePropertyOne);
-        salePropertyOne.setEmployeeId("E2");
+        salePropertyOne.setEmployeeId(2);
         assertEquals(2,realEstate.getPropertyDBSize());
         realEstate.addProperty(rentalProperty);
-        rentalProperty.setEmployeeId("E3");
+        rentalProperty.setEmployeeId(3);
         assertEquals(saleProperty,realEstate.listProperty("P1"));
 
-        salePropertyTwo.setEmployeeId("E1");
+        salePropertyTwo.setEmployeeId(1);
         realEstate.addProperty(salePropertyTwo);
         realEstate.listProperties();
     }

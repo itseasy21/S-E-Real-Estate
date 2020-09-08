@@ -5,17 +5,14 @@ import java.util.Scanner;
 public class Rent {
 
     /*property_id,vendor id,employee id,min reserve price*/
-    String id;
-    int pid;
-    int eid;
-    int cid;
+    String id, eid;
+    int cid,pid;
     double price;
     String status;
     double min_price;
-    int landlordId;
+    String landlordId;
 
-
-    public Rent(String id,int eid,int pid, int cid,int landlordId,double min_price, double price)
+    public Rent(String id,String eid,int pid, int cid,String landlordId,double min_price, double price)
     {
         this.id=id;
         this.eid=eid;
@@ -48,13 +45,21 @@ public class Rent {
         setStatus("Rented");
     }
 
+    public void setPrice(Double price) throws PropertyException {
+        if(price>this.min_price) {
+            this.price = price;
+        } else{
+            throw new PropertyException("Invalid rental property status.");
+        }
+    }
+
     public String getId() { return this.id; }
 
     public int getPropertyId() { return this.pid; }
 
-    public int getEmployeeId() { return this.eid; }
+    public String getEmployeeId() { return this.eid; }
 
-    public int getLandlordId() { return this.landlordId; }
+    public String getLandlordId() { return this.landlordId; }
 
     public double getMinPrice() { return this.min_price; }
 
@@ -66,11 +71,11 @@ public class Rent {
 
     public void setpid(int propertyI) { this.pid = propertyI; }
 
-    public void setEid(int eid) { this.eid = eid; }
+    public void setEid(String eid) { this.eid = eid; }
 
     public void setCid(int cid) { this.cid = cid; }
 
-    public void setLandlordIdid(int landlordId) { this.landlordId = landlordId; }
+    public void setLandlordIdid(String landlordId) { this.landlordId = landlordId; }
 
     public void setStatus(String status) throws PropertyException {
         if(status.equalsIgnoreCase("Available")||status.equalsIgnoreCase("Rented")) {
@@ -85,13 +90,7 @@ public class Rent {
 
     }
 
-    public void setPrice(Double price) throws PropertyException {
-        if(price>this.min_price) {
-            this.price = price;
-        } else{
-            throw new PropertyException("Invalid rental property status.");
-        }
-    }
+
 
     public String showDetails(){
         String printDetails = "";
