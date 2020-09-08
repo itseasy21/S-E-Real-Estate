@@ -1,8 +1,8 @@
 package model;
 
-public class PayrollException extends Throwable{
+public class MyException extends Throwable{
     private String message;
-    public PayrollException(String messsage){
+    public MyException(String messsage){
         this.message = messsage;
     }
 
