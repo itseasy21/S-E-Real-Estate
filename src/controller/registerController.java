@@ -52,12 +52,13 @@ public class registerController extends baseController{
 
         //gender, String dob, String nationality, String income, CustomerType type
 
-        if(model.isValidUser(check_user, check_pass)){
-            return true;
-        }else{
-            return false;
-        }
+//        if(model.isValidUser(check_user, check_pass)){
+//            return true;
+//        }else{
+//            return false;
+//        }
 
+        return false;
     }
 
 }
