@@ -78,14 +78,19 @@ public class mainLauncher {
         System.out.println("Registering as "+type+"\nPlease Enter Details Below");
 
         //Start taking all the values to register in the portal
-        String[] requiredDetails = {"First Name", "Last Name", "Email", "Password", "Phone No.", "Address", "Gender", "DOB", "Nationality", "Income", "Interested Suburbs"};
+        String[] requiredDetails = {"Name", "Email", "Password", "Phone No.", "Address", "Gender", "DOB", "Nationality", "Income"};
         ArrayList<String> details = new ArrayList<String>();
         for(String ask : requiredDetails){
             System.out.print(ask + ": ");
-            details.add(scanChoice.nextLine());
+            String userInput = "";
+            do {
+                userInput = scanChoice.nextLine();
+            }while(userInput.isEmpty());
+            details.add(userInput);
         }
         System.out.println(details);
-        reg registerNew = new C
+        registerController registerNew = new registerController();
+        registerNew.registerhandler(details.get(0),details.get(0),details.get(0),details.get(0),details.get(0),details.get(0),details.get(0),details.get(0),details.get(0),type);
 
     }
 

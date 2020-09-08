@@ -15,16 +15,18 @@ public class Customer extends User{
     CustomerType type;
     protected ArrayList<String> interestedSuburbs= new ArrayList<String>();
 
-    public Customer(String email, String password, String name, String address, String phoneNo, Date dob, String gender, String profilePic, String nationality, double income) {
-        super(++postCounter, email, password, name, address, phoneNo, dob, gender, profilePic);
+    public Customer(String email, String password, String name, String address, String phoneNo, Date dob, String gender, String nationality, double income, CustomerType type) {
+        super(++postCounter, email, password, name, address, phoneNo, dob, gender);
         this.nationality = nationality;
         this.income = income;
+        this.type = type;
     }
 
-    public void updateUser(String email, String password, String name, String address, String phoneNo, Date dob, String gender, String profilePic, String nationality, double income){
-        updateUser(email, password, name, address, phoneNo, dob, gender, profilePic);
+    public void updateUser(String email, String password, String name, String address, String phoneNo, Date dob, String gender, String nationality, double income, CustomerType type){
+        updateUser(email, password, name, address, phoneNo, dob, gender);
         this.nationality = nationality;
         this.income = income;
+        this.type = type;
     }
 
     public String getNationality() {

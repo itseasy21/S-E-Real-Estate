@@ -1,9 +1,9 @@
 package testing;
 
+import config.EmployeeType;
 import model.*;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Date;
@@ -20,10 +20,10 @@ public class EmployeeTest {
         System.out.println("before");
         c1 = new Employee("itseasy21@gmail.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",new Date(),"Male",
-                "abc.jpg",EmployeeType.FullTIme,45000,0);
+                 EmployeeType.FullTIme,45000,0);
         c2 = new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
                 "673 La Trobe","401717860",new Date(),"Male",
-                "abc.jpg",EmployeeType.PartTime,22000,10);
+                EmployeeType.PartTime,22000,10);
 
     }
 
