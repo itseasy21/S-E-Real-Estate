@@ -189,7 +189,7 @@ public class mainModel {
         propertyDB.put(propertyId,property);
     }
 
-    public Property listProperty(String propertyId) throws PropertyException {
+    public Property listProperty(int propertyId) throws PropertyException {
         if(propertyDB.containsKey(propertyId)){
             return propertyDB.get(propertyId);
         } else {
