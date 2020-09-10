@@ -49,7 +49,7 @@ public class SaleTest {
     public void testCase4() throws MyException {
         s2.BuyProperty(180000);
         assertEquals(0, s2.getListingPrice(),0);
-        
+
     }
 
 

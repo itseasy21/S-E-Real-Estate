@@ -33,10 +33,10 @@ public class PayrollTest {
 
 
     }
-    @Test
+    @Test(expected = MyException.class)
     public void testCase2() throws MyException {
         p1.setSalary(-1000);
-        assertEquals(-1000, p1.getSalary());
+        assertEquals(0, p1.getSalary(),0);
 
     }
     @Test
