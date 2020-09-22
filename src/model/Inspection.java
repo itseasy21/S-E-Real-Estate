@@ -5,7 +5,9 @@ import java.util.Scanner;
 
 public class Inspection {
 
-    private int propertyId, cid, eid;
+    private int propertyId;
+    private String cid;
+    private int eid;
     private String id,status;
     private String date,time;
     String[] timeslots1=new String[4];
@@ -70,7 +72,7 @@ public class Inspection {
     public void bookInspection(Customer cid) throws PropertyException {
         //String[] timeslots = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"};
         // if(this.getStatus().equalsIgnoreCase("created")) {
-        int c = cid.getId();
+        String c = cid.getId();
         setCid(c);
         Scanner sc = new Scanner(System.in);
         System.out.print("BOOK AN INSPECTION");
@@ -147,7 +149,7 @@ public class Inspection {
 
     public int getpId() { return this.propertyId; }
 
-    public int getcId() { return this.cid; }
+    public String getcId() { return this.cid; }
 
     public int geteId() { return this.eid; }
 
@@ -184,7 +186,7 @@ public class Inspection {
 
     public void setEid(int eid) { this.eid = eid; }
 
-    public void setCid(int cid) { this.cid = cid; }
+    public void setCid(String cid) { this.cid = cid; }
 
     public void setDate(String date) { this.date=date; }
 

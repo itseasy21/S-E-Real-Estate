@@ -70,7 +70,7 @@ public class Inspectionmain {
     public void bookInspection(Customer cid,Inspection a) throws PropertyException {
         //String[] timeslots = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"};
          if(a.getStatus().equalsIgnoreCase("created")) {
-        int c = cid.getId();
+        String c = cid.getId();
         a.setCid(c);
         Scanner sc = new Scanner(System.in);
         System.out.println("BOOK AN INSPECTION");

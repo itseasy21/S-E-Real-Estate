@@ -45,7 +45,7 @@ public class mainModel {
                 }
 
                     Customer newCustomer = new Customer(
-                            rsCustomer.getInt("customer_id"),
+                            rsCustomer.getString("customer_id"),
                             rsCustomer.getString("email"),
                             rsCustomer.getString("password"),
                             rsCustomer.getString("name"),

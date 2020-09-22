@@ -16,13 +16,13 @@ public class Customer extends User{
     protected ArrayList<String> interestedSuburbs= new ArrayList<String>();
 
     public Customer(String email, String password, String name, String address, String phoneNo, String dob, String gender, String nationality, double income, CustomerType type) {
-        super(++customerCounter, email, password, name, address, phoneNo, dob, gender);
+        super("CUS" + (++customerCounter), email, password, name, address, phoneNo, dob, gender);
         this.nationality = nationality;
         this.income = income;
         this.type = type;
     }
 
-    public Customer(int id, String email, String password, String name, String address, String phoneNo, String dob, String gender, String nationality, double income, CustomerType type) {
+    public Customer(String id, String email, String password, String name, String address, String phoneNo, String dob, String gender, String nationality, double income, CustomerType type) {
         super(id, email, password, name, address, phoneNo, dob, gender);
         ++customerCounter;
         this.nationality = nationality;
