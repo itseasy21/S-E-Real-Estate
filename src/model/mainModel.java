@@ -40,8 +40,10 @@ public class mainModel {
                     thisCustomerType = CustomerType.VENDOR;
                 }else if(rsCustomer.getString("type").equals("LANDLORD")){
                     thisCustomerType = CustomerType.LANDLORD;
-                }else if(rsCustomer.getString("type").equals("CUSTOMER")){
-                    thisCustomerType = CustomerType.CUSTOMER;
+                }else if(rsCustomer.getString("type").equals("BUYER")){
+                    thisCustomerType = CustomerType.BUYER;
+                }else if(rsCustomer.getString("type").equals("RENTER")){
+                    thisCustomerType = CustomerType.RENTER;
                 }
 
                     Customer newCustomer = new Customer(

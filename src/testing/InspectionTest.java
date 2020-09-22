@@ -23,7 +23,7 @@ public class InspectionTest {
         i2= new Inspection("2",0,0," "," " ," ");
         c1 = new Customer("itseasy21@gmail.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                "Indian",45000, CustomerType.CUSTOMER);
+                "Indian",45000, CustomerType.VENDOR);
 
       //  p = new Property(123, 1,"Green Brigade", 2,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);
         System.out.print(i1.showDetails());
@@ -44,12 +44,19 @@ public class InspectionTest {
  // /*
     @Test
     public void bookins() throws Exception{
-        System.out.println("\nBOOK INSPECTION");
-        i.createInspection(rentalProperty,i1);
 
-      //  System.out.println(i1.showDetails()+"\n");
-        i.bookInspection(c1,i1);
-      //  System.out.print(i1.showDetails());
+        if(c1.getType().equals(CustomerType.BUYER) || c1.getType().equals(CustomerType.RENTER)){
+
+            System.out.println("\nBOOK INSPECTION");
+            i.createInspection(rentalProperty,i1);
+
+            //  System.out.println(i1.showDetails()+"\n");
+            i.bookInspection(c1,i1);
+            //  System.out.print(i1.showDetails());
+        }else{
+            System.out.println("You are not allowed to book inspection!");
+        }
+
     }
 // */
 // /*

@@ -132,6 +132,16 @@ public class mainLauncher {
     private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException {
         System.out.println("Welcome "+username+" to S&E Real Estate");
         int choiceLoggedInMenu = 0;
+
+        //All LoggedInMenus
+        //    VENDOR,
+        //    LANDLORD,
+        //    BUYER,
+        //    RENTER
+        String[] vendor_landlordMenu = {"ADD PROPERTY", "LIST PROPERTIES", "LOGOUT"};
+        String[] buyerMenu = {};
+        String[] renterMenu = {};
+
         do {
             System.out.println("Pick an option.");
             for(int i = 0; i < loggedInMenuOptions.values().length; i++){
