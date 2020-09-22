@@ -20,9 +20,6 @@ public class InspectionTest {
         i1= new Inspection("3",1,1," "," " ," ");
         i2= new Inspection("2",2,2," "," " ," ");
         c1 = new Customer("itseasy21@gmail.com","pa33w0rd","Shubham",
-<<<<<<< HEAD
-                "673 La Trobe","401717860",new Date(),"Male",
-                "Indian",45000, CustomerType.CUSTOMER);
 =======
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
                 "Indian",45000, CustomerType.VENDOR);
@@ -43,10 +40,6 @@ public class InspectionTest {
 
     @Test
     public void bookins() throws Exception{
-<<<<<<< HEAD
-        System.out.println("\nBOOK INSPECTION");
-        i.createInspection(rentalProperty,i1);
-        i.bookInspection(c1,i1);
 =======
 
         if(c1.getType().equals(CustomerType.BUYER) || c1.getType().equals(CustomerType.RENTER)){
@@ -61,7 +54,6 @@ public class InspectionTest {
             System.out.println("You are not allowed to book inspection!");
         }
 
->>>>>>> 9914c71c06fa772cce81b941333cbc93da0a1d85
     }
 
     @Test
