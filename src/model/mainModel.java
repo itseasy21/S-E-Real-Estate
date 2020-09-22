@@ -155,6 +155,16 @@ public class mainModel {
         return true;
     }
 
+    public User getUserByUsername(String email){
+
+        for(User user : userDB){
+            if ( user.getEmail().equals(email) ) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     public boolean isValidUser(String check_user, String check_pass) {
 
         for(User user : userDB){

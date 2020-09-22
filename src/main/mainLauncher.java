@@ -130,7 +130,10 @@ public class mainLauncher {
     }
 
     private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException {
-        System.out.println("Welcome "+username+" to S&E Real Estate");
+
+        Customer currentUser = (Customer) model.getUserByUsername(username);
+
+        System.out.println("Welcome "+ currentUser.getName() +" to S&E Real Estate");
         int choiceLoggedInMenu = 0;
 
         //All LoggedInMenus
@@ -138,14 +141,19 @@ public class mainLauncher {
         //    LANDLORD,
         //    BUYER,
         //    RENTER
-        String[] vendor_landlordMenu = {"ADD PROPERTY", "LIST PROPERTIES", "LOGOUT"};
-        String[] buyerMenu = {};
-        String[] renterMenu = {};
+        String[] vendorLandlordMenu = {"ADD PROPERTY", "LIST PROPERTIES", "LOGOUT"};
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "UPDATE SUBURB PREFERENCE" ,"LOGOUT"};
+        String[] menu = new String[3];
+        if(currentUser.getType().equals(CustomerType.LANDLORD) || currentUser.getType().equals(CustomerType.VENDOR)){
+            menu = vendorLandlordMenu;
+        }else if(currentUser.getType().equals(CustomerType.BUYER) || currentUser.getType().equals(CustomerType.RENTER)){
+            menu = buyerRenterMenu;
+        }
 
         do {
             System.out.println("Pick an option.");
-            for(int i = 0; i < loggedInMenuOptions.values().length; i++){
-                System.out.println(i+1 + ". " + loggedInMenuOptions.values()[i]);
+            for(int i = 0; i < menu.length; i++){
+                System.out.println(i+1 + ". " + menu[i]);
             }
             System.out.println("Please press q to quit.");
 
@@ -161,12 +169,21 @@ public class mainLauncher {
             }
 
             //Handling Choice
-            switch (choiceLoggedInMenu) {
-                case 1 -> System.out.println("test");//Add Property TODO
-                case 2 -> System.out.println("test");//List Property TODO
+            if(currentUser.getType().equals(CustomerType.LANDLORD) || currentUser.getType().equals(CustomerType.VENDOR)) {
+                switch (choiceLoggedInMenu) {
+                    case 1 -> System.out.println("test");//Add Property TODO
+                    case 2 -> System.out.println("test");//List Property TODO
+                    case 3 -> renderMainMenu(model); //Logout
+                }
+            }else{
+                switch (choiceLoggedInMenu) {
+                    case 1 -> System.out.println("test1");//Search Property TODO
+                    case 2 -> System.out.println("test2");//Update Suburb Pref TODO
+                    case 3 -> renderMainMenu(model); //Logout
+                }
             }
 
-        } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > loggedInMenuOptions.values().length);
+        } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
 
     }
 
