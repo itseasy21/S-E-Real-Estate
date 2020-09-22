@@ -23,8 +23,8 @@ public class PropertyTest {
         System.out.println("Before Class");
         rentalProperty = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Flat);
         saleProperty = new Property( "Green Brigade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
-        salePropertyOne = new Property( "Green Brigade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
-        salePropertyTwo = new Property( "Green Brigade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
+        salePropertyOne = new Property( "Jersey parade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
+        salePropertyTwo = new Property( "Salt Waters", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
         realEstate = new mainModel();
 
     }
@@ -93,7 +93,7 @@ public class PropertyTest {
         assertEquals(2,realEstate.getPropertyDBSize());
         realEstate.addProperty(rentalProperty);
         rentalProperty.setEmployeeId(3);
-        assertEquals(saleProperty,realEstate.listProperty("P1"));
+        assertEquals(saleProperty,realEstate.listProperty(1));
 
         salePropertyTwo.setEmployeeId(1);
         realEstate.addProperty(salePropertyTwo);
@@ -101,6 +101,7 @@ public class PropertyTest {
     }
 
     // List Property test case
+    // trying to list a property not in DB
     @Test(expected = PropertyException.class)
     public void testListPropertyNegative() throws Exception{
         //check DB is empty
@@ -110,7 +111,7 @@ public class PropertyTest {
         realEstate.addProperty(rentalProperty);
         assertEquals(2,realEstate.getPropertyDBSize());
         // trying to list a property not found in database
-        assertEquals(saleProperty,realEstate.listProperty("P3"));
+        assertEquals(saleProperty,realEstate.listProperty(3));
     }
 
     @AfterClass

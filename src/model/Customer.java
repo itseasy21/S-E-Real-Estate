@@ -8,21 +8,29 @@ import java.util.Date;
 public class Customer extends User{
 
     // Counter to keep track of event post
-    static int postCounter = 0;
+    static int customerCounter = 0;
 
     String nationality;
     double income;
     CustomerType type;
     protected ArrayList<String> interestedSuburbs= new ArrayList<String>();
 
-    public Customer(String email, String password, String name, String address, String phoneNo, Date dob, String gender, String nationality, double income, CustomerType type) {
-        super(++postCounter, email, password, name, address, phoneNo, dob, gender);
+    public Customer(String email, String password, String name, String address, String phoneNo, String dob, String gender, String nationality, double income, CustomerType type) {
+        super("CUS" + (++customerCounter), email, password, name, address, phoneNo, dob, gender);
         this.nationality = nationality;
         this.income = income;
         this.type = type;
     }
 
-    public void updateUser(String email, String password, String name, String address, String phoneNo, Date dob, String gender, String nationality, double income, CustomerType type){
+    public Customer(String id, String email, String password, String name, String address, String phoneNo, String dob, String gender, String nationality, double income, CustomerType type) {
+        super(id, email, password, name, address, phoneNo, dob, gender);
+        ++customerCounter;
+        this.nationality = nationality;
+        this.income = income;
+        this.type = type;
+    }
+
+    public void updateUser(String email, String password, String name, String address, String phoneNo, String dob, String gender, String nationality, double income, CustomerType type){
         updateUser(email, password, name, address, phoneNo, dob, gender);
         this.nationality = nationality;
         this.income = income;
@@ -43,5 +51,9 @@ public class Customer extends User{
         printDetails += "\nIncome:\t"+getIncome();
 
         return printDetails;
+    }
+
+    public CustomerType getType() {
+        return this.type;
     }
 }

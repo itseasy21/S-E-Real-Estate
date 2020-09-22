@@ -5,14 +5,14 @@ import java.util.Scanner;
 public class Rent {
 
     /*property_id,vendor id,employee id,min reserve price*/
-    String id, eid;
-    int cid,pid;
+    String id;
+    int eid,cid,pid;
     double price;
     String status;
     double min_price;
     String landlordId;
 
-    public Rent(String id,String eid,int pid, int cid,String landlordId,double min_price, double price)
+    public Rent(String id,int eid,int pid, int cid,String landlordId,double min_price, double price, String status)
     {
         this.id=id;
         this.eid=eid;
@@ -24,20 +24,38 @@ public class Rent {
         this.status="Available";
     }
 
-    public void createRent(Property p,Customer c) throws PropertyException {
-        int propertyid=p.getPropertyId();
+    public void ApplyRent(Property p,Customer c) throws PropertyException {
+       // int propertyid=p.getPropertyId();
         if(p.isPropertyTypeRental()==true) {
+<<<<<<< HEAD
+            if (this.getPrice() > p.getMinPrice()) {
+                System.out.println("RENT PROPERTY");
+                setId(id);
+                p.setPropertyId(getPropertyId()); //test case
+                setpid(p.getPropertyId());
+                setCid(c.getId());
+                setLandlordIdid(getLandlordId());
+                setEid(getEmployeeId());
+                setMinPrice(p.getMinPrice());
+                setPrice(p.getRentalPrice());
+                setStatus("Onreview");
+                System.out.println("Thanks for applying property manager will look into your application");
+            }
+            else{
+                System.out.println("Check the minimun price required and apply again");
+            }
+=======
             String id="R" +1;
             setId(id);
             setpid(propertyid);
-            setEid(p.getEmployeeId());
+            setEid(String.valueOf(p.getEmployeeId()));
             setMinPrice(p.getMinPrice());
           //  setLandlordIdid();
             setStatus("Available");
+>>>>>>> 9914c71c06fa772cce81b941333cbc93da0a1d85
         }
         else{
-            System.out.println("property is not listed for rent");
-
+            System.out.println("selected property is not listed for rent");
         }
     }
 
@@ -49,7 +67,7 @@ public class Rent {
         if(price>this.min_price) {
             this.price = price;
         } else{
-            throw new PropertyException("Invalid rental property status.");
+            throw new PropertyException("Invalid price set for rental property.");
         }
     }
 
@@ -57,7 +75,7 @@ public class Rent {
 
     public int getPropertyId() { return this.pid; }
 
-    public String getEmployeeId() { return this.eid; }
+    public int getEmployeeId() { return this.eid; }
 
     public String getLandlordId() { return this.landlordId; }
 
@@ -65,20 +83,22 @@ public class Rent {
 
     public double getPrice() { return this.price; }
 
+    public int getCid() { return this.cid; }
+
     public String getStatus() { return this.status; }
 
     public void setId(String id) { this.id = id; }
 
     public void setpid(int propertyI) { this.pid = propertyI; }
 
-    public void setEid(String eid) { this.eid = eid; }
+    public void setEid(int eid) { this.eid = eid; }
 
     public void setCid(int cid) { this.cid = cid; }
 
     public void setLandlordIdid(String landlordId) { this.landlordId = landlordId; }
 
     public void setStatus(String status) throws PropertyException {
-        if(status.equalsIgnoreCase("Available")||status.equalsIgnoreCase("Rented")) {
+        if(status.equalsIgnoreCase("Available")||status.equalsIgnoreCase("Rented")||status.equalsIgnoreCase("Onreview")){
             this.status = status;
         } else{
             throw new PropertyException("Invalid rental property status.");
@@ -90,20 +110,22 @@ public class Rent {
 
     }
 
-
-
     public String showDetails(){
         String printDetails = "";
 
+        printDetails += "\nRent ID:\t\t" +getId();
         printDetails += "\nProperty ID:\t"+getPropertyId();
         printDetails += "\nEmployee ID:\t"+getEmployeeId();
+        printDetails += "\nLandlord ID:\t"+getLandlordId();
+        printDetails += "\nCustomer ID:\t"+getCid();
         printDetails += "\nMinimum Price:\t"+getMinPrice();
         printDetails += "\nPrice:\t"+getPrice();
         printDetails += "\nStatus:\t"+getStatus();
 
         return printDetails;
-
     }
+
+
 
   /*  public static void main(String args[]) throws PropertyException {
 

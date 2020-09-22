@@ -2,10 +2,7 @@ package testing;
 import model.*;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.Date;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -14,7 +11,7 @@ public class PayrollTest {
     Payroll p1,p2;
    // Employee c1,c2;
     @Before
-    public void setUp() throws Exception, PayrollException {
+    public void setUp() throws Exception, MyException {
         System.out.println("before");
         p1 = new Payroll(1,40,10);
         p2 = new Payroll(2,20,8);
@@ -30,26 +27,26 @@ public class PayrollTest {
 
     }
     @Test
-    public void testCase1()throws PayrollException{
+    public void testCase1()throws MyException {
         p1.setSalary(20000);
         assertEquals(20000.0, p1.getSalary());
 
 
     }
-    @Test
-    public void testCase2() throws PayrollException {
+    @Test(expected = MyException.class)
+    public void testCase2() throws MyException {
         p1.setSalary(-1000);
-        assertEquals(-1000, p1.getSalary());
+        assertEquals(0, p1.getSalary(),0);
 
     }
     @Test
-    public void testCase3()throws PayrollException{
+    public void testCase3()throws MyException {
         p1.setSalary(10000);
         p1.getHours();
         assertEquals(40.0, p1.getHours());
     }
     @Test
-    public void testCase4() throws PayrollException {
+    public void testCase4() throws MyException {
         p1.setSalary(5000);
         p1.getRate();
         assertEquals(10.0, p1.getRate());

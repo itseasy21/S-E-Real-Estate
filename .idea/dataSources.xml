@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="sereal" uuid="0e11a00a-e894-49b2-84e0-ec1fdc928812">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\Java-Eclipseworkspace\S-E-Real-Estate\sereal.db</jdbc-url>
+    </data-source>
+  </component>
+</project>

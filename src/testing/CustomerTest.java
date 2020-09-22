@@ -19,11 +19,11 @@ public class CustomerTest {
     public void setUp() throws Exception{
         System.out.println("before");
         c1 = new Customer("itseasy21@gmail.com","pa33w0rd","Shubham",
-                "673 La Trobe","401717860",new Date(),"Male",
-                "Indian",45000, CustomerType.CUSTOMER);
+                "673 La Trobe","401717860",(new Date()).toString(),"Male",
+                "Indian",45000, CustomerType.VENDOR);
         c2 = new Customer("s3801882@student.rmit.edu.au","sa52521","Shubham",
-                "673 La Trobe","401717860",new Date(),"Male",
-                "Indian",45000, CustomerType.CUSTOMER);
+                "673 La Trobe","401717860",(new Date()).toString(),"Male",
+                "Indian",45000, CustomerType.BUYER);
 
     }
 
@@ -32,7 +32,7 @@ public class CustomerTest {
         System.out.println("lol");
         System.out.println(c1.showDetails());
         c1.updateUser("itseasy19@gmail.com","pa33w0rd","Shubham",
-                "673 La Trobe","401717860",new Date(),"Male", "Indian",45000, CustomerType.CUSTOMER);
+                "673 La Trobe","401717860",(new Date()).toString(),"Male", "Indian",45000, CustomerType.VENDOR);
     }
 
     @After

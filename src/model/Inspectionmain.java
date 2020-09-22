@@ -8,18 +8,21 @@ public class Inspectionmain {
     String[] timeslots1=new String[4];
     String[] Emptytimeslot=new String[1];
     Inspection a;
-   // String[] iArray;
+    // String[] iArray;
     public static HashMap<String, Inspection> inspectionDB = new HashMap<String, Inspection>();
-  //  ArrayList<Inspection> inspection = new ArrayList<Inspection>();
+    //  ArrayList<Inspection> inspection = new ArrayList<Inspection>();
 
     public void createInspection(Property pid,Inspection a) throws PropertyException {
-        int propertyid=pid.getPropertyId();
-        String id="I" +1;
+        //  int propertyid=pid.getPropertyId();
+
         a.setId(a.getId());
-       // a.setpid(propertyid);
-        a.setpid(1);
-        //a.setEid(pid.getEmployeeId());
-        a.setEid(1);
+        a.setpid(a.getpId());
+        a.setEid(a.geteId());
+
+        System.out.println(a.getId());
+        System.out.println(a.getpId());
+        System.out.println(a.geteId());
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Calendar cal = Calendar.getInstance();
         for (int i = 0; i < a.getdatesize(); i++) {
@@ -29,26 +32,26 @@ public class Inspectionmain {
         }
 
         a.setdatesSlot(dates);
-       // System.out.println(a.getdateslot());
+        // System.out.println(a.getdateslot());
         Scanner sc = new Scanner(System.in);
         //System.out.println("create 5 time slots");
         //for(int i=0;i<timeslots1.length;i++){
-            String[] timeslots1 = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"}; //for test case
-            //timeslots1[i]=sc.nextLine();
-            for(int i=0;i<timeslots1.length;i++) {
-               // System.out.println("timeslot" + timeslots1[i]);
-                a.setTimeSlot(timeslots1);
-            }
-       // }
+        String[] timeslots1 = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"}; //for test case
+        //timeslots1[i]=sc.nextLine();
+        for(int i=0;i<timeslots1.length;i++) {
+            // System.out.println("timeslot" + timeslots1[i]);
+            a.setTimeSlot(timeslots1);
+        }
+        // }
         a.setStatus("Created");
-        inspectionDB.put(id,a);
+        //inspectionDB.put(id,a);
         //System.out.println(inspectionDB.values());
 
 
-      //  iArray = new String[]{id, , String.valueOf(a.geteId()), String.valueOf(a.getdateslot()), a.getTimeslot()};
+        //  iArray = new String[]{id, , String.valueOf(a.geteId()), String.valueOf(a.getdateslot()), a.getTimeslot()};
         //Inspection i=new Inspection(id,propertyid,a.geteId(),dates, timeslots1);
-       // inspection.add(i);
-       // inspection.add(i);
+        // inspection.add(i);
+        // inspection.add(i);
         /*for(int j=0;j<inspection.size();j++){
             System.out.println(inspection.get(j).getId());
             System.out.println(inspection.get(j).getpId());
@@ -56,10 +59,10 @@ public class Inspectionmain {
             if(!inspection.get(j).getId().isEmpty()){
                 System.out.println(inspection.get(j).getpId()); }
         }*/
-     //   System.out.println(inspectionDB.get();
+        //   System.out.println(inspectionDB.get();
 
-     //   for (Inspection ignored :inspectionDB.values()){
-       // System.out.println("Value: "+ inspectionDB.values());
+        //   for (Inspection ignored :inspectionDB.values()){
+        // System.out.println("Value: "+ inspectionDB.values());
         //}
 
 
@@ -69,8 +72,23 @@ public class Inspectionmain {
 
     public void bookInspection(Customer cid,Inspection a) throws PropertyException {
         //String[] timeslots = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"};
+<<<<<<< HEAD
+        if(a.getStatus().equalsIgnoreCase("created")) {
+            int c = cid.getId();
+            a.setCid(c);
+            Scanner sc = new Scanner(System.in);
+            System.out.println("BOOK AN INSPECTION");
+            System.out.println("-----------------------------------------");
+            boolean loop = true;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Calendar cal = Calendar.getInstance();
+            for (int i = 0; i < a.getdatesize(); i++) {
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+                String newDate = sdf.format(cal.getTime());
+                dates[i] = newDate;
+=======
          if(a.getStatus().equalsIgnoreCase("created")) {
-        int c = cid.getId();
+        String c = cid.getId();
         a.setCid(c);
         Scanner sc = new Scanner(System.in);
         System.out.println("BOOK AN INSPECTION");
@@ -88,58 +106,65 @@ public class Inspectionmain {
          //   System.out.println(dates.length);
             for (int i = 0; i < dates.length; i++) {
                 System.out.println(dates[i]);
+>>>>>>> 9914c71c06fa772cce81b941333cbc93da0a1d85
             }
-            System.out.println("select the date you want to book an inspection");
-            //String selectdate = sc.next();   //input from customer
-            String selectdate = dates[1];
-            System.out.println(selectdate);
-
-            for (int i = 0; i < dates.length; i++) {
-
-                if (dates[i].equalsIgnoreCase(selectdate)) {
-                    a.setDate(dates[i]);
-                    loop = false;
-                    break;
-                } else {
-                    loop = true;
+            do {
+                System.out.println("available dates for inspection are:");
+                //   System.out.println(dates.length);
+                for (int i = 0; i < dates.length; i++) {
+                    System.out.println(dates[i]);
                 }
-            }
-            if (loop == true) {
-                System.out.println("incorrect date entered...");
-            }
-        } while (loop == true);
+                System.out.println("select the date you want to book an inspection");
+                //String selectdate = sc.next();   //input from customer
+                String selectdate = dates[1];
+                System.out.println(selectdate);
+
+                for (int i = 0; i < dates.length; i++) {
+
+                    if (dates[i].equalsIgnoreCase(selectdate)) {
+                        a.setDate(dates[i]);
+                        loop = false;
+                        break;
+                    } else {
+                        loop = true;
+                    }
+                }
+                if (loop == true) {
+                    System.out.println("incorrect date entered...");
+                }
+            } while (loop == true);
 
 
-        String[] timeslots1 = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"}; //for test case
-        loop = true;
-        do {
-            System.out.println("available time slots for inspection are:");
-           // for (int i = 0; i < a.getTimeslot().length(); i++) {
+            String[] timeslots1 = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"}; //for test case
+            loop = true;
+            do {
+                System.out.println("available time slots for inspection are:");
+                // for (int i = 0; i < a.getTimeslot().length(); i++) {
                 System.out.println(a.getTimeslot());
-            //}
-            System.out.println("select one of the available Time slots for the inspection");
-            //String selecttime = sc.next();
-            String selecttime = timeslots1[1];
-            System.out.println(selecttime);
-            for (int i = 0; i < timeslots1.length; i++) {
-                if (timeslots1[i].equalsIgnoreCase(selecttime)) {
-                    a.setTime(timeslots1[i]);
-                    loop = false;
-                    break;
-                } else {
-                    loop = true;
+                //}
+                System.out.println("select one of the available Time slots for the inspection");
+                //String selecttime = sc.next();
+                String selecttime = timeslots1[1];
+                System.out.println(selecttime);
+                for (int i = 0; i < timeslots1.length; i++) {
+                    if (timeslots1[i].equalsIgnoreCase(selecttime)) {
+                        a.setTime(timeslots1[i]);
+                        loop = false;
+                        break;
+                    } else {
+                        loop = true;
+                    }
                 }
-            }
-            if (loop == true) {
-                System.out.println("incorrect time slot entered...");
-            }
-        } while (loop == true);
-        System.out.println("inspection time and date set sucessfully for " + a.getDate() + " at " + a.getTime());
-        a.setStatus("Scheduled");
+                if (loop == true) {
+                    System.out.println("incorrect time slot entered...");
+                }
+            } while (loop == true);
+            System.out.println("inspection time and date set sucessfully for " + a.getDate() + " at " + a.getTime());
+            a.setStatus("Scheduled");
         }
         else{
-           System.out.println("no inspection available for this property");
-         }
+            System.out.println("no inspection available for this property");
+        }
     }
 
     public void cancellInspection(Inspection a) throws PropertyException {

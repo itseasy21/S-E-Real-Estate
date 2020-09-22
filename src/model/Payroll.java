@@ -1,7 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-
 public class Payroll
 {
     private static double totalSalary ;
@@ -9,16 +7,16 @@ public class Payroll
     private double hours ;
     private double rate ;
     private double salary ;
-    public Payroll(int id, double hours, double rate)throws PayrollException
+    public Payroll(int id, double hours, double rate)throws MyException
     {
         this.id = id ;
         if(hours<=0)
         {
-            throw new PayrollException("hours Cannot be 0 or less!");}
+            throw new MyException("hours Cannot be 0 or less!");}
         else{
         this.hours = hours ;}
         if(rate<=0)
-        {throw new PayrollException("rates Cannot be 0 or less!");}
+        {throw new MyException("rates Cannot be 0 or less!");}
         this.rate = rate ;
         double salaryCalc = hours * rate ;
         totalSalary = totalSalary + salaryCalc ;
@@ -48,10 +46,10 @@ public class Payroll
     {
         return rate ;
     }
-    public void setSalary(double salary) throws PayrollException
+    public void setSalary(double salary) throws MyException
     {
         if(salary<=0)
-            throw new PayrollException("Salary Cannot be 0 or less!");
+            throw new MyException("Salary Cannot be 0 or less!");
         else
         this.salary=salary;
 

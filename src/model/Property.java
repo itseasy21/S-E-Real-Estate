@@ -73,7 +73,7 @@ public class Property {
         this.employeeId = employeeId;
     }
     public boolean isEmployeeAssigned(){
-        return this.employeeId == 0;
+        return this.employeeId != 0;
     }
 
     public String getPropertyName() {
@@ -174,6 +174,7 @@ public class Property {
                 "propertyName='" + getPropertyName() + '\n' +
                 "propertyType='" +propertyType + '\n' +
                 "propertyAddress='" + getPropertyAddress() + '\n' +
+                "Employee Id= "+getEmployeeId()+'\n' +
                 "minPrice=" + getMinPrice() + '\n'+
                 "suburb=" + getSuburb() + '\n' +
                 "propertyCategory="+ getPropertyCategory()+ '\n' +
