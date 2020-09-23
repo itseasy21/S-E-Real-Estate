@@ -168,8 +168,8 @@ public class mainLauncher {
             //Handling Choice
             if(currentUser.getType().equals(CustomerType.LANDLORD) || currentUser.getType().equals(CustomerType.VENDOR)) {
                 switch (choiceLoggedInMenu) {
-                    case 1 -> addProperty(currentUser,scanChoice, model);//Add Property TODO
-                    case 2 -> System.out.println("LIST PROPERTY");//List Property TODO
+                    case 1 -> addProperty(currentUser,scanChoice, model);
+                    case 2 -> listProperty(currentUser, scanChoice, model);
                     case 3 -> renderMainMenu(model); //Logout
                 }
             }else{
@@ -321,5 +321,30 @@ public class mainLauncher {
 
 
     }
+    public static void listProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException{
+
+            System.out.println("Select type of property");
+            for (int i = 0; i < PropertyType.values().length; i++) {
+                System.out.println((i + 1) + "." + PropertyType.values()[i]);
+            }
+            int choice = scanChoice.nextInt();
+            while (true) {
+                if (choice > PropertyType.values().length) {
+                    System.out.println("Invalid option ! Please try again");
+                    choice = scanChoice.nextInt();
+                } else {
+
+                    break;
+                }
+
+            }
+            switch (choice) {
+                case 1 -> model.listPropertiesForSale();
+                case 2 -> model.listPropertiesForRent();
+            }
+
+            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+        }
+
 
 }
