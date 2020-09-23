@@ -6,13 +6,14 @@ public class Rent {
 
     /*property_id,vendor id,employee id,min reserve price*/
     String id;
-    int eid,cid,pid;
+    String eid,cid;
+    int pid;
     double price;
     String status;
     double min_price;
     String landlordId;
 
-    public Rent(String id,int eid,int pid, int cid,String landlordId,double min_price, double price, String status)
+    public Rent(String id,String eid,int pid, String cid,String landlordId,double min_price, double price, String status)
     {
         this.id=id;
         this.eid=eid;
@@ -27,7 +28,7 @@ public class Rent {
     public void ApplyRent(Property p,Customer c) throws PropertyException {
        // int propertyid=p.getPropertyId();
         if(p.isPropertyTypeRental()==true) {
-<<<<<<< HEAD
+
             if (this.getPrice() > p.getMinPrice()) {
                 System.out.println("RENT PROPERTY");
                 setId(id);
@@ -44,15 +45,14 @@ public class Rent {
             else{
                 System.out.println("Check the minimun price required and apply again");
             }
-=======
+
             String id="R" +1;
             setId(id);
-            setpid(propertyid);
+            setpid(p.getPropertyId());
             setEid(String.valueOf(p.getEmployeeId()));
             setMinPrice(p.getMinPrice());
           //  setLandlordIdid();
             setStatus("Available");
->>>>>>> 9914c71c06fa772cce81b941333cbc93da0a1d85
         }
         else{
             System.out.println("selected property is not listed for rent");
@@ -75,7 +75,7 @@ public class Rent {
 
     public int getPropertyId() { return this.pid; }
 
-    public int getEmployeeId() { return this.eid; }
+    public String getEmployeeId() { return this.eid; }
 
     public String getLandlordId() { return this.landlordId; }
 
@@ -83,7 +83,7 @@ public class Rent {
 
     public double getPrice() { return this.price; }
 
-    public int getCid() { return this.cid; }
+    public String getCid() { return this.cid; }
 
     public String getStatus() { return this.status; }
 
@@ -91,9 +91,9 @@ public class Rent {
 
     public void setpid(int propertyI) { this.pid = propertyI; }
 
-    public void setEid(int eid) { this.eid = eid; }
+    public void setEid(String eid) { this.eid = eid; }
 
-    public void setCid(int cid) { this.cid = cid; }
+    public void setCid(String cid) { this.cid = cid; }
 
     public void setLandlordIdid(String landlordId) { this.landlordId = landlordId; }
 

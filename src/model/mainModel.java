@@ -133,6 +133,7 @@ public class mainModel {
                             ", '" + thisCustomer.getNationality() + "', " + thisCustomer.getIncome() + ", '" + thisCustomer.getType().toString() + "')";
 //                    System.out.println(insertQuery);
                     stmt.executeUpdate(insertQuery);
+
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
