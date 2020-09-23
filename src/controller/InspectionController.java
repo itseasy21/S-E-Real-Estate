@@ -16,45 +16,45 @@ public class InspectionController {
     public static HashMap<String, Inspection> inspectionDB = new HashMap<String, Inspection>();
     //  ArrayList<Inspection> inspection = new ArrayList<Inspection>();
 
-    public void createInspection(Property pid, Inspection a) throws PropertyException {
+    public void createInspection(Property pid, Inspection a) throws PropertyException, UserException {
         int propertyid=pid.getPropertyId();
+        //if(pid.getEmpRole().equals(EmployeeType.PropertyManager)||pid.getEmpRole().equals(EmployeeType.SalesConsultant)) {
+            if (a.getStatus().equalsIgnoreCase(" ")) {
 
-        if(a.getStatus().equalsIgnoreCase(" ")) {
+                //test case
+                a.setId(a.getId());
+                a.setpid(a.getpId());
+                a.setEid(a.geteId());
 
-            //test case
-            a.setId(a.getId());
-            a.setpid(a.getpId());
-            a.setEid(a.geteId());
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Calendar cal = Calendar.getInstance();
+                for (int i = 0; i < a.getdatesize(); i++) {
+                    cal.add(Calendar.DAY_OF_MONTH, 1);
+                    String newDate = sdf.format(cal.getTime());
+                    dates[i] = newDate;
+                }
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            Calendar cal = Calendar.getInstance();
-            for (int i = 0; i < a.getdatesize(); i++) {
-                cal.add(Calendar.DAY_OF_MONTH, 1);
-                String newDate = sdf.format(cal.getTime());
-                dates[i] = newDate;
-            }
-
-            a.setdatesSlot(dates);
-            // System.out.println(a.getdateslot());
-            Scanner sc = new Scanner(System.in);
-            //System.out.println("create 5 time slots");
-            //for(int i=0;i<timeslots1.length;i++){
-            String[] timeslots1 = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"}; //for test case
-            //timeslots1[i]=sc.nextLine();
-            for (int i = 0; i < timeslots1.length; i++) {
-                // System.out.println("timeslot" + timeslots1[i]);
-                a.setTimeSlot(timeslots1);
-            }
-            // }
-            a.setStatus("Created");
-            //inspectionDB.put(id,a);
-            //System.out.println(inspectionDB.values());
+                a.setdatesSlot(dates);
+                // System.out.println(a.getdateslot());
+                Scanner sc = new Scanner(System.in);
+                //System.out.println("create 5 time slots");
+                //for(int i=0;i<timeslots1.length;i++){
+                String[] timeslots1 = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"}; //for test case
+                //timeslots1[i]=sc.nextLine();
+                for (int i = 0; i < timeslots1.length; i++) {
+                    // System.out.println("timeslot" + timeslots1[i]);
+                    a.setTimeSlot(timeslots1);
+                }
+                // }
+                a.setStatus("Created");
+                //inspectionDB.put(id,a);
+                //System.out.println(inspectionDB.values());
 
 
-            //  iArray = new String[]{id, , String.valueOf(a.geteId()), String.valueOf(a.getdateslot()), a.getTimeslot()};
-            //Inspection i=new Inspection(id,propertyid,a.geteId(),dates, timeslots1);
-            // inspection.add(i);
-            // inspection.add(i);
+                //  iArray = new String[]{id, , String.valueOf(a.geteId()), String.valueOf(a.getdateslot()), a.getTimeslot()};
+                //Inspection i=new Inspection(id,propertyid,a.geteId(),dates, timeslots1);
+                // inspection.add(i);
+                // inspection.add(i);
         /*for(int j=0;j<inspection.size();j++){
             System.out.println(inspection.get(j).getId());
             System.out.println(inspection.get(j).getpId());
@@ -62,15 +62,19 @@ public class InspectionController {
             if(!inspection.get(j).getId().isEmpty()){
                 System.out.println(inspection.get(j).getpId()); }
         }*/
-            //   System.out.println(inspectionDB.get();
+                //   System.out.println(inspectionDB.get();
 
-            //   for (Inspection ignored :inspectionDB.values()){
-            // System.out.println("Value: "+ inspectionDB.values());
-            //}
-        }
-        else{
-            System.out.println("Inspection already created");
-        }
+                //   for (Inspection ignored :inspectionDB.values()){
+                // System.out.println("Value: "+ inspectionDB.values());
+                //}
+            } else {
+                System.out.println("Inspection already created");
+            }
+        //}
+        //else {
+          //  System.out.println("You are not allowed to create inspection!");
+            //throw new UserException("You are not allowed to Create inspection!");
+        //}
     }
 
     public boolean bookInspection(Customer cid, Inspection a) throws PropertyException, UserException {
