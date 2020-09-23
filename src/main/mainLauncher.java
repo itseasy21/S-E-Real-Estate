@@ -17,7 +17,7 @@ public class mainLauncher {
 
     private static mainModel model;
 
-    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException {
+    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException, PropertyException {
         model = new mainModel(); //Initialize Model
         model.syncDB(); //Synchronize the data into memory from DB
         renderMainMenu(model); //Render Main Menu
@@ -28,7 +28,7 @@ public class mainLauncher {
         System.exit(0);
     }
 
-    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException {
+    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException {
         int choiceMainMenu = 0;
         Scanner scanChoice = new Scanner(System.in);
 
@@ -64,7 +64,7 @@ public class mainLauncher {
     }
 
 
-    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException {
+    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException {
         System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
         int registerChoice = 0;
@@ -143,7 +143,7 @@ public class mainLauncher {
         }
     }
 
-    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException {
+    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException {
         Employee currentEmp = (Employee) model.getUserByUsername(email);
 
         System.out.println("Welcome "+ currentEmp.getName() +" to S&E Real Estate");
