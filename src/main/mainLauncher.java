@@ -1,10 +1,10 @@
 package main;
 
-import controller.*;
-import config.*;
-import model.Customer;
-import model.SERException;
-import model.mainModel;
+import config.CustomerType;
+import config.menuOptions;
+import controller.loginController;
+import controller.registerController;
+import model.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -53,6 +53,7 @@ public class mainLauncher {
             switch (choiceMainMenu) {
                 case 1 -> login(scanChoice, model);
                 case 2 -> register(scanChoice, model);
+
             }
 
         } while (choiceMainMenu < 1 || choiceMainMenu > menuOptions.values().length);
@@ -171,8 +172,8 @@ public class mainLauncher {
             //Handling Choice
             if(currentUser.getType().equals(CustomerType.LANDLORD) || currentUser.getType().equals(CustomerType.VENDOR)) {
                 switch (choiceLoggedInMenu) {
-                    case 1 -> System.out.println("test");//Add Property TODO
-                    case 2 -> System.out.println("test");//List Property TODO
+                    case 1 -> addProperty(currentUser,scanChoice, model);//Add Property TODO
+                    case 2 -> System.out.println("LIST PROPERTY");//List Property TODO
                     case 3 -> renderMainMenu(model); //Logout
                 }
             }else{
@@ -208,6 +209,118 @@ public class mainLauncher {
                 currentUser.addSuburb(input);
             }
         }while(true);
+
+    }
+
+    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) {
+
+        System.out.println("Please Enter the property details !");
+
+        System.out.println("Property Name:");
+        String pName = scanChoice.nextLine();
+        while (true){
+            if(pName.length()<2){
+                System.out.println("Please enter a valid Property Name");
+                pName = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        System.out.println("Select a Property Type");
+        for (int i = 0; i < PropertyType.values().length; i++) {
+            System.out.println((i + 1) + "." + PropertyType.values()[i]);
+        }
+
+        int choice = scanChoice.nextInt();
+
+        while(true){
+            if(choice > PropertyType.values().length){
+                System.out.println("Invalid Property Type! Try again");
+                choice = scanChoice.nextInt();
+            }else{
+                break;
+            }
+        }
+
+        PropertyType pType = PropertyType.values()[choice];
+
+        System.out.println("Address:");
+        String pAddress = scanChoice.nextLine();
+        while (true){
+            if(pAddress.length()<4){
+                System.out.println("Please enter a complete Property Address");
+                pAddress = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+
+        System.out.println("Minimum Price");
+        double minPrice = scanChoice.nextDouble();
+        while (true){
+          if(minPrice<1000){
+              System.out.println("Minimum pricing too low for the property ! Try again");
+              minPrice = scanChoice.nextDouble();
+          }else{
+              break;
+          }
+        }
+        System.out.println("Suburb:");
+        String suburb = scanChoice.nextLine();
+        while (true){
+            if(suburb.length()<4){
+                System.out.println("Please enter the complete suburb Name");
+                suburb = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+        System.out.println("Bedroom/Bathroom/Parking count : eg.(3/2/1) ");
+        String count = scanChoice.nextLine();
+        while(true){
+         String[] values = count.split("/");
+         try {
+             for (String value : values) {
+
+                 Integer.parseInt(value);
+             }
+             break;
+         }catch (NumberFormatException e){
+             System.out.println(" Invalid values please try again");
+             count = scanChoice.nextLine();
+         }
+        }
+
+        System.out.println("Listed Pricing");
+        double pricing  = scanChoice.nextDouble();
+        while (true){
+            if(pricing<1000){
+                System.out.println("Listed pricing too low for the property ! Try again");
+                pricing = scanChoice.nextDouble();
+            }else{
+                break;
+            }
+        }
+
+        System.out.println("Select Property Category");
+        for(int i = 0; i < PropertyCategory.values().length; i++){
+            System.out.println((i+1)+ "." + PropertyCategory.values()[i]);
+        }
+        choice = scanChoice.nextInt();
+        while(true){
+            if(choice > PropertyCategory.values().length){
+                System.out.println("Invalid Property Type! Try again");
+                choice = scanChoice.nextInt();
+            }else{
+                break;
+            }
+        }
+        PropertyCategory pCategory = PropertyCategory.values()[choice];
+        model.addProperty(new Property(pName,pType,pAddress,minPrice,suburb,Integer.parseInt(count.split("/")[0]),Integer.parseInt(count.split("/")[1]),Integer.parseInt(count.split("/")[2]),pricing,pCategory));
+
+
 
     }
 

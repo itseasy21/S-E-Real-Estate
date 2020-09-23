@@ -1,12 +1,7 @@
 package testing;
 
 
-import config.EmployeeType;
-import model.PropertyCategory;
-import model.PropertyException;
-import model.PropertyType;
-import model.mainModel;
-import model.Property;
+import model.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,10 +17,10 @@ public class PropertyTest {
     @BeforeClass
     public static void setUp() throws Exception{
         System.out.println("Before Class");
-        rentalProperty = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Flat, EmployeeType.BranchAdmin);
-        saleProperty = new Property( "Green Brigade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse,EmployeeType.BranchAdmin);
-        salePropertyOne = new Property( "Jersey parade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse,EmployeeType.BranchAdmin);
-        salePropertyTwo = new Property( "Salt Waters", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse,EmployeeType.BranchAdmin);
+        rentalProperty = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Flat);
+        saleProperty = new Property( "Green Brigade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
+        salePropertyOne = new Property( "Jersey parade", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
+        salePropertyTwo = new Property( "Salt Waters", PropertyType.Sale,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Townhouse);
         realEstate = new mainModel();
 
     }
