@@ -1,6 +1,7 @@
 package main;
 
 import config.CustomerType;
+import config.EmployeeType;
 import config.menuOptions;
 import controller.loginController;
 import controller.registerController;
@@ -16,7 +17,7 @@ public class mainLauncher {
 
     private static mainModel model;
 
-    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException {
+    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException, PropertyException {
         model = new mainModel(); //Initialize Model
         model.syncDB(); //Synchronize the data into memory from DB
         renderMainMenu(model); //Render Main Menu
@@ -27,12 +28,12 @@ public class mainLauncher {
         System.exit(0);
     }
 
-    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException {
+    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException {
         int choiceMainMenu = 0;
         Scanner scanChoice = new Scanner(System.in);
 
         do {
-            System.out.println("Pick an option.");
+            System.out.println("Welcome to S&E Real Estate!");
             for(int i = 0; i < menuOptions.values().length; i++){
                 System.out.println(i+1 + ". " + menuOptions.values()[i]);
             }
@@ -51,8 +52,9 @@ public class mainLauncher {
 
             //Handling Choice
             switch (choiceMainMenu) {
-                case 1 -> login(scanChoice, model);
+                case 1 -> login(scanChoice, 0, model);
                 case 2 -> register(scanChoice, model);
+                case 3 -> login(scanChoice, 1, model);
 
             }
 
@@ -61,7 +63,8 @@ public class mainLauncher {
         scanChoice.close();
     }
 
-    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException {
+
+    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException {
         System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
         int registerChoice = 0;
@@ -107,7 +110,8 @@ public class mainLauncher {
 
     }
 
-    private static void login(Scanner scanChoice,mainModel model) throws IOException, SERException, ParseException, SQLException {
+
+    private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException {
         System.out.println("Please Enter Your Registered Email ID and Password to Login! ");
         System.out.print("Email: ");
         String email = scanChoice.nextLine();
@@ -116,13 +120,22 @@ public class mainLauncher {
         if(!email.isEmpty() || !password.isEmpty()){
             loginController lg = new loginController();
             lg.initializeModel("",model);
-            boolean loggedin = lg.loginHandler(email,password);
+            boolean loggedin;
+            if(loginType == 0)
+                loggedin = lg.loginHandler(email,password);
+            else
+                loggedin = lg.adminloginHandler(email,password);
+
             if(!loggedin){
 //                throw new SERException("Username You Entered is not Valid");
                 System.out.println("\u001B[31m" + "Invalid Credentials! Please Retry" + "\u001B[0m");
-                login(scanChoice, model);
+                login(scanChoice, loginType, model);
             }else{
-                renderLoggedInMenu(email,scanChoice,model);
+                if(loginType == 0)
+                    renderLoggedInMenu(email,scanChoice,model);
+                else
+                    renderAdminLoggedInMenu(email,scanChoice,model);
+
             }
         }else{
             System.out.println("You Left ID Pass Blank, Redirecting Back to Menu");
@@ -130,7 +143,62 @@ public class mainLauncher {
         }
     }
 
-    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException {
+    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException {
+        Employee currentEmp = (Employee) model.getUserByUsername(email);
+
+        System.out.println("Welcome "+ currentEmp.getName() +" to S&E Real Estate" + currentEmp.getEmpRole());
+
+        int choiceLoggedInMenu = 0;
+        //All LoggedInMenus
+        String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES", "LOGOUT"}; //Sales & Property Menu
+        String[] branchAdmin = {"LIST PROPERTY", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL" ,"LOGOUT"}; //Branch Admin Menu
+        String[] menu = new String[6];
+
+        if(currentEmp.getEmpRole().equals(EmployeeType.PropertyManager) || currentEmp.getEmpRole().equals(EmployeeType.SalesConsultant)){
+            menu = salesPropertyManager;
+        }else if(currentEmp.getEmpRole().equals(EmployeeType.BranchAdmin)){
+            menu = branchAdmin;
+        }
+
+        do {
+            System.out.println("Pick an option.");
+            for(int i = 0; i < menu.length; i++){
+                System.out.println(i+1 + ". " + menu[i]);
+            }
+            System.out.println("Please press q to quit.");
+
+            String input = scanChoice.nextLine();
+            if(input.equals("q") || input.isEmpty())
+                renderMainMenu(model);
+            else {
+                try {
+                    choiceLoggedInMenu = Integer.parseInt(input.trim());
+                }catch(NumberFormatException exp){
+                    System.out.println("Invalid Input! Please retry.");
+                }
+            }
+
+            //Handling Choice
+            if(currentEmp.getEmpRole().equals(EmployeeType.PropertyManager) || currentEmp.getEmpRole().equals(EmployeeType.SalesConsultant)) {
+                switch (choiceLoggedInMenu) {
+                    case 1 -> System.out.println("TODO"); //listProperty(currentUser, scanChoice, model);
+                    case 2 -> System.out.println("TODO"); //Create Inspection Time
+                    case 3 -> renderMainMenu(model); //Logout
+                }
+            }else{
+                switch (choiceLoggedInMenu) {
+                    case 1 -> System.out.println("List Property");// TODO
+                    case 2 -> System.out.println("Add Employee to Property"); //TODO
+                    case 3 -> System.out.println("RUN PAYROLL"); //TODO
+                    case 4 -> renderMainMenu(model); //Logout
+                }
+            }
+
+        } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
+
+    }
+
+    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException {
 
         Customer currentUser = (Customer) model.getUserByUsername(username);
 
@@ -185,7 +253,7 @@ public class mainLauncher {
 
     }
 
-    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException {
+    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException {
         ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
         int loopCounter = 1;
         for (String suburb : suburbs){
@@ -195,7 +263,7 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException {
+    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException {
 
         do {
             System.out.print("Suburb Name to Add (press q to go Back): ");
@@ -209,7 +277,7 @@ public class mainLauncher {
 
     }
 
-    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException{
+    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException{
 
         System.out.println("Please Enter the property details !");
 
@@ -321,7 +389,7 @@ public class mainLauncher {
 
 
     }
-    public static void listProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException{
+    public static void listProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException{
 
             System.out.println("Select type of property");
             for (int i = 0; i < PropertyType.values().length; i++) {
