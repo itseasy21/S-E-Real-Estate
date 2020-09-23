@@ -92,7 +92,7 @@ public class mainModel {
                 EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,0));
         userDB.add(new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10))
+                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
         /*
         try {
             stmt = this.conn.createStatement();
