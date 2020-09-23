@@ -1,16 +1,14 @@
 package testing;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import config.CustomerType;
 import model.*;
-
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RentTest {
 

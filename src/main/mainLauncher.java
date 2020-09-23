@@ -1,10 +1,10 @@
 package main;
 
-import controller.*;
-import config.*;
-import model.Customer;
-import model.SERException;
-import model.mainModel;
+import config.CustomerType;
+import config.menuOptions;
+import controller.loginController;
+import controller.registerController;
+import model.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -53,6 +53,7 @@ public class mainLauncher {
             switch (choiceMainMenu) {
                 case 1 -> login(scanChoice, model);
                 case 2 -> register(scanChoice, model);
+
             }
 
         } while (choiceMainMenu < 1 || choiceMainMenu > menuOptions.values().length);
@@ -133,16 +134,12 @@ public class mainLauncher {
 
         Customer currentUser = (Customer) model.getUserByUsername(username);
 
-        System.out.println("Welcome "+ currentUser.getName() +" to S&E Real Estate " + currentUser.getType());
+        System.out.println("Welcome "+ currentUser.getName() +" to S&E Real Estate");
         int choiceLoggedInMenu = 0;
 
         //All LoggedInMenus
-        //    VENDOR,
-        //    LANDLORD,
-        //    BUYER,
-        //    RENTER
-        String[] vendorLandlordMenu = {"ADD PROPERTY", "LIST PROPERTIES", "LOGOUT"};
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LOGOUT"};
+        String[] vendorLandlordMenu = {"ADD PROPERTY", "LIST PROPERTIES", "LOGOUT"}; //Vendor & Landlord Menu
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.LANDLORD) || currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorLandlordMenu;
@@ -171,15 +168,15 @@ public class mainLauncher {
             //Handling Choice
             if(currentUser.getType().equals(CustomerType.LANDLORD) || currentUser.getType().equals(CustomerType.VENDOR)) {
                 switch (choiceLoggedInMenu) {
-                    case 1 -> System.out.println("test");//Add Property TODO
-                    case 2 -> System.out.println("test");//List Property TODO
+                    case 1 -> addProperty(currentUser,scanChoice, model);
+                    case 2 -> listProperty(currentUser, scanChoice, model);
                     case 3 -> renderMainMenu(model); //Logout
                 }
             }else{
                 switch (choiceLoggedInMenu) {
                     case 1 -> System.out.println("test1");//Search Property TODO
-                    case 2 -> listSuburb(currentUser, scanChoice, model);//Update Suburb Pref TODO
-                    case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref TODO
+                    case 2 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
+                    case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
                     case 4 -> renderMainMenu(model); //Logout
                 }
             }
@@ -188,13 +185,14 @@ public class mainLauncher {
 
     }
 
-    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) {
+    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException {
         ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
         int loopCounter = 1;
         for (String suburb : suburbs){
             System.out.println(loopCounter + ". " + suburb);
             loopCounter++;
         }
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
     private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException {
@@ -202,13 +200,151 @@ public class mainLauncher {
         do {
             System.out.print("Suburb Name to Add (press q to go Back): ");
             String input = scanChoice.nextLine();
-            if(input.equals("q") || input.isEmpty())
+            if(input.equals("q"))
                 renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
             else {
-                currentUser.addSuburb(input);
+                model.addSuburb(currentUser, input);
             }
         }while(true);
 
     }
+
+    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException{
+
+        System.out.println("Please Enter the property details !");
+
+        System.out.println("Property Name:");
+        String pName = scanChoice.nextLine();
+        while (true){
+            if(pName.length()<2){
+                System.out.println("Please enter a valid Property Name");
+                pName = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        System.out.println("Select a Property Type");
+        for (int i = 0; i < PropertyType.values().length; i++) {
+            System.out.println((i + 1) + "." + PropertyType.values()[i]);
+        }
+
+        int choice = scanChoice.nextInt();
+
+        while(true){
+            if(choice > PropertyType.values().length){
+                System.out.println("Invalid Property Type! Try again");
+                choice = scanChoice.nextInt();
+            }else{
+                break;
+            }
+        }
+
+        PropertyType pType = PropertyType.values()[choice-1];
+
+        System.out.println("Address:");
+        String pAddress = scanChoice.nextLine();
+        while (true){
+            if(pAddress.length()<4){
+                System.out.println("Please enter a complete Property Address");
+                pAddress = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+
+        System.out.println("Minimum Price");
+        double minPrice = scanChoice.nextDouble();
+        while (true){
+          if(minPrice<1000){
+              System.out.println("Minimum pricing too low for the property ! Try again");
+              minPrice = scanChoice.nextDouble();
+          }else{
+              break;
+          }
+        }
+        System.out.println("Suburb:");
+        String suburb = scanChoice.nextLine();
+        while (true){
+            if(suburb.length()<4){
+                System.out.println("Please enter the complete suburb Name");
+                suburb = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+        System.out.println("Bedroom/Bathroom/Parking count : eg.(3/2/1) ");
+        String count = scanChoice.nextLine();
+        while(true){
+         String[] values = count.split("/");
+         try {
+             for (String value : values) {
+
+                 Integer.parseInt(value);
+             }
+             break;
+         }catch (NumberFormatException e){
+             System.out.println(" Invalid values please try again");
+             count = scanChoice.nextLine();
+         }
+        }
+
+        System.out.println("Listed Pricing");
+        double pricing  = scanChoice.nextDouble();
+        while (true){
+            if(pricing<1000){
+                System.out.println("Listed pricing too low for the property ! Try again");
+                pricing = scanChoice.nextDouble();
+            }else{
+                break;
+            }
+        }
+
+        System.out.println("Select Property Category");
+        for(int i = 0; i < PropertyCategory.values().length; i++){
+            System.out.println((i+1)+ "." + PropertyCategory.values()[i]);
+        }
+        choice = scanChoice.nextInt();
+        while(true){
+            if(choice > PropertyCategory.values().length){
+                System.out.println("Invalid Property Type! Try again");
+                choice = scanChoice.nextInt();
+            }else{
+                break;
+            }
+        }
+        PropertyCategory pCategory = PropertyCategory.values()[choice-1];
+        model.addProperty(new Property(pName,pType,pAddress,minPrice,suburb,Integer.parseInt(count.split("/")[0]),Integer.parseInt(count.split("/")[1]),Integer.parseInt(count.split("/")[2]),pricing,pCategory));
+
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+
+
+    }
+    public static void listProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException{
+
+            System.out.println("Select type of property");
+            for (int i = 0; i < PropertyType.values().length; i++) {
+                System.out.println((i + 1) + "." + PropertyType.values()[i]);
+            }
+            int choice = scanChoice.nextInt();
+            while (true) {
+                if (choice > PropertyType.values().length) {
+                    System.out.println("Invalid option ! Please try again");
+                    choice = scanChoice.nextInt();
+                } else {
+
+                    break;
+                }
+
+            }
+            switch (choice) {
+                case 1 -> model.listPropertiesForSale();
+                case 2 -> model.listPropertiesForRent();
+            }
+
+            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+        }
+
 
 }

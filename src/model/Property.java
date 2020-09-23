@@ -1,5 +1,7 @@
 package model;
 
+import config.EmployeeType;
+
 public class Property {
     private int propertyId;
     private String propertyName;
@@ -14,6 +16,7 @@ public class Property {
     private double sellingPrice;
     private double rentalPrice;
     private int employeeId;
+    private EmployeeType empRole;
 
 
     public Property( String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
@@ -26,6 +29,8 @@ public class Property {
         this.bathroomCount = bathroomCount;
         this.parkingCount = parkingCount;
         this.propertyCategory = propertyCategory;
+        this.empRole = empRole;
+
         if (propertyType == PropertyType.Rent) {
             this.rentalPrice = pricing;
             this.sellingPrice = 0;
@@ -47,6 +52,7 @@ public class Property {
         this.bathroomCount = bathroomCount;
         this.parkingCount = parkingCount;
         this.propertyCategory = propertyCategory;
+        this.empRole = empRole;
         if (propertyType == PropertyType.Rent) {
             this.rentalPrice = pricing;
             this.sellingPrice = 0;
@@ -74,6 +80,14 @@ public class Property {
     }
     public boolean isEmployeeAssigned(){
         return this.employeeId != 0;
+    }
+
+    public EmployeeType getEmpRole() {
+        return empRole;
+    }
+
+    public void setEmpRole(EmployeeType empRole) {
+        this.empRole = empRole;
     }
 
     public String getPropertyName() {

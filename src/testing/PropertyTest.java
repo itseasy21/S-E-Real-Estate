@@ -1,11 +1,7 @@
 package testing;
 
 
-import model.PropertyCategory;
-import model.PropertyException;
-import model.PropertyType;
-import model.mainModel;
-import model.Property;
+import model.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -77,7 +73,6 @@ public class PropertyTest {
     // Add Property Test case
     @Test
     public void testAddProperty() throws  Exception{
-        assertTrue(realEstate.isPropertyDBEmpty());
         realEstate.addProperty(saleProperty);
         assertFalse(realEstate.isPropertyDBEmpty());
     }
