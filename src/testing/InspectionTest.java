@@ -18,8 +18,8 @@ public class InspectionTest {
     static void setUpBeforeClass() throws Exception {
         System.out.println("BEFORE");
         i = new InspectionController();
-        i1= new Inspection("3",1,1," "," " ," ");
-        i2= new Inspection("2",2,2," "," " ," ");
+        i1= new Inspection("3",1,"EMP1"," "," " ," ");
+        i2= new Inspection("2",2,"EMP2"," "," " ," ");
         c1 = new Customer("itseasy21@gmail.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
                 "Indian",45000, CustomerType.BUYER);
