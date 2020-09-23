@@ -18,6 +18,7 @@ public class InspectionController {
 
     public void createInspection(Property pid, Inspection a) throws PropertyException {
         int propertyid=pid.getPropertyId();
+        if()
         if(a.getStatus().equalsIgnoreCase(" ")) {
 
             //test case
