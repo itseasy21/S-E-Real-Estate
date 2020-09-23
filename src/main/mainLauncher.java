@@ -209,7 +209,7 @@ public class mainLauncher {
 
     }
 
-    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException{
+    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException{
 
         System.out.println("Please Enter the property details !");
 

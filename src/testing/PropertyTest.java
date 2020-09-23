@@ -109,6 +109,15 @@ public class PropertyTest {
         assertEquals(saleProperty,realEstate.listProperty(3));
     }
 
+
+    @Test
+    public void testAssignEmployee()throws Exception{
+        assertFalse(rentalProperty.isEmployeeAssigned());
+        rentalProperty.setEmployeeId(2);
+        assertTrue(rentalProperty.isEmployeeAssigned());
+    }
+
+
     @AfterClass
     public static void tearDown(){
         System.out.println("Test case executed !");
