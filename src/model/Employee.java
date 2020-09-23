@@ -50,6 +50,7 @@ public class Employee extends User{
         return this.empType;
     }
 
+
     public void setEmpType(EmployeeType empType) {
         this.empType = empType;
     }

@@ -1,6 +1,7 @@
 package testing;
 
 import config.CustomerType;
+import controller.InspectionController;
 import model.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,55 +10,60 @@ import org.junit.jupiter.api.Test;
 import java.util.Date;
 
 public class InspectionTest {
-    static Inspectionmain i,in;
+    static InspectionController i,in;
     static Inspection i1,i2;
     static Property rentalProperty;
-    static Customer c1;
+    static Customer c1,c2;
     @BeforeAll
     static void setUpBeforeClass() throws Exception {
         System.out.println("BEFORE");
-        i = new Inspectionmain();
+        i = new InspectionController();
         i1= new Inspection("3",1,1," "," " ," ");
         i2= new Inspection("2",2,2," "," " ," ");
         c1 = new Customer("itseasy21@gmail.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                "Indian",45000, CustomerType.VENDOR);
-
-      //  p = new Property(123, 1,"Green Brigade", 2,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);
-        System.out.print(i1.showDetails());
+                "Indian",45000, CustomerType.BUYER);
         rentalProperty = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Flat);
 
+        c2 = new Customer("itseasy21@gmail.com","pa33w0rd","amellia",
+
+                "673 La Trobe","401717860",(new Date()).toString(),"Female",
+                "Indian",45000, CustomerType.VENDOR);
     }
 
     @Test
-    public void createins() throws Exception{
+    public void createins() throws PropertyException{
         System.out.println("\nCREATE INSPECTION");
         i.createInspection(rentalProperty,i1);
         System.out.print(i1.showDetails());
     }
-
     @Test
-    public void bookins() throws Exception{
+    public void bookins() throws PropertyException, UserException {
+        System.out.println("\nBOOK INSPECTION");
+        i.createInspection(rentalProperty,i1);
+        i.bookInspection(c1,i1);
+    }
 
-        if(c1.getType().equals(CustomerType.BUYER) || c1.getType().equals(CustomerType.RENTER)){
+    @Test//(expected = UserException.class)
+    public void bookinsnegative() throws PropertyException, UserException {
+        System.out.println("\nBOOK INSPECTION");
+        i.createInspection(rentalProperty,i1);
+        // i.bookInspection(c2,i1);
+        Assertions.assertThrows(UserException.class, () -> i.bookInspection(c2,i1));
+    }
 
-            System.out.println("\nBOOK INSPECTION");
-            i.createInspection(rentalProperty,i1);
-
-            //  System.out.println(i1.showDetails()+"\n");
-            i.bookInspection(c1,i1);
-            //  System.out.print(i1.showDetails());
-        }else{
-            System.out.println("You are not allowed to book inspection!");
-        }
-
+    @Test//(expected = UserException.class)
+    public void bookinsnegative1() throws PropertyException, UserException {
+        System.out.println("\nBOOK INSPECTION");
+        // i.bookInspection(c2,i1);
+        Assertions.assertThrows(UserException.class, () -> i.bookInspection(c1,i1));
     }
 
     @Test
     public void cancellins() throws Exception{
         System.out.println("\nCANCELL INSPECTION");
         i.createInspection(rentalProperty,i1);
-        i.bookInspection(c1,i1);
+        // i.bookInspection(c1,i1);
         i.cancellInspection(i1);
         System.out.print(i1.showDetails());
     }
@@ -78,8 +84,8 @@ public class InspectionTest {
 /*
     @AfterAll
     static void tearDownAfterClass() throws Exception {
-        System.out.println("\nafter");
-        System.out.print(i.showDetails());
+        System.out.println("\nAfter");
+        System.out.print(i1.showDetails());
     }
 
     @Test
