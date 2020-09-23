@@ -78,19 +78,18 @@ public class PropertyTest {
     }
     // List Property test case
     @Test
-    public void testListProperty() throws Exception{
-        assertTrue(realEstate.isPropertyDBEmpty());
+    public void testListProperty() throws PropertyException{
         realEstate.addProperty(saleProperty);
         assertEquals(1,realEstate.getPropertyDBSize());
 
         realEstate.addProperty(salePropertyOne);
-        salePropertyOne.setEmployeeId(2);
+        salePropertyOne.setEmployeeId("E1");
         assertEquals(2,realEstate.getPropertyDBSize());
         realEstate.addProperty(rentalProperty);
-        rentalProperty.setEmployeeId(3);
+        rentalProperty.setEmployeeId("E2");
         assertEquals(saleProperty,realEstate.listProperty(1));
 
-        salePropertyTwo.setEmployeeId(1);
+        salePropertyTwo.setEmployeeId("E3");
         realEstate.addProperty(salePropertyTwo);
         realEstate.listProperties();
     }
@@ -113,7 +112,7 @@ public class PropertyTest {
     @Test
     public void testAssignEmployee()throws Exception{
         assertFalse(rentalProperty.isEmployeeAssigned());
-        rentalProperty.setEmployeeId(2);
+        rentalProperty.setEmployeeId("E2");
         assertTrue(rentalProperty.isEmployeeAssigned());
     }
 

@@ -15,7 +15,7 @@ public class Property {
     private int parkingCount;
     private double sellingPrice;
     private double rentalPrice;
-    private int employeeId;
+    private String employeeId;
     private EmployeeType empRole;
 
 
@@ -71,15 +71,15 @@ public class Property {
         this.propertyId = propertyId;
     }
 
-    public int getEmployeeId() {
+    public String getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
     public boolean isEmployeeAssigned(){
-        return this.employeeId != 0;
+        return this.employeeId != null;
     }
 
     public EmployeeType getEmpRole() {
@@ -183,12 +183,12 @@ public class Property {
 
     @Override
     public String toString() {
-        return "Property Details------------------------" + '\n' +'\n'+
+        return "-----------------------Property Details------------------------" + '\n' +'\n'+
                 "propertyId=" + getPropertyId() + '\n'+
-                "propertyName='" + getPropertyName() + '\n' +
-                "propertyType='" +propertyType + '\n' +
-                "propertyAddress='" + getPropertyAddress() + '\n' +
-                "Employee Id= "+getEmployeeId()+'\n' +
+                "propertyName=" + getPropertyName() + '\n' +
+                "propertyType=" +propertyType + '\n' +
+                "propertyAddress=" + getPropertyAddress() + '\n' +
+                "Employee Assigned = "+isEmployeeAssigned()+'\n' +
                 "minPrice=" + getMinPrice() + '\n'+
                 "suburb=" + getSuburb() + '\n' +
                 "propertyCategory="+ getPropertyCategory()+ '\n' +

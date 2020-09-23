@@ -151,7 +151,7 @@ public class mainLauncher {
         int choiceLoggedInMenu = 0;
         //All LoggedInMenus
         String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES", "LOGOUT"}; //Sales & Property Menu
-        String[] branchAdmin = {"LIST PROPERTY", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL" ,"LOGOUT"}; //Branch Admin Menu
+        String[] branchAdmin = {"LIST PROPERTIES", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL" ,"LOGOUT"}; //Branch Admin Menu
         String[] menu = new String[6];
 
         if(currentEmp.getEmpRole().equals(EmployeeType.PropertyManager) || currentEmp.getEmpRole().equals(EmployeeType.SalesConsultant)){
@@ -187,8 +187,8 @@ public class mainLauncher {
                 }
             }else{
                 switch (choiceLoggedInMenu) {
-                    case 1 -> System.out.println("List Property");// TODO
-                    case 2 -> System.out.println("Add Employee to Property"); //TODO
+                    case 1 -> listProperties(email, scanChoice, model);
+                    case 2 -> addEmpToProperty(email, scanChoice, model);
                     case 3 -> System.out.println("RUN PAYROLL"); //TODO
                     case 4 -> renderMainMenu(model); //Logout
                 }
@@ -384,7 +384,7 @@ public class mainLauncher {
         }
         PropertyCategory pCategory = PropertyCategory.values()[choice-1];
         model.addProperty(new Property(pName,pType,pAddress,minPrice,suburb,Integer.parseInt(count.split("/")[0]),Integer.parseInt(count.split("/")[1]),Integer.parseInt(count.split("/")[2]),pricing,pCategory));
-
+        System.out.println("Property has been successfully added!");
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
 
 
@@ -413,6 +413,61 @@ public class mainLauncher {
 
             renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
         }
+        public static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException {
+            model.listAvailableProperties();
+            renderAdminLoggedInMenu(email,scanChoice,model);
 
+        }
+        public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException {
+            while (true) {
+                System.out.println("Select the Property id");
+                System.out.println(model.getPropertyDB());
+                int choice = scanChoice.nextInt();
+                scanChoice.nextLine();
+                Property property = model.listProperty(choice);
+                if (property.isEmployeeAssigned()) {
+                    System.out.println("Employee has been assigned for the selected property! would you like to re-assign ? (y/n) ");
+                    String response = scanChoice.nextLine();
+                    if (response.equalsIgnoreCase("Y")) {
+                        System.out.println("Enter Employee Id:");
+                        System.out.println(model.getEmpKeySets());
+                        String empId = scanChoice.nextLine();
+                        if (model.checkEmployeeExists(empId)) {
+                            EmployeeType empRole = model.getEmployeeRole(empId);
+                            System.out.println("Emp Role is "+ empRole);
+                            if (empRole != null) {
+                                property.setEmployeeId(empId);
+                                property.setEmpRole(empRole);
+                                break;
+                            }
+                        } else {
+                            System.out.println("Invalid Employee ID");
+                        }
+                }else{
+                        continue;
+                    }
+
+                } else if(!property.isEmployeeAssigned()) {
+                    System.out.println("Enter Employee Id:");
+                    System.out.println(model.getEmpKeySets());
+                    String empId = scanChoice.nextLine();
+                    if (model.checkEmployeeExists(empId)) {
+                        EmployeeType empRole = model.getEmployeeRole(empId);
+                        System.out.println("Emp Role is "+ empRole);
+                        if (empRole != null) {
+                            property.setEmployeeId(empId);
+                            property.setEmpRole(empRole);
+                            break;
+                        }
+                    } else {
+                        System.out.println("Invalid Employee id");
+                    }
+
+
+                }
+            }
+            System.out.println("Employee Assigned to the Property !");
+            renderAdminLoggedInMenu(email, scanChoice, model);
+        }
 
 }
