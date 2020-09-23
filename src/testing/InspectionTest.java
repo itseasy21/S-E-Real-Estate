@@ -1,6 +1,7 @@
 package testing;
 
 import config.CustomerType;
+import config.EmployeeType;
 import controller.InspectionController;
 import model.*;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +24,7 @@ public class InspectionTest {
         c1 = new Customer("itseasy21@gmail.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
                 "Indian",45000, CustomerType.BUYER);
-        rentalProperty = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Flat);
+        rentalProperty = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Flat, EmployeeType.BranchAdmin);
 
         c2 = new Customer("itseasy21@gmail.com","pa33w0rd","amellia",
 
