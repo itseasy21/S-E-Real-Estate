@@ -182,7 +182,7 @@ public class mainLauncher {
             if(currentEmp.getEmpRole().equals(EmployeeType.PropertyManager) || currentEmp.getEmpRole().equals(EmployeeType.SalesConsultant)) {
                 switch (choiceLoggedInMenu) {
                     case 1 -> System.out.println("TODO"); //listProperty(currentUser, scanChoice, model);
-                    case 2 -> System.out.println("TODO"); //Create Inspection Time
+                    case 2 -> createInspection(currentEmp, scanChoice, model); //Create Inspection Time
                     case 3 -> renderMainMenu(model); //Logout
                 }
             }else{
@@ -196,6 +196,48 @@ public class mainLauncher {
 
         } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
 
+    }
+
+    private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException {
+
+        System.out.println("Please Enter the property details !");
+
+        System.out.println("Property ID:");
+        String pID = scanChoice.nextLine();
+        while (true){
+            if(pID.length()>2){
+                System.out.println("Please enter a valid Property Name");
+                pID = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        System.out.println("Ender Date:");
+        String dateSlot = scanChoice.nextLine();
+        while (true){
+            if(dateSlot.length()<2){
+                System.out.println("Please enter a valid Date");
+                dateSlot = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        System.out.println("Ender Time:");
+        String timeSlot = scanChoice.nextLine();
+        while (true){
+            if(timeSlot.length()<2){
+                System.out.println("Please enter a valid Time");
+                timeSlot = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        model.createInspection(Integer.parseInt(pID), currentEmp, dateSlot, timeSlot, "Created");
+        System.out.println("Inspection Times added!");
+        renderLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
     }
 
     private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException {
@@ -386,8 +428,6 @@ public class mainLauncher {
         model.addProperty(new Property(pName,pType,pAddress,minPrice,suburb,Integer.parseInt(count.split("/")[0]),Integer.parseInt(count.split("/")[1]),Integer.parseInt(count.split("/")[2]),pricing,pCategory));
         System.out.println("Property has been successfully added!");
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
-
-
     }
     public static void listProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException{
 

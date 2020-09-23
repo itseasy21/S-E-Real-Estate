@@ -2,9 +2,9 @@ package testing;
 
 import config.EmployeeType;
 import model.*;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class EmployeeTest {
 
-    Employee c1, c2, c3, c4;
+    static Employee c1, c2, c3, c4;
     Property p1;
 
     @Before
@@ -25,7 +25,7 @@ public class EmployeeTest {
                 EmployeeType.PartTime,EmployeeType.PropertyManager, 22000,10);
     }
 
-    @Test
+    @Test //Positive
     public void testCase1() throws UserException {
         assertEquals(45000.0, c1.getSalary());
         System.out.println("updating salary to 10000");
@@ -33,7 +33,7 @@ public class EmployeeTest {
         assertEquals(10000.0, c1.getSalary());
     }
 
-    @Test(expected = UserException.class)
+    @Test(expected = UserException.class) //Negative
     public void testCase2() throws UserException {
         assertEquals(45000.0, c1.getSalary());
         System.out.println("updating salary to negative");
@@ -41,13 +41,13 @@ public class EmployeeTest {
         assertEquals(0, c1.getSalary());
     }
 
-    @Test(expected = UserException.class)
+    @Test(expected = UserException.class) //Negative
     public void testCase3() throws UserException {
         System.out.println("testing updating of working hours for full time employee");
         c1.setWorkingHours(20);
     }
 
-    @Test
+    @Test //Positive
     public void testCase4() throws UserException {
         System.out.println("testing updating of working hours for part time employee to 20");
         assertEquals(10.0, c2.getWorkingHours());
@@ -55,12 +55,5 @@ public class EmployeeTest {
         c2.setWorkingHours(20);
         System.out.println("after changing:" + c2.getWorkingHours());
         assertEquals(20.0, c2.getWorkingHours());
-    }
-
-    @After
-    public void outputCase1(){
-
-        System.out.println("User 1:\n"+c1.showDetails());
-        System.out.println("\nUser 2:\n"+c2.showDetails());
     }
 }

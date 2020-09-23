@@ -32,7 +32,7 @@ public class InspectionTest {
     }
 
     @Test
-    public void createins() throws PropertyException{
+    public void createins() throws PropertyException, UserException {
         System.out.println("\nCREATE INSPECTION");
         i.createInspection(rentalProperty,i1);
         System.out.print(i1.showDetails());
@@ -60,7 +60,7 @@ public class InspectionTest {
     }
 
     @Test
-    public void cancellins() throws Exception{
+    public void cancellins() throws Exception, UserException {
         System.out.println("\nCANCELL INSPECTION");
         i.createInspection(rentalProperty,i1);
         // i.bookInspection(c1,i1);
@@ -74,7 +74,7 @@ public class InspectionTest {
     }
 
     @Test
-    public void testcreatedStatus() throws PropertyException {
+    public void testcreatedStatus() throws PropertyException, UserException {
         System.out.println("\nTESTING CREATED STATUS");
         i.createInspection(rentalProperty,i2);
         Assertions.assertEquals(i2.getStatus(),"Created");
