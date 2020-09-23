@@ -20,13 +20,11 @@ public class InspectionTest {
         i1= new Inspection("3",1,1," "," " ," ");
         i2= new Inspection("2",2,2," "," " ," ");
         c1 = new Customer("itseasy21@gmail.com","pa33w0rd","Shubham",
-=======
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
                 "Indian",45000, CustomerType.VENDOR);
 
       //  p = new Property(123, 1,"Green Brigade", 2,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00);
         System.out.print(i1.showDetails());
->>>>>>> 9914c71c06fa772cce81b941333cbc93da0a1d85
         rentalProperty = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Preston", 2,3,2,234_000.00, PropertyCategory.Flat);
 
     }
@@ -40,7 +38,6 @@ public class InspectionTest {
 
     @Test
     public void bookins() throws Exception{
-=======
 
         if(c1.getType().equals(CustomerType.BUYER) || c1.getType().equals(CustomerType.RENTER)){
 

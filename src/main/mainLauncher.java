@@ -133,7 +133,7 @@ public class mainLauncher {
 
         Customer currentUser = (Customer) model.getUserByUsername(username);
 
-        System.out.println("Welcome "+ currentUser.getName() +" to S&E Real Estate");
+        System.out.println("Welcome "+ currentUser.getName() +" to S&E Real Estate " + currentUser.getType());
         int choiceLoggedInMenu = 0;
 
         //All LoggedInMenus
@@ -189,11 +189,18 @@ public class mainLauncher {
     }
 
     private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) {
+        ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
+        int loopCounter = 1;
+        for (String suburb : suburbs){
+            System.out.println(loopCounter + ". " + suburb);
+            loopCounter++;
+        }
     }
 
     private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException {
 
         do {
+            System.out.print("Suburb Name to Add (press q to go Back): ");
             String input = scanChoice.nextLine();
             if(input.equals("q") || input.isEmpty())
                 renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);

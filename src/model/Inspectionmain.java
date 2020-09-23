@@ -72,9 +72,8 @@ public class Inspectionmain {
 
     public void bookInspection(Customer cid,Inspection a) throws PropertyException {
         //String[] timeslots = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"};
-<<<<<<< HEAD
         if(a.getStatus().equalsIgnoreCase("created")) {
-            int c = cid.getId();
+            String c = cid.getId();
             a.setCid(c);
             Scanner sc = new Scanner(System.in);
             System.out.println("BOOK AN INSPECTION");
@@ -86,27 +85,6 @@ public class Inspectionmain {
                 cal.add(Calendar.DAY_OF_MONTH, 1);
                 String newDate = sdf.format(cal.getTime());
                 dates[i] = newDate;
-=======
-         if(a.getStatus().equalsIgnoreCase("created")) {
-        String c = cid.getId();
-        a.setCid(c);
-        Scanner sc = new Scanner(System.in);
-        System.out.println("BOOK AN INSPECTION");
-        System.out.println("-----------------------------------------");
-        boolean loop = true;
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Calendar cal = Calendar.getInstance();
-        for (int i = 0; i < a.getdatesize(); i++) {
-            cal.add(Calendar.DAY_OF_MONTH, 1);
-            String newDate = sdf.format(cal.getTime());
-            dates[i] = newDate;
-        }
-        do {
-            System.out.println("available dates for inspection are:");
-         //   System.out.println(dates.length);
-            for (int i = 0; i < dates.length; i++) {
-                System.out.println(dates[i]);
->>>>>>> 9914c71c06fa772cce81b941333cbc93da0a1d85
             }
             do {
                 System.out.println("available dates for inspection are:");
