@@ -134,16 +134,12 @@ public class mainLauncher {
 
         Customer currentUser = (Customer) model.getUserByUsername(username);
 
-        System.out.println("Welcome "+ currentUser.getName() +" to S&E Real Estate " + currentUser.getType());
+        System.out.println("Welcome "+ currentUser.getName() +" to S&E Real Estate");
         int choiceLoggedInMenu = 0;
 
         //All LoggedInMenus
-        //    VENDOR,
-        //    LANDLORD,
-        //    BUYER,
-        //    RENTER
-        String[] vendorLandlordMenu = {"ADD PROPERTY", "LIST PROPERTIES", "LOGOUT"};
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LOGOUT"};
+        String[] vendorLandlordMenu = {"ADD PROPERTY", "LIST PROPERTIES", "LOGOUT"}; //Vendor & Landlord Menu
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.LANDLORD) || currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorLandlordMenu;
@@ -179,8 +175,8 @@ public class mainLauncher {
             }else{
                 switch (choiceLoggedInMenu) {
                     case 1 -> System.out.println("test1");//Search Property TODO
-                    case 2 -> listSuburb(currentUser, scanChoice, model);//Update Suburb Pref TODO
-                    case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref TODO
+                    case 2 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
+                    case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
                     case 4 -> renderMainMenu(model); //Logout
                 }
             }
@@ -189,13 +185,14 @@ public class mainLauncher {
 
     }
 
-    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) {
+    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException {
         ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
         int loopCounter = 1;
         for (String suburb : suburbs){
             System.out.println(loopCounter + ". " + suburb);
             loopCounter++;
         }
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
     private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException {

@@ -59,6 +59,15 @@ public class mainModel {
                             rsCustomer.getDouble("income"),
                             thisCustomerType);
                     userDB.add(newCustomer);
+
+                //add interested suburbs
+                if(rsCustomer.getString("interested_suburb") != null) {
+                    String[] suburbs = rsCustomer.getString("interested_suburb").split(",");
+                    for (String oneSub : suburbs) {
+                        newCustomer.addSuburb(oneSub);
+                    }
+                }
+
 //                    try {
 //                        stmt = this.conn.createStatement();
 //                        String findReplies = "select * from reply where postID = '" + rsCustomer.getString("id") + "';";
@@ -126,11 +135,12 @@ public class mainModel {
             if(user instanceof Customer){ //If user is a customer
                 try {
                     Customer thisCustomer = (Customer) user;
-                    String insertQuery = "insert into Customer(customer_id, name, email, password, phone_number, address, gender, DOB, nationality, income, type)" +
+                    String intSuburb = String.join(",", thisCustomer.getInterestedSuburbs()); // a,b
+                    String insertQuery = "insert into Customer(customer_id, name, email, password, phone_number, address, gender, DOB, nationality, income, type, interested_suburb)" +
                             "VALUES(" + thisCustomer.getId() + ", '" + thisCustomer.getName() + "', " +
                             "'" + thisCustomer.getEmail() + "', '" + thisCustomer.getPassword() + "', '" + thisCustomer.getPhoneNo() + "'" +
                             ", '" + thisCustomer.getAddress() + "', '" + thisCustomer.getGender() + "', '" + thisCustomer.getDob() + "'" +
-                            ", '" + thisCustomer.getNationality() + "', " + thisCustomer.getIncome() + ", '" + thisCustomer.getType().toString() + "')";
+                            ", '" + thisCustomer.getNationality() + "', " + thisCustomer.getIncome() + ", '" + thisCustomer.getType().toString() + "', '" + intSuburb + "')";
 //                    System.out.println(insertQuery);
                     stmt.executeUpdate(insertQuery);
 
