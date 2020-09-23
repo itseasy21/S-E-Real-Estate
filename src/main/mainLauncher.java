@@ -150,7 +150,6 @@ public class mainLauncher {
 
         int choiceLoggedInMenu = 0;
         //All LoggedInMenus
-        // Property manager, Sale Consultant, Branch Manager
         String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES", "LOGOUT"}; //Sales & Property Menu
         String[] branchAdmin = {"LIST PROPERTY", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL" ,"LOGOUT"}; //Branch Admin Menu
         String[] menu = new String[6];

@@ -1,6 +1,7 @@
 package model;
 
 import config.CustomerType;
+import config.EmployeeType;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -86,6 +87,12 @@ public class mainModel {
         }
 
         //TODO: Populating UserDB with Employees
+        userDB.add(new Employee("admin@branch.com","pa33w0rd","Shubham",
+                "673 La Trobe","401717860",(new Date()).toString(),"Male",
+                EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,0));
+        userDB.add(new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
+                "673 La Trobe","401717860",(new Date()).toString(),"Male",
+                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10))
         /*
         try {
             stmt = this.conn.createStatement();
