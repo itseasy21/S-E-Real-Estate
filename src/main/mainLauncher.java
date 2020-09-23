@@ -199,10 +199,10 @@ public class mainLauncher {
         do {
             System.out.print("Suburb Name to Add (press q to go Back): ");
             String input = scanChoice.nextLine();
-            if(input.equals("q") || input.isEmpty())
+            if(input.equals("q"))
                 renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
             else {
-                currentUser.addSuburb(input);
+                model.addSuburb(currentUser, input);
             }
         }while(true);
 

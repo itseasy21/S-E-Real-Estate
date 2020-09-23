@@ -288,4 +288,21 @@ public class mainModel {
         }
         return customerID;
     }
+
+    public void addSuburb(Customer currentUser, String suburb){
+        int error = 0;
+        if(suburb.isEmpty()){
+            error = 1;
+        }else if(suburb.contains(",")){
+            error = 1;
+        }else if(suburb.length() < 4){
+            error = 1;
+        }
+
+        if(error == 0)
+            currentUser.addSuburb(suburb);
+        else
+            System.out.println("An Error Occurred While Adding, Please Retry!");
+    }
+
 }
