@@ -212,13 +212,14 @@ public class mainModel {
         return false;
     }
 
-
-    public void addProperty(Property property){
+//Property Class Functionalities
+    public void addProperty(Property property) throws PropertyException{
         int propertyId = propertyDB.size() + 1;
         if(property.getPropertyId() == 0)
             property.setPropertyId(propertyId);
         propertyDB.put(propertyId,property);
         System.out.println(" Property has been successfully added!");
+        listProperty(propertyId);
 
     }
 
