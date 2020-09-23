@@ -19,7 +19,7 @@ public class Property {
     private EmployeeType empRole;
 
 
-    public Property( String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory , EmployeeType empRole) {
+    public Property( String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
         this.propertyName = propertyName;
         this.propertyType = propertyType;
         this.propertyAddress = propertyAddress;
@@ -41,7 +41,7 @@ public class Property {
 
     }
 
-    public Property(int propertyId, String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory, EmployeeType empRole) {
+    public Property(int propertyId, String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
         this.propertyId = propertyId;
         this.propertyName = propertyName;
         this.propertyType = propertyType;
