@@ -56,4 +56,12 @@ public class Customer extends User{
     public CustomerType getType() {
         return this.type;
     }
+
+    public void addSuburb(String area){
+        this.interestedSuburbs.add(area);
+    }
+
+    public ArrayList<String> getInterestedSuburbs() {
+        return this.interestedSuburbs;
+    }
 }

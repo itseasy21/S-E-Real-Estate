@@ -142,8 +142,8 @@ public class mainLauncher {
         //    BUYER,
         //    RENTER
         String[] vendorLandlordMenu = {"ADD PROPERTY", "LIST PROPERTIES", "LOGOUT"};
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "UPDATE SUBURB PREFERENCE" ,"LOGOUT"};
-        String[] menu = new String[3];
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LOGOUT"};
+        String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.LANDLORD) || currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorLandlordMenu;
         }else if(currentUser.getType().equals(CustomerType.BUYER) || currentUser.getType().equals(CustomerType.RENTER)){
@@ -178,12 +178,29 @@ public class mainLauncher {
             }else{
                 switch (choiceLoggedInMenu) {
                     case 1 -> System.out.println("test1");//Search Property TODO
-                    case 2 -> System.out.println("test2");//Update Suburb Pref TODO
-                    case 3 -> renderMainMenu(model); //Logout
+                    case 2 -> listSuburb(currentUser, scanChoice, model);//Update Suburb Pref TODO
+                    case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref TODO
+                    case 4 -> renderMainMenu(model); //Logout
                 }
             }
 
         } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
+
+    }
+
+    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) {
+    }
+
+    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException {
+
+        do {
+            String input = scanChoice.nextLine();
+            if(input.equals("q") || input.isEmpty())
+                renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+            else {
+                currentUser.addSuburb(input);
+            }
+        }while(true);
 
     }
 

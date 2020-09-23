@@ -19,10 +19,10 @@ public class EmployeeTest {
     public void setUp() throws Exception{
         c1 = new Employee("itseasy21@gmail.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                 EmployeeType.FullTIme,45000,0);
+                 EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,0);
         c2 = new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                EmployeeType.PartTime,22000,10);
+                EmployeeType.PartTime,EmployeeType.PropertyManager, 22000,10);
     }
 
     @Test
