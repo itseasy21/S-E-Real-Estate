@@ -3,5 +3,7 @@ package config;
 public enum EmployeeType {
     FullTIme,
     PartTime,
-    BranchAdmin
+    BranchAdmin, //Role
+    SalesConsultant, //Role
+    PropertyManager //Role
 }
