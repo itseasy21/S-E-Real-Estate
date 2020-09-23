@@ -2,6 +2,7 @@ package model;
 
 import config.CustomerType;
 import config.EmployeeType;
+import controller.InspectionController;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,10 +13,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class mainModel {
 
     public static ArrayList<User> userDB = new ArrayList<>();
+    public static ArrayList<InspectionController> inspectionDB = new ArrayList<InspectionController>();
     public static HashMap<Integer, Property> propertyDB;
     Connection conn;
     Statement stmt;
@@ -314,6 +317,23 @@ public class mainModel {
             currentUser.addSuburb(suburb);
         else
             System.out.println("An Error Occurred While Adding, Please Retry!");
+    }
+
+    public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException {
+        Property thisProp = null;
+        for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
+            if(set.getValue().getPropertyId() == propertyID){
+                thisProp = set.getValue();
+            }
+        }
+
+        if(thisProp != null){
+            InspectionController inspect = new InspectionController();
+            Inspection tempIns = new Inspection("3",thisProp.getPropertyId(), thisProp.getEmployeeId(), getdateslot,timeslots1 ,status);
+            inspect.createInspection(thisProp, tempIns);
+            inspectionDB.add(inspect);
+        }
+
     }
 
 }
