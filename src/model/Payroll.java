@@ -3,13 +3,13 @@ package model;
 public class Payroll
 {
     private static double totalSalary ;
-    private int id ;
+    private String id ;
     private double hours ;
     private double rate ;
     private double salary ;
-    public Payroll(int id, double hours, double rate)throws MyException
+    public Payroll(String empid, double hours, double rate,double salary)throws MyException
     {
-        this.id = id ;
+        this.id = empid;
         if(hours<=0)
         {
             throw new MyException("hours Cannot be 0 or less!");}
@@ -18,13 +18,14 @@ public class Payroll
         if(rate<=0)
         {throw new MyException("rates Cannot be 0 or less!");}
         this.rate = rate ;
-        double salaryCalc = hours * rate ;
-        totalSalary = totalSalary + salaryCalc ;
+       // double salaryCalc = hours * rate ;
+       // totalSalary = totalSalary + salaryCalc ;
+        this.salary=salary;
     }
 
     public void calculateSalary()
     {
-        salary = hours * rate ;
+        this.salary = hours * rate ;
     }
 
     public double getSalary()
@@ -32,7 +33,7 @@ public class Payroll
         return salary ;
     }
 
-    public int getEmployeeID()
+    public String getEmployeeID()
     {
         return id ;
     }
@@ -55,10 +56,28 @@ public class Payroll
 
     }
 
-
     public void increaseHours(double hourIncrease)
     {
-        hours = hours + hourIncrease ;
+        this.hours = this.hours + hourIncrease ;
+    }
+    public void reducedHours(double hourDecrease)throws MyException
+    {
+        if(hourDecrease<=0)
+            throw new MyException("Hours Cannot be 0 or less!");
+        else if(this.hours-hourDecrease<=0)
+            throw new MyException("Cannot decrease hours");
+        else
+            this.hours=hours-hourDecrease;
+    }
+    public void setHours(double hours) throws MyException {
+        if(hours<=0)
+            throw new MyException("Hours Cannot be 0 or less!");
+        else
+            this.hours = hours;
+    }
+    public void setBonus(double bonus)
+    {
+        this.salary = this.salary+bonus;
     }
 
     public static double getTotalPayout()

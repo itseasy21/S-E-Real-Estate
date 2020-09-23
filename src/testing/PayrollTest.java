@@ -13,8 +13,8 @@ public class PayrollTest {
     @Before
     public void setUp() throws Exception, MyException {
         System.out.println("before");
-        p1 = new Payroll(1,40,10);
-        p2 = new Payroll(2,20,8);
+        p1 = new Payroll("EMP1",40,10,45000);
+        p2 = new Payroll("EMP2",20,8,20000);
 
         /*c1 = new Employee("itseasy21@gmail.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",new Date(),"Male",
@@ -51,9 +51,22 @@ public class PayrollTest {
         p1.getRate();
         assertEquals(10.0, p1.getRate());
     }
+    @Test
+    public void testCase5()throws MyException{
+        p1.setBonus(1000);
+        assertEquals(46000.0,p1.getSalary());
+
+    }
+    @Test(expected = MyException.class)
+    public void testCase6()throws MyException
+    {
+        p1.reducedHours(41);
+        assertEquals(0,p1.getHours(),0);
+    }
     @After
     public void outputCase1(){
         System.out.println(p1.showDetails());
+        //System.out.println(p2.showDetails());
     }
 
 }

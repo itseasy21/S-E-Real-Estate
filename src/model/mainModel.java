@@ -89,7 +89,7 @@ public class mainModel {
         //TODO: Populating UserDB with Employees
         userDB.add(new Employee("admin@branch.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,0));
+                EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,20));
         userDB.add(new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
                 EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
@@ -242,6 +242,30 @@ public class mainModel {
         }
         return null;
     }
+    public double EmployeeSalary(String id)
+    { for(User user : userDB){
+        if(user instanceof Employee) {
+            if ((user.getId()).equalsIgnoreCase(id)) {
+                return ((Employee) user).getSalary();
+            }
+        }
+
+    }
+    return 0;
+
+    }
+    public double getEmployeeHour(String id)
+    { for(User user : userDB){
+        if(user instanceof Employee) {
+            if ((user.getId()).equalsIgnoreCase(id)) {
+                System.out.println(((Employee) user).getWorkingHours());
+                return ((Employee) user).getWorkingHours();
+            }
+        }
+
+    }
+        return 0;
+    }
 //Property Class Functionalities
     public void addProperty(Property property) throws PropertyException{
         int propertyId = propertyDB.size() + 1;
@@ -382,4 +406,36 @@ public class mainModel {
 
     }
 
+    public void updateSalary(String empid, double salary, Payroll payroll) throws MyException, UserException {
+        payroll.setSalary(salary);
+        for(User user : userDB){
+            if(user instanceof Employee) {
+                if ((user.getId()).equalsIgnoreCase(empid)) {
+                    ((Employee) user).setSalary(salary);
+                }
+
+                }
+            }
+
+      //  System.out.println("hello"+payroll.getSalary());
+    }
+
+    public void updateHour(String empid, double hour, Payroll payroll)throws MyException ,UserException {
+        payroll.setHours(hour);
+       // System.out.println("hello"+payroll.getHours());
+        for(User user : userDB){
+            if(user instanceof Employee) {
+                if ((user.getId()).equalsIgnoreCase(empid)) {
+                    ((Employee) user).setWorkingHours(hour);
+                }
+
+            }
+        }
+
+    }
+
+    public void getSalary(String empid, Payroll payroll) {
+        payroll.getSalary();
+        //System.out.println("hello"+payroll.getSalary());
+    }
 }
