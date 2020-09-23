@@ -210,6 +210,8 @@ public class mainModel {
         if(property.getPropertyId() == 0)
             property.setPropertyId(propertyId);
         propertyDB.put(propertyId,property);
+        System.out.println(" Property has been successfully added!");
+
     }
 
     public Property listProperty(int propertyId) throws PropertyException {

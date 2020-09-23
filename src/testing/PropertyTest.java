@@ -73,7 +73,6 @@ public class PropertyTest {
     // Add Property Test case
     @Test
     public void testAddProperty() throws  Exception{
-        assertTrue(realEstate.isPropertyDBEmpty());
         realEstate.addProperty(saleProperty);
         assertFalse(realEstate.isPropertyDBEmpty());
     }

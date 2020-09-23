@@ -209,7 +209,7 @@ public class mainLauncher {
 
     }
 
-    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) {
+    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException{
 
         System.out.println("Please Enter the property details !");
 
@@ -240,7 +240,7 @@ public class mainLauncher {
             }
         }
 
-        PropertyType pType = PropertyType.values()[choice];
+        PropertyType pType = PropertyType.values()[choice-1];
 
         System.out.println("Address:");
         String pAddress = scanChoice.nextLine();
@@ -314,9 +314,10 @@ public class mainLauncher {
                 break;
             }
         }
-        PropertyCategory pCategory = PropertyCategory.values()[choice];
+        PropertyCategory pCategory = PropertyCategory.values()[choice-1];
         model.addProperty(new Property(pName,pType,pAddress,minPrice,suburb,Integer.parseInt(count.split("/")[0]),Integer.parseInt(count.split("/")[1]),Integer.parseInt(count.split("/")[2]),pricing,pCategory));
 
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
 
 
     }
