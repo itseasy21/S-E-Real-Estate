@@ -146,7 +146,7 @@ public class mainLauncher {
     private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException {
         Employee currentEmp = (Employee) model.getUserByUsername(email);
 
-        System.out.println("Welcome "+ currentEmp.getName() +" to S&E Real Estate");
+        System.out.println("Welcome "+ currentEmp.getName() +" to S&E Real Estate" + currentEmp.getEmpRole());
 
         int choiceLoggedInMenu = 0;
         //All LoggedInMenus
@@ -154,9 +154,9 @@ public class mainLauncher {
         String[] branchAdmin = {"LIST PROPERTY", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL" ,"LOGOUT"}; //Branch Admin Menu
         String[] menu = new String[6];
 
-        if(currentEmp.getEmpType().equals(EmployeeType.PropertyManager) || currentEmp.getEmpType().equals(EmployeeType.SalesConsultant)){
+        if(currentEmp.getEmpRole().equals(EmployeeType.PropertyManager) || currentEmp.getEmpRole().equals(EmployeeType.SalesConsultant)){
             menu = salesPropertyManager;
-        }else if(currentEmp.getEmpType().equals(EmployeeType.BranchAdmin)){
+        }else if(currentEmp.getEmpRole().equals(EmployeeType.BranchAdmin)){
             menu = branchAdmin;
         }
 
@@ -179,7 +179,7 @@ public class mainLauncher {
             }
 
             //Handling Choice
-            if(currentEmp.getEmpType().equals(EmployeeType.PropertyManager) || currentEmp.getEmpType().equals(EmployeeType.SalesConsultant)) {
+            if(currentEmp.getEmpRole().equals(EmployeeType.PropertyManager) || currentEmp.getEmpRole().equals(EmployeeType.SalesConsultant)) {
                 switch (choiceLoggedInMenu) {
                     case 1 -> System.out.println("TODO"); //listProperty(currentUser, scanChoice, model);
                     case 2 -> System.out.println("TODO"); //Create Inspection Time
