@@ -1,6 +1,7 @@
 package main;
 
 import config.CustomerType;
+import config.EmployeeType;
 import config.menuOptions;
 import controller.loginController;
 import controller.registerController;
@@ -32,7 +33,7 @@ public class mainLauncher {
         Scanner scanChoice = new Scanner(System.in);
 
         do {
-            System.out.println("Pick an option.");
+            System.out.println("Welcome to S&E Real Estate!");
             for(int i = 0; i < menuOptions.values().length; i++){
                 System.out.println(i+1 + ". " + menuOptions.values()[i]);
             }
@@ -51,8 +52,9 @@ public class mainLauncher {
 
             //Handling Choice
             switch (choiceMainMenu) {
-                case 1 -> login(scanChoice, model);
+                case 1 -> login(scanChoice, 0, model);
                 case 2 -> register(scanChoice, model);
+                case 3 -> login(scanChoice, 1, model);
 
             }
 
@@ -60,6 +62,7 @@ public class mainLauncher {
 
         scanChoice.close();
     }
+
 
     private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException {
         System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
@@ -107,7 +110,8 @@ public class mainLauncher {
 
     }
 
-    private static void login(Scanner scanChoice,mainModel model) throws IOException, SERException, ParseException, SQLException {
+
+    private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException {
         System.out.println("Please Enter Your Registered Email ID and Password to Login! ");
         System.out.print("Email: ");
         String email = scanChoice.nextLine();
@@ -116,18 +120,83 @@ public class mainLauncher {
         if(!email.isEmpty() || !password.isEmpty()){
             loginController lg = new loginController();
             lg.initializeModel("",model);
-            boolean loggedin = lg.loginHandler(email,password);
+            boolean loggedin;
+            if(loginType == 0)
+                loggedin = lg.loginHandler(email,password);
+            else
+                loggedin = lg.adminloginHandler(email,password);
+
             if(!loggedin){
 //                throw new SERException("Username You Entered is not Valid");
                 System.out.println("\u001B[31m" + "Invalid Credentials! Please Retry" + "\u001B[0m");
-                login(scanChoice, model);
+                login(scanChoice, loginType, model);
             }else{
-                renderLoggedInMenu(email,scanChoice,model);
+                if(loginType == 0)
+                    renderLoggedInMenu(email,scanChoice,model);
+                else
+                    renderAdminLoggedInMenu(email,scanChoice,model);
+
             }
         }else{
             System.out.println("You Left ID Pass Blank, Redirecting Back to Menu");
             renderMainMenu(model);
         }
+    }
+
+    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException {
+        Employee currentEmp = (Employee) model.getUserByUsername(email);
+
+        System.out.println("Welcome "+ currentEmp.getName() +" to S&E Real Estate");
+
+        int choiceLoggedInMenu = 0;
+        //All LoggedInMenus
+        // Property manager, Sale Consultant, Branch Manager
+        String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES", "LOGOUT"}; //Sales & Property Menu
+        String[] branchAdmin = {"LIST PROPERTY", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL" ,"LOGOUT"}; //Branch Admin Menu
+        String[] menu = new String[6];
+
+        if(currentEmp.getEmpType().equals(EmployeeType.PropertyManager) || currentEmp.getEmpType().equals(EmployeeType.SalesConsultant)){
+            menu = salesPropertyManager;
+        }else if(currentEmp.getEmpType().equals(EmployeeType.BranchAdmin)){
+            menu = branchAdmin;
+        }
+
+        do {
+            System.out.println("Pick an option.");
+            for(int i = 0; i < menu.length; i++){
+                System.out.println(i+1 + ". " + menu[i]);
+            }
+            System.out.println("Please press q to quit.");
+
+            String input = scanChoice.nextLine();
+            if(input.equals("q") || input.isEmpty())
+                renderMainMenu(model);
+            else {
+                try {
+                    choiceLoggedInMenu = Integer.parseInt(input.trim());
+                }catch(NumberFormatException exp){
+                    System.out.println("Invalid Input! Please retry.");
+                }
+            }
+
+            //Handling Choice
+            if(currentEmp.getEmpType().equals(EmployeeType.PropertyManager) || currentEmp.getEmpType().equals(EmployeeType.SalesConsultant)) {
+                switch (choiceLoggedInMenu) {
+                    case 1 -> System.out.println("TODO"); //listProperty(currentUser, scanChoice, model);
+                    case 2 -> System.out.println("TODO"); //Create Inspection Time
+                    case 3 -> renderMainMenu(model); //Logout
+                }
+            }else{
+                switch (choiceLoggedInMenu) {
+                    case 1 -> System.out.println("List Property");// TODO
+                    case 2 -> System.out.println("Add Employee to Property"); //TODO
+                    case 3 -> System.out.println("RUN PAYROLL"); //TODO
+                    case 4 -> renderMainMenu(model); //Logout
+                }
+            }
+
+        } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
+
     }
 
     private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException {
