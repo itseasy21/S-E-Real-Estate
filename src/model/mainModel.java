@@ -194,11 +194,14 @@ public class mainModel {
     }
 
 
-    public boolean isValidUser(String check_user, String check_pass) {
+    public boolean isValidUser(String check_user, String check_pass, int userType) {
 
         for(User user : userDB){
                 if ( user.getEmail().equals(check_user) && user.getPassword().equals(check_pass) ) {
-                    return true;
+                    if(userType == 0 && user instanceof Customer)
+                        return true;
+                    else if(userType == 1 && user instanceof Employee)
+                        return true;
                 }
         }
 
