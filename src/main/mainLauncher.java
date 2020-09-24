@@ -258,7 +258,7 @@ public class mainLauncher {
             }
         }
 
-        System.out.println("Ender Date:");
+        System.out.println("Enter Date:");
         String dateSlot = scanChoice.nextLine();
         while (true){
             if(dateSlot.length()<2){
@@ -269,7 +269,7 @@ public class mainLauncher {
             }
         }
 
-        System.out.println("Ender Time:");
+        System.out.println("Enter Time:");
         String timeSlot = scanChoice.nextLine();
         while (true){
             if(timeSlot.length()<2){
