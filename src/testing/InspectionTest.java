@@ -18,8 +18,8 @@ public class InspectionTest {
     static void setUpBeforeClass() throws Exception {
         System.out.println("BEFORE");
         i = new InspectionController();
-        i1= new Inspection("3",1,1," "," " ," ");
-        i2= new Inspection("2",2,2," "," " ," ");
+        i1= new Inspection("3",1,1," "," " ,"null");
+        i2= new Inspection("2",2,2," "," ","null");
         c1 = new Customer("itseasy21@gmail.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
                 "Indian",45000, CustomerType.BUYER);
@@ -32,41 +32,54 @@ public class InspectionTest {
     }
 
     @Test
+    public void initialstatus() throws PropertyException, UserException {
+        System.out.println("\nInitial status");
+        Assertions.assertEquals(i1.getStatus(), "null");
+        System.out.print(i1.showDetails());
+    }
+
+    @Test
     public void createins() throws PropertyException, UserException {
         System.out.println("\nCREATE INSPECTION");
         i.createInspection(rentalProperty,i1);
+        Assertions.assertEquals(i1.getStatus(),"Created");
         System.out.print(i1.showDetails());
     }
     @Test
     public void bookins() throws PropertyException, UserException {
         System.out.println("\nBOOK INSPECTION");
         i.createInspection(rentalProperty,i1);
+        Assertions.assertEquals(i1.getStatus(),"Created");
         i.bookInspection(c1,i1);
+        Assertions.assertEquals(i1.getStatus(),"Scheduled");
     }
 
     @Test//(expected = UserException.class)
     public void bookinsnegative() throws PropertyException, UserException {
         System.out.println("\nBOOK INSPECTION");
         i.createInspection(rentalProperty,i1);
-        // i.bookInspection(c2,i1);
         Assertions.assertThrows(UserException.class, () -> i.bookInspection(c2,i1));
+        //customer type is vendor not buyer/renter
     }
 
     @Test//(expected = UserException.class)
     public void bookinsnegative1() throws PropertyException, UserException {
         System.out.println("\nBOOK INSPECTION");
-        // i.bookInspection(c2,i1);
         Assertions.assertThrows(UserException.class, () -> i.bookInspection(c1,i1));
+        //booking an inspection for a property with no inspection created
     }
 
     @Test
     public void cancellins() throws Exception, UserException {
         System.out.println("\nCANCELL INSPECTION");
         i.createInspection(rentalProperty,i1);
+        Assertions.assertEquals(i1.getStatus(),"Created");
         // i.bookInspection(c1,i1);
         i.cancellInspection(i1);
+        Assertions.assertEquals(i1.getStatus(),"cancelled");
         System.out.print(i1.showDetails());
     }
+
 
     @Test//(expected = PropertyException.class)
     public void setStatusNegative() throws Exception{

@@ -319,7 +319,7 @@ public class mainModel {
             System.out.println("An Error Occurred While Adding, Please Retry!");
     }
 
-    public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException {
+    public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
         Property thisProp = null;
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
             if(set.getValue().getPropertyId() == propertyID){

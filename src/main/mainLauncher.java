@@ -17,7 +17,7 @@ public class mainLauncher {
 
     private static mainModel model;
 
-    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException, PropertyException {
+    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException {
         model = new mainModel(); //Initialize Model
         model.syncDB(); //Synchronize the data into memory from DB
         renderMainMenu(model); //Render Main Menu
@@ -28,7 +28,7 @@ public class mainLauncher {
         System.exit(0);
     }
 
-    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException {
+    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException {
         int choiceMainMenu = 0;
         Scanner scanChoice = new Scanner(System.in);
 
@@ -64,7 +64,7 @@ public class mainLauncher {
     }
 
 
-    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException {
+    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException {
         System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
         int registerChoice = 0;
@@ -111,7 +111,7 @@ public class mainLauncher {
     }
 
 
-    private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException {
+    private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException {
         System.out.println("Please Enter Your Registered Email ID and Password to Login! ");
         System.out.print("Email: ");
         String email = scanChoice.nextLine();
@@ -143,7 +143,7 @@ public class mainLauncher {
         }
     }
 
-    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException {
+    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException {
         Employee currentEmp = (Employee) model.getUserByUsername(email);
 
         System.out.println("Welcome "+ currentEmp.getName() +" to S&E Real Estate" + currentEmp.getEmpRole());
@@ -198,7 +198,7 @@ public class mainLauncher {
 
     }
 
-    private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException {
+    private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException {
 
         System.out.println("Please Enter the property details !");
 
@@ -206,25 +206,30 @@ public class mainLauncher {
         String pID = scanChoice.nextLine();
         while (true){
             if(pID.length()>2){
-                System.out.println("Please enter a valid Property Name");
+                System.out.println("Please enter a valid Property ID");
                 pID = scanChoice.nextLine();
             }else{
                 break;
             }
         }
 
-        System.out.println("Ender Date:");
-        String dateSlot = scanChoice.nextLine();
-        while (true){
-            if(dateSlot.length()<2){
-                System.out.println("Please enter a valid Date");
-                dateSlot = scanChoice.nextLine();
-            }else{
-                break;
+        System.out.println("Enter 5 Dates:");
+        String[] dateSlot = new String[5];
+        String dateslot="";
+        for(int i=0;i<dateSlot.length;i++) {
+            dateSlot[i] = scanChoice.nextLine();
+            dateslot=dateslot +" ," +dateSlot[i];
+
+            while (true) {
+                if (dateSlot[i].length() < 2) {
+                    System.out.println("Please enter a valid Date");
+                    dateSlot[i] = scanChoice.nextLine();
+                } else {
+                    break;
+                }
             }
         }
-
-        System.out.println("Ender Time:");
+        System.out.println("Enter Time:");
         String timeSlot = scanChoice.nextLine();
         while (true){
             if(timeSlot.length()<2){
@@ -235,12 +240,12 @@ public class mainLauncher {
             }
         }
 
-        model.createInspection(Integer.parseInt(pID), currentEmp, dateSlot, timeSlot, "Created");
+        model.createInspection(Integer.parseInt(pID), currentEmp, dateslot, timeSlot, "Created");
         System.out.println("Inspection Times added!");
         renderLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
     }
 
-    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException {
+    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException {
 
         Customer currentUser = (Customer) model.getUserByUsername(username);
 
@@ -295,7 +300,7 @@ public class mainLauncher {
 
     }
 
-    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException {
+    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException {
         ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
         int loopCounter = 1;
         for (String suburb : suburbs){
@@ -305,7 +310,7 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException {
+    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException {
 
         do {
             System.out.print("Suburb Name to Add (press q to go Back): ");
@@ -319,7 +324,7 @@ public class mainLauncher {
 
     }
 
-    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException{
+    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException {
 
         System.out.println("Please Enter the property details !");
 
@@ -429,7 +434,7 @@ public class mainLauncher {
 
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
-    public static void listProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException{
+    public static void listProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException {
 
             System.out.println("Select type of property");
             for (int i = 0; i < PropertyType.values().length; i++) {
