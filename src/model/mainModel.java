@@ -1,5 +1,4 @@
 package model;
-
 import config.CustomerType;
 import config.EmployeeType;
 import controller.InspectionController;
@@ -10,10 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 
 public class mainModel {
 
@@ -29,7 +26,7 @@ public class mainModel {
         this.propertyDB = new HashMap<>();
     }
 
-    public void syncDB() {
+    public void syncDB() throws PropertyException {
         //synchronize data in memory with data from sqliteDB
 
         //Populating UserDB with Customers
@@ -92,10 +89,20 @@ public class mainModel {
         //TODO: Populating UserDB with Employees
         userDB.add(new Employee("admin@branch.com","pa33w0rd","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,0));
+                EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,20));
         userDB.add(new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
                 "673 La Trobe","401717860",(new Date()).toString(),"Male",
                 EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
+
+        //TODO: Populating PropertyDB with Properties
+        addProperty(new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat));
+        addProperty(new Property( "Jersey parade", PropertyType.Rent,"102 Plenty road", 26000,"Bundoora", 2,1,2,324_000.00, PropertyCategory.House));
+        addProperty(new Property( "Residency Towers", PropertyType.Sale,"2 Moreland road", 26000,"Coburg", 2,2,3,426_000.00, PropertyCategory.Unit));
+        addProperty(new Property( "Spring Waters", PropertyType.Sale,"200 Clifton Hill ", 26000,"Preston", 4,3,2,204_000.00, PropertyCategory.Studio));
+        addProperty(new Property( "Salt Waters", PropertyType.Sale,"18 ivanhoe crescent", 26000,"Mill Park", 2,3,1,403_000.00, PropertyCategory.House));
+        addProperty(new Property( "Jelly Craig", PropertyType.Rent,"5 Flinders street", 26000,"Reservoir", 1,3,3,304_000.00, PropertyCategory.Townhouse));
+        addProperty(new Property( "France City", PropertyType.Rent,"10 Koornang road", 26000,"Carnegie", 3,3,2,236_000.00, PropertyCategory.Flat));
+
         /*
         try {
             stmt = this.conn.createStatement();
@@ -187,11 +194,14 @@ public class mainModel {
     }
 
 
-    public boolean isValidUser(String check_user, String check_pass) {
+    public boolean isValidUser(String check_user, String check_pass, int userType) {
 
         for(User user : userDB){
                 if ( user.getEmail().equals(check_user) && user.getPassword().equals(check_pass) ) {
-                    return true;
+                    if(userType == 0 && user instanceof Customer)
+                        return true;
+                    else if(userType == 1 && user instanceof Employee)
+                        return true;
                 }
         }
 
@@ -215,15 +225,56 @@ public class mainModel {
         return false;
     }
 
+    public boolean checkEmployeeExists(String id){
+        for(User user : userDB){
+            if(user instanceof Employee) {
+                if ((user.getId()).equalsIgnoreCase(id)) {
+                    return true;
+                }
+            }
+        }
+    return false;
+    }
+    public EmployeeType getEmployeeRole(String id){
+        for(User user : userDB) {
+            if (user instanceof Employee) {
+                if ((user.getId()).equalsIgnoreCase(id)) {
+                    return ((Employee) user).getEmpRole();
+                }
+            }
+        }
+        return null;
+    }
+    public double EmployeeSalary(String id)
+    { for(User user : userDB){
+        if(user instanceof Employee) {
+            if ((user.getId()).equalsIgnoreCase(id)) {
+                return ((Employee) user).getSalary();
+            }
+        }
+
+    }
+    return 0;
+
+    }
+    public double getEmployeeHour(String id)
+    { for(User user : userDB){
+        if(user instanceof Employee) {
+            if ((user.getId()).equalsIgnoreCase(id)) {
+                System.out.println(((Employee) user).getWorkingHours());
+                return ((Employee) user).getWorkingHours();
+            }
+        }
+
+    }
+        return 0;
+    }
 //Property Class Functionalities
     public void addProperty(Property property) throws PropertyException{
         int propertyId = propertyDB.size() + 1;
         if(property.getPropertyId() == 0)
             property.setPropertyId(propertyId);
         propertyDB.put(propertyId,property);
-        System.out.println(" Property has been successfully added!");
-        listProperty(propertyId);
-
     }
 
     public Property listProperty(int propertyId) throws PropertyException {
@@ -233,6 +284,13 @@ public class mainModel {
             throw new PropertyException("Invalid property ID");
         }
 
+    }
+
+
+    public void listAvailableProperties(){
+       for(int property : propertyDB.keySet()){
+           System.out.println(propertyDB.get(property).toString());
+       }
     }
     public void listPropertiesForSale() {
         try {
@@ -267,7 +325,7 @@ public class mainModel {
     public void listUnassignedProperties() {
         try {
             System.out.println(" ");
-            System.out.println("*********Unassigned Properties*******:");
+            System.out.println("Unassigned Properties");
             propertyDB.values()
                     .stream()
                     .filter(i -> !i.isEmployeeAssigned())
@@ -286,9 +344,24 @@ public class mainModel {
    public boolean isPropertyDBEmpty(){
         return propertyDB.isEmpty();
    }
+
+
    public int getPropertyDBSize(){
         return propertyDB.size();
    }
+    public Set<Integer> getPropertyDB() {
+        return propertyDB.keySet();
+    }
+    public Set<String> getEmpKeySets(){
+        Set<String> empId = new HashSet<String>();
+
+        for(User user : userDB ){
+            if(user instanceof Employee){
+                empId.add(user.getId());
+            }
+        }
+        return empId;
+    }
 
     public String registerCustomer(String name, String email, String password, String phoneNo, String address, String gender, String dob, String nationality, String income, CustomerType type) throws ParseException {
         String customerID = null;
@@ -336,4 +409,36 @@ public class mainModel {
 
     }
 
+    public void updateSalary(String empid, double salary, Payroll payroll) throws MyException, UserException {
+        payroll.setSalary(salary);
+        for(User user : userDB){
+            if(user instanceof Employee) {
+                if ((user.getId()).equalsIgnoreCase(empid)) {
+                    ((Employee) user).setSalary(salary);
+                }
+
+                }
+            }
+
+      //  System.out.println("hello"+payroll.getSalary());
+    }
+
+    public void updateHour(String empid, double hour, Payroll payroll)throws MyException ,UserException {
+        payroll.setHours(hour);
+       // System.out.println("hello"+payroll.getHours());
+        for(User user : userDB){
+            if(user instanceof Employee) {
+                if ((user.getId()).equalsIgnoreCase(empid)) {
+                    ((Employee) user).setWorkingHours(hour);
+                }
+
+            }
+        }
+
+    }
+
+    public void getSalary(String empid, Payroll payroll) {
+        payroll.getSalary();
+        //System.out.println("hello"+payroll.getSalary());
+    }
 }

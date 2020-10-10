@@ -1,20 +1,17 @@
 package model;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Scanner;
 
 public class Inspection {
 
     private int propertyId;
     private String cid;
-    private int eid;
+    private String eid;
     private String id,status;
     private String date,time;
     String[] timeslots1=new String[4];
     String[] Emptytimeslot=new String[1];
     String[] dates=new String[6];
 
-    public Inspection(String id, int propertyid, int eid, String getdateslot, String timeslots1, String status) {
+    public Inspection(String id, int propertyid, String eid, String getdateslot, String timeslots1, String status) {
         this.id = id;
         this.propertyId = propertyid;
         this.cid = cid;
@@ -151,7 +148,7 @@ public class Inspection {
 
     public String getcId() { return this.cid; }
 
-    public int geteId() { return this.eid; }
+    public String geteId() { return this.eid; }
 
     public String getDate() { return this.date; }
 
@@ -184,7 +181,7 @@ public class Inspection {
 
     public void setpid(int propertyI) { this.propertyId = propertyI; }
 
-    public void setEid(int eid) { this.eid = eid; }
+    public void setEid(String eid) { this.eid = eid; }
 
     public void setCid(String cid) { this.cid = cid; }
 
