@@ -97,7 +97,7 @@ public class mainModel {
         //TODO: Populating PropertyDB with Properties
         addProperty(new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat));
         addProperty(new Property( "Jersey parade", PropertyType.Rent,"102 Plenty road", 26000,"Bundoora", 2,1,2,324_000.00, PropertyCategory.House));
-        addProperty(new Property( "Residency Towers", PropertyType.Sale,"2 Moreland road", 26000,"Coburg", 2,2,3,426_000.00, PropertyCategory.Unit));
+        addProperty(new Property( "Residency Towers", PropertyType.Sale,"2 Moreland road", 26000,"Bundoora", 2,2,3,426_000.00, PropertyCategory.Unit));
         addProperty(new Property( "Spring Waters", PropertyType.Sale,"200 Clifton Hill ", 26000,"Preston", 4,3,2,204_000.00, PropertyCategory.Studio));
         addProperty(new Property( "Salt Waters", PropertyType.Sale,"18 ivanhoe crescent", 26000,"Mill Park", 2,3,1,403_000.00, PropertyCategory.House));
         addProperty(new Property( "Jelly Craig", PropertyType.Rent,"5 Flinders street", 26000,"Reservoir", 1,3,3,304_000.00, PropertyCategory.Townhouse));
@@ -291,6 +291,58 @@ public class mainModel {
        for(int property : propertyDB.keySet()){
            System.out.println(propertyDB.get(property).toString());
        }
+    }
+    public void searchPropertyByName(String name, String filter){
+       switch (name) {
+           case "Suburb":
+                try {
+                   System.out.println("Showing properties by " + name);
+                    propertyDB.values()
+                           .stream()
+                           .filter(e -> (e.getSuburb().equalsIgnoreCase(filter) && e.isEmployeeAssigned()))
+                        .forEach(p -> System.out.println(p.toString()));
+                } catch (NullPointerException e) {
+                   System.out.println("None");
+                return;
+                }
+           break;
+           case "Name":
+               try {
+                   System.out.println("Showing properties by " + name);
+                   propertyDB.values()
+                           .stream()
+                           .filter(e -> (e.getPropertyName().equalsIgnoreCase(filter)) && e.isEmployeeAssigned())
+                           .forEach(p -> System.out.println(p.toString()));
+               } catch (NullPointerException e) {
+                   System.out.println("None");
+                   return;
+               }
+               break;
+       }
+    }
+    public void searchPropertyByPrice(double minPrice, double maxPrice){
+        try {
+            System.out.println("Showing properties between " + minPrice +"- "+maxPrice);
+            propertyDB.values()
+                    .stream()
+                    .filter(e -> (e.getPropertyPrice() >= minPrice) && (e.getPropertyPrice()<= maxPrice) && e.isEmployeeAssigned())
+                    .forEach(p -> System.out.println(p.toString()));
+        } catch (NullPointerException e) {
+            System.out.println("None");
+            return;
+        }
+    }
+    public void searchPropertyByCategory(PropertyCategory propertyCategory){
+        try {
+            System.out.println("Showing properties of the Category" + propertyCategory);
+            propertyDB.values()
+                    .stream()
+                    .filter(e -> (e.getPropertyCategory().equals(propertyCategory)) && e.isEmployeeAssigned())
+                    .forEach(p -> System.out.println(p.toString()));
+        } catch (NullPointerException e) {
+            System.out.println("None");
+            return;
+        }
     }
     public void listPropertiesForSale() {
         try {
