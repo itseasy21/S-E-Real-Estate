@@ -63,7 +63,6 @@ public class mainLauncher {
         scanChoice.close();
     }
 
-
     private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException {
         System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
@@ -109,7 +108,6 @@ public class mainLauncher {
             renderMainMenu(model);
 
     }
-
 
     private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException {
         System.out.println("Please Enter Your Registered Email ID and Password to Login! ");
@@ -241,7 +239,6 @@ public class mainLauncher {
             renderAdminLoggedInMenu(email, scanChoice, model);
         }
     }
-
 
     private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
 
@@ -474,6 +471,7 @@ public class mainLauncher {
         System.out.println("Property has been successfully added!");
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
+
     public static void listProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             model.listPropertiesForSale();
@@ -501,12 +499,14 @@ public class mainLauncher {
         }
             renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
         }
-        public static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
-            model.listAvailableProperties();
-            renderAdminLoggedInMenu(email,scanChoice,model);
 
-        }
-        public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+    public static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+        model.listAvailableProperties();
+        renderAdminLoggedInMenu(email,scanChoice,model);
+
+    }
+
+    public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
             while (true) {
                 System.out.println("Select the Property id");
                 System.out.println(model.getPropertyDB());
