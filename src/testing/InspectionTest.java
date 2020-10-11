@@ -40,7 +40,7 @@ public class InspectionTest {
     @Test
     public void bookins() throws PropertyException, UserException {
         System.out.println("\nBOOK INSPECTION");
-        i.createInspection(rentalProperty,i1);
+       i.createInspection(rentalProperty,i1);
         i.bookInspection(c1,i1);
     }
 

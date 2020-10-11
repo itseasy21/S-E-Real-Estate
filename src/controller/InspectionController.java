@@ -21,6 +21,7 @@ public class InspectionController {
         //if(pid.getEmpRole().equals(EmployeeType.PropertyManager)||pid.getEmpRole().equals(EmployeeType.SalesConsultant)) {
             if (a.getStatus().equalsIgnoreCase("null")) {
 
+                Scanner sc = new Scanner(System.in);
                 //test case
                 a.setId(a.getId());
                 a.setpid(a.getpId());
@@ -36,7 +37,7 @@ public class InspectionController {
 
                 a.setdatesSlot(dates);
                 // System.out.println(a.getdateslot());
-                Scanner sc = new Scanner(System.in);
+
                 //System.out.println("create 5 time slots");
                 //for(int i=0;i<timeslots1.length;i++){
                 String[] timeslots1 = {"10:00am", "10:30am", "11:00am", "11:30am", "12:00pm"}; //for test case
@@ -47,26 +48,8 @@ public class InspectionController {
                 }
                 // }
                 a.setStatus("Created");
-                //inspectionDB.put(id,a);
-                //System.out.println(inspectionDB.values());
 
 
-                //  iArray = new String[]{id, , String.valueOf(a.geteId()), String.valueOf(a.getdateslot()), a.getTimeslot()};
-                //Inspection i=new Inspection(id,propertyid,a.geteId(),dates, timeslots1);
-                // inspection.add(i);
-                // inspection.add(i);
-        /*for(int j=0;j<inspection.size();j++){
-            System.out.println(inspection.get(j).getId());
-            System.out.println(inspection.get(j).getpId());
-            System.out.println(inspection.get(j).geteId());
-            if(!inspection.get(j).getId().isEmpty()){
-                System.out.println(inspection.get(j).getpId()); }
-        }*/
-                //   System.out.println(inspectionDB.get();
-
-                //   for (Inspection ignored :inspectionDB.values()){
-                // System.out.println("Value: "+ inspectionDB.values());
-                //}
             } else {
                 System.out.println("Inspection already created");
             }
@@ -172,5 +155,32 @@ public class InspectionController {
         a.setTime(null);
         a.setTimeSlot(Emptytimeslot);
         a.setdatesSlot(Emptytimeslot);
+    }
+
+    public void showInspection(){
+        System.out.println("Inspection id: "+a.getId());
+        System.out.println("Initial status : "+a.getStatus());
+        System.out.println("proprty id : "+a.getpId());
+        System.out.println("employee id : "+a.geteId());
+        System.out.println("Available dates : "+a.getdateslot());
+        System.out.println("Available times : "+a.getTimeslot());
+
+    }
+
+    public String showDetails() {
+        String printDetails = "";
+
+        printDetails += "Inspection ID:\t" + a.getId();
+        printDetails += "\nProperty ID:\t" + a.getpId();
+        printDetails += "\nCustomer ID:\t" + a.getcId();
+        printDetails += "\nEmployee ID:\t" + a.geteId();
+       // printDetails += "\nDate:\t" + a.getDate();
+       // printDetails += "\nTime:\t" + a.getTime();
+        printDetails += "\nAvailable dates:\t" + a.getdateslot();
+        printDetails += "\nTimeslot:\t" + a.getTimeslot();
+
+        printDetails += "\nStatus:\t" + a.getStatus();
+
+        return printDetails;
     }
 }

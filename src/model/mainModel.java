@@ -15,7 +15,7 @@ import java.util.*;
 public class mainModel {
 
     public static ArrayList<User> userDB = new ArrayList<>();
-    public static ArrayList<InspectionController> inspectionDB = new ArrayList<InspectionController>();
+    public static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
     public static HashMap<Integer, Property> propertyDB;
     Connection conn;
     Statement stmt;
@@ -69,16 +69,6 @@ public class mainModel {
                     }
                 }
 
-//                    try {
-//                        stmt = this.conn.createStatement();
-//                        String findReplies = "select * from reply where postID = '" + rsCustomer.getString("id") + "';";
-//                        ResultSet rsReply = stmt.executeQuery(findReplies);
-//                        while (rsReply.next()) {
-//                            newEvent.handleReply(new Reply(rsReply.getString("postID"), rsReply.getInt("value"), rsReply.getString("responderID")));
-//                        }
-//                    } catch (SQLException e) {
-//                        e.printStackTrace();
-//                    }
             }
             rsCustomer.close();
 
@@ -86,13 +76,56 @@ public class mainModel {
             throwables.printStackTrace();
         }
 
-        //TODO: Populating UserDB with Employees
-        userDB.add(new Employee("admin@branch.com","pa33w0rd","Shubham",
-                "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,20));
-        userDB.add(new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
-                "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
+        // Populating UserDB with Employees
+        try {
+            Statement stmt1 = this.conn.createStatement();
+            String findEmp = "select * from Employee;";
+            ResultSet rsEmp = stmt1.executeQuery(findEmp);
+            while(rsEmp.next()) {
+
+                EmployeeType thisType = null;
+                EmployeeType thisRole = null;
+
+                if (rsEmp.getString("employee_type").equals("FullTIme")) {
+                    thisType = EmployeeType.FullTIme;
+                } else if (rsEmp.getString("employee_type").equals("PartTime")) {
+                    thisType = EmployeeType.PartTime;
+                }
+
+                switch (rsEmp.getString("employee_role")) {
+                    case "BranchAdmin" -> thisRole = EmployeeType.BranchAdmin;
+                    case "SalesConsultant" -> thisRole = EmployeeType.SalesConsultant;
+                    case "PropertyManager" -> thisRole = EmployeeType.PropertyManager;
+                }
+
+                Employee newEmp = new Employee(
+                        rsEmp.getString("employee_id"),
+                        rsEmp.getString("email"),
+                        rsEmp.getString("password"),
+                        rsEmp.getString("name"),
+                        rsEmp.getString("address"),
+                        rsEmp.getString("phone_number"),
+                        rsEmp.getString("DOB"),
+                        rsEmp.getString("gender"),
+                        thisType,
+                        thisRole,
+                        rsEmp.getDouble("salary"),
+                        rsEmp.getDouble("hours")
+                    );
+                userDB.add(newEmp);
+            }
+                rsEmp.close();
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+//        userDB.add(new Employee("admin@branch.com","pa33w0rd","Shubham",
+//                "673 La Trobe","401717860",(new Date()).toString(),"Male",
+//                EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,20));
+//        userDB.add(new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
+//                "673 La Trobe","401717860",(new Date()).toString(),"Male",
+//                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
 
         //TODO: Populating PropertyDB with Properties
         addProperty(new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat));
@@ -103,42 +136,6 @@ public class mainModel {
         addProperty(new Property( "Jelly Craig", PropertyType.Rent,"5 Flinders street", 26000,"Reservoir", 1,3,3,304_000.00, PropertyCategory.Townhouse));
         addProperty(new Property( "France City", PropertyType.Rent,"10 Koornang road", 26000,"Carnegie", 3,3,2,236_000.00, PropertyCategory.Flat));
 
-        /*
-        try {
-            stmt = this.conn.createStatement();
-            String findPosts = "select * from Employee;";
-            ResultSet rsCustomer = stmt.executeQuery(findPosts);
-            while(rsCustomer.next()){
-
-                CustomerType thisCustomerType= null;
-                if(rsCustomer.getString("type").equals("VENDOR")){
-                    thisCustomerType = CustomerType.VENDOR;
-                }else if(rsCustomer.getString("type").equals("LANDLORD")){
-                    thisCustomerType = CustomerType.LANDLORD;
-                }else if(rsCustomer.getString("type").equals("CUSTOMER")){
-                    thisCustomerType = CustomerType.CUSTOMER;
-                }
-
-                Customer newCustomer = new Customer(
-                        rsCustomer.getInt("customer_id "),
-                        rsCustomer.getString("email"),
-                        rsCustomer.getString("password"),
-                        rsCustomer.getString("name"),
-                        rsCustomer.getString("address"),
-                        rsCustomer.getString("phoneNo"),
-                        rsCustomer.getDate("DOB"),
-                        rsCustomer.getString("gender"),
-                        rsCustomer.getString("nationality"),
-                        rsCustomer.getDouble("income"),
-                        thisCustomerType);
-                userDB.add(newCustomer);
-            }
-            rsCustomer.close();
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-         */
     }
 
     public void savetoDB() throws SQLException {
@@ -158,14 +155,27 @@ public class mainModel {
                             "'" + thisCustomer.getEmail() + "', '" + thisCustomer.getPassword() + "', '" + thisCustomer.getPhoneNo() + "'" +
                             ", '" + thisCustomer.getAddress() + "', '" + thisCustomer.getGender() + "', '" + thisCustomer.getDob() + "'" +
                             ", '" + thisCustomer.getNationality() + "', " + thisCustomer.getIncome() + ", '" + thisCustomer.getType().toString() + "', '" + intSuburb + "')";
-//                    System.out.println(insertQuery);
+
                     stmt.executeUpdate(insertQuery);
 
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
             }else{
-                //TODO: If user is a employee
+                //If user is a employee
+                try {
+                    Employee thisEmp = (Employee) user;
+                    String insertQuery = "insert into Employee(employee_id, name, email, password, phone_number, address, gender, DOB, salary, employee_type, employee_role)" +
+                            "VALUES('" + thisEmp.getId() + "', '" + thisEmp.getName() + "', " +
+                            "'" + thisEmp.getEmail() + "', '" + thisEmp.getPassword() + "', '" + thisEmp.getPhoneNo() + "'" +
+                            ", '" + thisEmp.getAddress() + "', '" + thisEmp.getGender() + "', '" + thisEmp.getDob() + "'" +
+                            ", '" + thisEmp.getSalary() + "', '" + thisEmp.getEmpType().toString() + "', '" + thisEmp.getEmpRole().toString() + "')";
+
+                    stmt.executeUpdate(insertQuery);
+
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         }
     }
@@ -446,19 +456,37 @@ public class mainModel {
 
     public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
         Property thisProp = null;
+
+        /*int propertyId = propertyDB.size() + 1;
+        if(property.getPropertyId() == 0)
+            property.setPropertyId(propertyId);
+        propertyDB.put(propertyId,property);
+        */
+
+
+
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
             if(set.getValue().getPropertyId() == propertyID){
                 thisProp = set.getValue();
             }
         }
 
-        if(thisProp != null){
+        if(thisProp != null && thisProp.getEmployeeId().equals(currentEmployee.getId())&&thisProp.isEmployeeAssigned()){
             InspectionController inspect = new InspectionController();
             Inspection tempIns = new Inspection("3",thisProp.getPropertyId(), thisProp.getEmployeeId(), getdateslot,timeslots1 ,status);
-            inspect.createInspection(thisProp, tempIns);
-            inspectionDB.add(inspect);
-        }
 
+            inspect.createInspection(thisProp, tempIns);
+            inspectionDB.add(tempIns);
+            for(Inspection a:inspectionDB){
+                System.out.println(a.showDetails());
+            }
+        }
+    }
+
+    public void listInspection(){
+        for(Inspection a:inspectionDB){
+            System.out.println(a.showDetails());
+        }
     }
 
     public void updateSalary(String empid, double salary, Payroll payroll) throws MyException, UserException {
