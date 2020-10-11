@@ -19,7 +19,7 @@ public class InspectionController {
     public void createInspection(Property pid, Inspection a) throws PropertyException, UserException {
         int propertyid=pid.getPropertyId();
         //if(pid.getEmpRole().equals(EmployeeType.PropertyManager)||pid.getEmpRole().equals(EmployeeType.SalesConsultant)) {
-            if (a.getStatus().equalsIgnoreCase(" ")) {
+            if (a.getStatus().equalsIgnoreCase("null")) {
 
                 //test case
                 a.setId(a.getId());
