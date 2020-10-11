@@ -106,6 +106,7 @@ public class mainModel {
                         rsEmp.getString("address"),
                         rsEmp.getString("phone_number"),
                         rsEmp.getString("DOB"),
+                        rsEmp.getString("gender"),
                         thisType,
                         thisRole,
                         rsEmp.getDouble("salary"),
