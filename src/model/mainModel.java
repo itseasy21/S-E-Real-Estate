@@ -15,7 +15,7 @@ import java.util.*;
 public class mainModel {
 
     public static ArrayList<User> userDB = new ArrayList<>();
-    public static ArrayList<InspectionController> inspectionDB = new ArrayList<InspectionController>();
+    public static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
     public static HashMap<Integer, Property> propertyDB;
     Connection conn;
     Statement stmt;
@@ -394,19 +394,37 @@ public class mainModel {
 
     public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
         Property thisProp = null;
+
+        /*int propertyId = propertyDB.size() + 1;
+        if(property.getPropertyId() == 0)
+            property.setPropertyId(propertyId);
+        propertyDB.put(propertyId,property);
+        */
+
+
+
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
             if(set.getValue().getPropertyId() == propertyID){
                 thisProp = set.getValue();
             }
         }
 
-        if(thisProp != null){
+        if(thisProp != null && thisProp.getEmployeeId().equals(currentEmployee.getId())&&thisProp.isEmployeeAssigned()){
             InspectionController inspect = new InspectionController();
             Inspection tempIns = new Inspection("3",thisProp.getPropertyId(), thisProp.getEmployeeId(), getdateslot,timeslots1 ,status);
-            inspect.createInspection(thisProp, tempIns);
-            inspectionDB.add(inspect);
-        }
 
+            inspect.createInspection(thisProp, tempIns);
+            inspectionDB.add(tempIns);
+            for(Inspection a:inspectionDB){
+                System.out.println(a.showDetails());
+            }
+        }
+    }
+
+    public void listInspection(){
+        for(Inspection a:inspectionDB){
+            System.out.println(a.showDetails());
+        }
     }
 
     public void updateSalary(String empid, double salary, Payroll payroll) throws MyException, UserException {

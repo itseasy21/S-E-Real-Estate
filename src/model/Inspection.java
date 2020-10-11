@@ -10,6 +10,7 @@ public class Inspection {
     String[] timeslots1=new String[4];
     String[] Emptytimeslot=new String[1];
     String[] dates=new String[6];
+    private String getdatesl,gettimesl;
 
     public Inspection(String id, int propertyid, String eid, String getdateslot, String timeslots1, String status) {
         this.id = id;
@@ -20,6 +21,8 @@ public class Inspection {
         this.time = time;
         this.dates= dates;
         this.status = status;
+        this.getdatesl=getdateslot;
+        this.gettimesl=timeslots1;
     }
 
 /*
@@ -140,6 +143,10 @@ public class Inspection {
         setdatesSlot(Emptytimeslot);
     }
 
+    public String getdatesl(){return this.getdatesl;}
+
+    public String gettimesl(){return this.gettimesl;}
+
     public int getdatesize() { return dates.length; }
 
     public String getId() { return this.id; }
@@ -162,6 +169,8 @@ public class Inspection {
             print += "\n" + this.timeslots1[i];
         }
         return print; }
+
+
 
     public String getdateslot() {
         String print = "";
@@ -207,13 +216,12 @@ public class Inspection {
 
         printDetails += "Inspection ID:\t" + getId();
         printDetails += "\nProperty ID:\t" + getpId();
-        printDetails += "\nCustomer ID:\t" + getcId();
+      //  printDetails += "\nCustomer ID:\t" + getcId();
         printDetails += "\nEmployee ID:\t" + geteId();
-        printDetails += "\nDate:\t" + getDate();
-        printDetails += "\nTime:\t" + getTime();
-        printDetails += "\nAvailable dates:\t" + getdateslot();
-        printDetails += "\nTimeslot:\t" + getTimeslot();
-
+       // printDetails += "\nDate:\t" + getDate();
+       //  printDetails += "\nTime:\t" + getTime();
+        printDetails += "\nAvailable dates:\t" + getdatesl();
+        printDetails += "\nTimeslot:\t" + gettimesl();
         printDetails += "\nStatus:\t" + getStatus();
 
         return printDetails;

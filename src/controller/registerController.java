@@ -4,6 +4,8 @@ import config.CustomerType;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -119,6 +121,31 @@ public class registerController extends baseController{
         }
         /* Date format is invalid */
         catch (ParseException e)
+        {
+//            System.out.println(strDate+" is Invalid Date format\nA Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020");
+            return false;
+        }
+        /* Return true if date format is valid */
+        return true;
+    }
+
+    public static boolean validateJavaTime(String strDate)
+    {
+        /*
+         * Set preferred date format,
+         * For example MM-dd-yyyy, MM.dd.yyyy,dd.MM.yyyy etc.*/
+        //SimpleDateFormat sdfrmt = new SimpleDateFormat("hh:mm");
+        //sdfrmt.setLenient(false);
+        /* Create Date object
+         * parse the string into date
+         */
+        try
+        {
+            LocalTime t = LocalTime.parse(strDate);
+//		        System.out.println(strDate+" is valid date format");
+        }
+        /* Date format is invalid */
+        catch (DateTimeParseException e)
         {
 //            System.out.println(strDate+" is Invalid Date format\nA Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020");
             return false;
