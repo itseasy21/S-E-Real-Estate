@@ -1,7 +1,7 @@
 package testing;
 
 import config.CustomerType;
-import controller.InspectionController;
+import model.InspectionController;
 import model.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
