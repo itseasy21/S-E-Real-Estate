@@ -187,7 +187,7 @@ public class mainLauncher {
                 }
             }else{
                 switch (choiceLoggedInMenu) {
-                    case 1 -> listProperties(email, scanChoice, model);
+                    case 1 -> listProperty(currentEmp, scanChoice, model);
                     case 2 -> addEmpToProperty(email, scanChoice, model);
                     case 3 -> handlePayroll(email,scanChoice,model);
                     case 4 -> renderMainMenu(model); //Logout
@@ -264,7 +264,7 @@ public class mainLauncher {
         System.out.println("Enter " +count +" more dates");
         date = scanChoice.nextLine();
             while (true) {
-                if (date.length() < 11 && !controller.registerController.validateJavaDate(date)) {
+                if (date.length() < 11 && !controller.registerController.validateDOB(date)) {
                     String errorMsg = "A Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020\n";
                     System.out.println("Please enter a valid Date" + errorMsg);
                     date = scanChoice.nextLine();
@@ -533,35 +533,40 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    public static void listProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
-        if(currentUser.getType().equals(CustomerType.VENDOR)){
-            model.listPropertiesForSale();
-        }
-        if(currentUser.getType().equals(CustomerType.LANDLORD)) {
-            System.out.println("Select type of property");
-            for (int i = 0; i < PropertyType.values().length; i++) {
-                System.out.println((i + 1) + "." + PropertyType.values()[i]);
-            }
-            int choice = scanChoice.nextInt();
-            while (true) {
-                if (choice > PropertyType.values().length) {
-                    System.out.println("Invalid option ! Please try again");
-                    choice = scanChoice.nextInt();
-                } else {
+    public static void listProperty(User someuser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
 
-                    break;
+        if(someuser instanceof Customer) {
+            Customer currentUser = (Customer) someuser;
+            if (currentUser.getType().equals(CustomerType.VENDOR)) {
+                model.listPropertiesForSale();
+            }
+            if (currentUser.getType().equals(CustomerType.LANDLORD)) {
+                System.out.println("Select type of property");
+                for (int i = 0; i < PropertyType.values().length; i++) {
+                    System.out.println((i + 1) + "." + PropertyType.values()[i]);
                 }
+                int choice = scanChoice.nextInt();
+                while (true) {
+                    if (choice > PropertyType.values().length) {
+                        System.out.println("Invalid option ! Please try again");
+                        choice = scanChoice.nextInt();
+                    } else {
 
+                        break;
+                    }
+
+                }
+                switch (choice) {
+                    case 1 -> model.listPropertiesForSale();
+                    case 2 -> model.listPropertiesForRent();
+                }
             }
-            switch (choice) {
-                case 1 -> model.listPropertiesForSale();
-                case 2 -> model.listPropertiesForRent();
-            }
-        }
             renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+        }else if(someuser instanceof Employee) {
+          //do something
         }
+    }
 
-        }
         public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
 
             System.out.println("Select the Property id");
