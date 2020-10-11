@@ -3,6 +3,7 @@ package main;
 import config.CustomerType;
 import config.EmployeeType;
 import config.menuOptions;
+import controller.auctionController;
 import controller.loginController;
 import controller.registerController;
 import model.*;
@@ -63,7 +64,6 @@ public class mainLauncher {
         scanChoice.close();
     }
 
-
     private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException {
         System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
@@ -109,7 +109,6 @@ public class mainLauncher {
             renderMainMenu(model);
 
     }
-
 
     private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException {
         System.out.println("Please Enter Your Registered Email ID and Password to Login! ");
@@ -243,7 +242,6 @@ public class mainLauncher {
         }
     }
 
-
     private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
 
         System.out.println("Please Enter the property details !");
@@ -328,18 +326,21 @@ public class mainLauncher {
         int choiceLoggedInMenu = 0;
 
         //All LoggedInMenus
-        String[] vendorLandlordMenu = {"ADD PROPERTY", "LIST PROPERTIES", "LOGOUT"}; //Vendor & Landlord Menu
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LIST INSPECTION" ,"LOGOUT"}; //Buyer & Renter Menu
+        String[] vendorMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS","AUCTION", "LOGOUT"};//Vendor Menu
+        String[] landLordMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS", "LOGOUT"};//Landlord Menu
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
-        if(currentUser.getType().equals(CustomerType.LANDLORD) || currentUser.getType().equals(CustomerType.VENDOR)){
-            menu = vendorLandlordMenu;
-        }else if(currentUser.getType().equals(CustomerType.BUYER) || currentUser.getType().equals(CustomerType.RENTER)){
+        if(currentUser.getType().equals(CustomerType.VENDOR)){
+            menu = vendorMenu;
+        }else if(currentUser.getType().equals(CustomerType.LANDLORD)){
+            menu  = landLordMenu;
+        }
+        else if(currentUser.getType().equals(CustomerType.BUYER) || currentUser.getType().equals(CustomerType.RENTER)){
             menu = buyerRenterMenu;
         }
 
         do {
-            System.out.println("Pick an option.");
-            for(int i = 0; i < menu.length; i++){
+            System.out.println("Pick an option.");            for(int i = 0; i < menu.length; i++){
                 System.out.println(i+1 + ". " + menu[i]);
             }
             System.out.println("Please press q to quit.");
@@ -356,13 +357,22 @@ public class mainLauncher {
             }
 
             //Handling Choice
-            if(currentUser.getType().equals(CustomerType.LANDLORD) || currentUser.getType().equals(CustomerType.VENDOR)) {
+            if(currentUser.getType().equals(CustomerType.LANDLORD)) {
                 switch (choiceLoggedInMenu) {
                     case 1 -> addProperty(currentUser,scanChoice, model);
                     case 2 -> listProperty(currentUser, scanChoice, model);
-                    case 3 -> renderMainMenu(model); //Logout
+                    case 3 -> viewPropertyDetails(currentUser.getEmail(), scanChoice, model);
+                    case 4 -> renderMainMenu(model); //Logout
                 }
-            }else{
+            }else if(currentUser.getType().equals(CustomerType.VENDOR)){
+                switch (choiceLoggedInMenu) {
+                    case 1 -> addProperty(currentUser,scanChoice, model);
+                    case 2 -> listProperty(currentUser, scanChoice, model);
+                    case 3 -> viewPropertyDetails(currentUser.getEmail(), scanChoice, model);
+                    case 4 -> createAuction(currentUser, scanChoice, model);
+                    case 5 -> renderMainMenu(model); //Logout
+                }
+            } else{
                 switch (choiceLoggedInMenu) {
                     case 1 -> System.out.println("test1");//Search Property TODO
                     case 2 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
@@ -375,7 +385,19 @@ public class mainLauncher {
         } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
 
     }
+    private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model){
+        System.out.println("Enter date for auction: eg. dd/MM/yyyy");
+        String auctionDate = scanChoice.nextLine();
+        auctionController auctionValidator = new auctionController();
+        auctionValidator.initializeModel("",model);
+        boolean dateValidate = auctionValidator.validateJavaDate(auctionDate);
+        if(dateValidate){
+            System.out.println("select properties for auction ");
+        }else{
+            System.out.println("Please enter a valid date");
+        }
 
+    }
     private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
         ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
         int loopCounter = 1;
@@ -510,6 +532,7 @@ public class mainLauncher {
         System.out.println("Property has been successfully added!");
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
+
     public static void listProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             model.listPropertiesForSale();
@@ -537,10 +560,14 @@ public class mainLauncher {
         }
             renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
         }
-        public static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
-            model.listAvailableProperties();
-            renderAdminLoggedInMenu(email,scanChoice,model);
 
+        }
+        public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+
+            System.out.println("Select the Property id");
+            int choice = scanChoice.nextInt();
+            Property property = model.listProperty(choice);
+            System.out.println(property.toString());
         }
         public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
             while (true) {

@@ -1,6 +1,7 @@
 package controller;
 
 import config.CustomerType;
+import model.UserException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class registerController extends baseController{
 
-    public boolean registerhandler(String name, String email, String password, String phoneNo, String address, String gender, String dob, String nationality, String income, CustomerType type) throws ParseException {
+    public boolean registerhandler(String name, String email, String password, String phoneNo, String address, String gender, String dob, String nationality, String income, CustomerType type) throws ParseException, UserException {
 
         int error = 0;
         String errorMsg = "";
@@ -58,7 +59,7 @@ public class registerController extends baseController{
             errorMsg += "Please Enter Gender as Male/Female/TransGender\n";
         }
 
-        if(dob.length() < 11 && !validateJavaDate(dob)){
+        if(dob.length() < 11 && !validateDOB(dob)){
             error = 1;
             errorMsg += "A Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020\n";
         }
@@ -92,8 +93,9 @@ public class registerController extends baseController{
                 return true;
             }
         }else{
-            System.out.println("\u001B[31m" + "The following error(s) occurred:\n" +errorMsg + "\u001B[0m");
-            return false;
+            throw new UserException("The following error(s) occurred:\n" +errorMsg);
+//            System.out.println("\u001B[31m" + "The following error(s) occurred:\n" +errorMsg + "\u001B[0m");
+//            return false;
         }
 
         return false;
@@ -104,7 +106,7 @@ public class registerController extends baseController{
      * @source https://beginnersbook.com/2013/05/java-date-format-validation/
      * @return true/false
      */
-    public static boolean validateJavaDate(String strDate)
+    public static boolean validateDOB(String strDate)
     {
         /*
          * Set preferred date format,
