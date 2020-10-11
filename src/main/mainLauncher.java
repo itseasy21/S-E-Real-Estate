@@ -328,7 +328,7 @@ public class mainLauncher {
         //All LoggedInMenus
         String[] vendorMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS","AUCTION", "LOGOUT"};//Vendor Menu
         String[] landLordMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS", "LOGOUT"};//Landlord Menu
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LOGOUT"}; //Buyer & Renter Menu
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "LIST INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorMenu;
@@ -385,6 +385,7 @@ public class mainLauncher {
         } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
 
     }
+
     private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model){
         System.out.println("Enter date for auction: eg. dd/MM/yyyy");
         String auctionDate = scanChoice.nextLine();
@@ -398,6 +399,7 @@ public class mainLauncher {
         }
 
     }
+
     private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
         ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
         int loopCounter = 1;
@@ -567,14 +569,15 @@ public class mainLauncher {
         }
     }
 
-        public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+    public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
 
-            System.out.println("Select the Property id");
-            int choice = scanChoice.nextInt();
-            Property property = model.listProperty(choice);
-            System.out.println(property.toString());
-        }
-        public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+        System.out.println("Select the Property id");
+        int choice = scanChoice.nextInt();
+        Property property = model.listProperty(choice);
+        System.out.println(property.toString());
+    }
+
+    public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
             while (true) {
                 System.out.println("Select the Property id");
                 System.out.println(model.getPropertyDB());
