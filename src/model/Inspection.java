@@ -127,10 +127,10 @@ public class Inspection {
 
         printDetails += "Inspection ID:\t\t\t" + getId();
         printDetails += "\nProperty ID:\t\t\t" + getpId();
-      //  printDetails += "\nCustomer ID:\t\t\t" + getcId();
+        printDetails += "\nCustomer ID:\t\t\t" + getcId();
         printDetails += "\nEmployee ID:\t\t\t" + geteId();
-       // printDetails += "\nDate:\t\t\t" + getDate();
-       //  printDetails += "\nTime:\t\t\t" + getTime();
+        printDetails += "\nDate:\t\t\t\t" + getDate();
+        printDetails += "\nTime:\t\t\t\t" + getTime();
         printDetails += "\nAvailable dates:\t\t\t" + getdatesl();
         printDetails += "\nAvailable Timeslot:\t\t\t" + gettimesl();
         printDetails += "\nStatus:\t\t\t\t\t" + getStatus();

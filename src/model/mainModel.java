@@ -392,6 +392,7 @@ public class mainModel {
     }
 
     public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
+
         Property thisProp = null;
 
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
@@ -404,7 +405,6 @@ public class mainModel {
             if(thisProp.getEmployeeId().equals(currentEmployee.getId())) {
                 //InspectionController inspect = new InspectionController();
                 Inspection tempIns = new Inspection(thisProp.getPropertyId(), thisProp.getEmployeeId(), getdateslot, timeslots1, status);
-
                 inspectionDB.add(tempIns);
                 System.out.println("Inspection has been created sucessfully!");
             }else{
@@ -448,7 +448,7 @@ public class mainModel {
         for(Inspection a:inspectionDB){
             if(a.getId().equals(id)){
                 System.out.println( a.getId());
-                String dates=a.getdateslot();
+                String dates=a.getdatesl();
                 String[] split=dates.split(";");
                 String date1=split[0];
                 String date2=split[1];
@@ -469,7 +469,7 @@ public class mainModel {
         System.out.println("Available dates for inspections are:");
         for(Inspection a:inspectionDB){
             if(a.getId().equals(id)){
-                String times=a.getTimeslot();
+                String times=a.gettimesl();
                 String[] split=times.split(";");
                 String date1=split[0];
                 String date2=split[1];
@@ -490,7 +490,7 @@ public class mainModel {
         String date="";
         for(Inspection a:inspectionDB){
             if(a.getId().equals(id)){
-                String dates=a.getdateslot();
+                String dates=a.getdatesl();
                 String[] split=dates.split(";");
                 if(dateOption==1){
                     date=split[0];
@@ -512,7 +512,7 @@ public class mainModel {
         String time = "";
         for (Inspection a : inspectionDB) {
             if (a.getId().equals(id)) {
-                String times = a.getTimeslot();
+                String times = a.gettimesl();
                 String[] split = times.split(";");
                 if (timeOption == 1) {
                     time = split[0];
@@ -531,10 +531,13 @@ public class mainModel {
     }
 
     public void listInspectionBook(){
-        System.out.println("Available inspections are:");
+        System.out.println("Available inspections:");
         for(Inspection a:inspectionDB){
             if(a.getStatus().equals("Created")){
-                System.out.println("Inspecion ID:" +a.getId() +" Property ID:" +a.getpId());
+                System.out.println("Inspecion ID:" +a.getId() +"\tProperty ID:" +a.getpId());
+            }
+            if(a.getId().equals(null)){
+                System.out.println("No inpections are available");
             }
         }
     }
@@ -582,9 +585,6 @@ public class mainModel {
                 System.out.println("Inspection cancelled sucessfully");
                 System.out.println(a.showDetails());
 
-            }
-            else{
-                System.out.println("invalid Inspection Id entered");
             }
         }
         System.out.println("---------------------------------------------------------------------------------");

@@ -289,6 +289,7 @@ public class mainLauncher {
                                     loop = true;
                                 } else {
                                     loop=false;
+                                    break;
                                 }
                             }
                         }
@@ -331,6 +332,7 @@ public class mainLauncher {
                                     loop = true;
                                 } else {
                                     loop=false;
+                                    break;
                                 }
                             }
                         }
@@ -345,7 +347,6 @@ public class mainLauncher {
         }while(count>=1);
 
         model.createInspection(Integer.parseInt(pID), currentEmp, dateSlot, timeSlot, "Created");
-
         renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
     }
 
@@ -433,7 +434,7 @@ public class mainLauncher {
         //All LoggedInMenus
         String[] vendorMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS","AUCTION", "LOGOUT"};//Vendor Menu
         String[] landLordMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS", "LOGOUT"};//Landlord Menu
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LOGOUT"}; //Buyer & Renter Menu
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LIST INSPECTION","BOOK INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorMenu;
@@ -445,7 +446,8 @@ public class mainLauncher {
         }
 
         do {
-            System.out.println("Pick an option.");            for(int i = 0; i < menu.length; i++){
+            System.out.println("Pick an option.");
+            for(int i = 0; i < menu.length; i++){
                 System.out.println(i+1 + ". " + menu[i]);
             }
             System.out.println("Please press q to quit.");
@@ -483,7 +485,8 @@ public class mainLauncher {
                     case 2 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
                     case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
                     case 4 -> listInspection(currentUser, scanChoice, model); //List inspection
-                    case 5 -> renderMainMenu(model); //Logout
+                    case 5 -> bookInspection(currentUser, scanChoice, model);//book inspection
+                    case 6 -> renderMainMenu(model); //Logout
                 }
             }
 

@@ -22,6 +22,15 @@ public class Employee extends User{
         this.workingHours = workingHours;
     }
 
+    public Employee(String id, String email, String password, String name, String address, String phoneNo, String dob, String gender, EmployeeType empType, EmployeeType empRole, double salary, double workingHours) {
+        super(id, email, password, name, address, phoneNo, dob, gender);
+        ++employeeCounter;
+        this.empType = empType;
+        this.empRole = empRole;
+        this.salary = salary;
+        this.workingHours = workingHours;
+    }
+
     public void updateUser(String email, String password, String name, String address, String phoneNo, String dob, String gender, EmployeeType empType, EmployeeType empRole, double salary, double workingHours){
         updateUser(email, password, name, address, phoneNo, dob, gender);
         this.empType = empType;
