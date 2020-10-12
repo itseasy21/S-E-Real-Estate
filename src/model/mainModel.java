@@ -15,6 +15,7 @@ public class mainModel {
 
     public static ArrayList<User> userDB = new ArrayList<>();
     public static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
+    public static ArrayList<Application> applicationDB = new ArrayList<Application>();
     public static HashMap<Integer, Property> propertyDB;
     Connection conn;
     Statement stmt;
@@ -127,7 +128,10 @@ public class mainModel {
 //                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
 
         //TODO: Populating PropertyDB with Properties
-        addProperty(new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat));
+        Property p1 = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat);
+        p1.setEmployeeId("EMP01");
+        addProperty(p1);
+//        addProperty(new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat));
         addProperty(new Property( "Jersey parade", PropertyType.Rent,"102 Plenty road", 26000,"Bundoora", 2,1,2,324_000.00, PropertyCategory.House));
         addProperty(new Property( "Residency Towers", PropertyType.Sale,"2 Moreland road", 26000,"Bundoora", 2,2,3,426_000.00, PropertyCategory.Unit));
         addProperty(new Property( "Spring Waters", PropertyType.Sale,"200 Clifton Hill ", 26000,"Preston", 4,3,2,204_000.00, PropertyCategory.Studio));
@@ -684,5 +688,45 @@ public class mainModel {
     public void getSalary(String empid, Payroll payroll) {
         payroll.getSalary();
         //System.out.println("hello"+payroll.getSalary());
+    }
+
+    public boolean isInspectionDone(Customer customer, Property thisProp){
+        for(Inspection i : inspectionDB){
+            if(i.getcId().equals(customer.getId()) && i.getpId() == thisProp.getPropertyId() && i.getStatus().equalsIgnoreCase("Completed")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void rentApplication(Property selectedProperty, Customer applyingUser, double weeklyRent) throws ApplicationException {
+
+        int error = 0;
+        String msg = "";
+
+        if(!applyingUser.getType().equals(CustomerType.RENTER)){
+            error = 1;
+            msg += "You are not allowed to rent.\n";
+        }
+
+        if(isInspectionDone(applyingUser, selectedProperty)){
+            error = 1;
+            msg += "You need to inspect the property before applying.\n";
+        }
+
+        if(weeklyRent < selectedProperty.getMinPrice()){
+            error = 1;
+            msg += "The weekly rent should be more then the minimum specified rent.\n";
+        }
+
+        if(error == 0){
+            Application newRental = new RentalApplication(selectedProperty.getEmployeeId(), applyingUser.getId(), selectedProperty, weeklyRent);
+            System.out.println("Your Application for Rental of " + selectedProperty.getPropertyName() + " is submitted with ID: " + newRental.getId() + "\n" +
+                    "The Property Manager will be in touch th you!");
+            applicationDB.add(newRental);
+        }else{
+            throw new ApplicationException(msg);
+        }
+
     }
 }

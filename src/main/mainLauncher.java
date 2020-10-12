@@ -18,7 +18,7 @@ public class mainLauncher {
 
     private static mainModel model;
 
-    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException {
+    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException {
         model = new mainModel(); //Initialize Model
         model.syncDB(); //Synchronize the data into memory from DB
         renderMainMenu(model); //Render Main Menu
@@ -29,7 +29,7 @@ public class mainLauncher {
         System.exit(0);
     }
 
-    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException {
+    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException {
         int choiceMainMenu = 0;
         Scanner scanChoice = new Scanner(System.in);
 
@@ -64,7 +64,7 @@ public class mainLauncher {
         scanChoice.close();
     }
 
-    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException {
+    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException, ApplicationException {
         System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
         int registerChoice = 0;
@@ -110,7 +110,7 @@ public class mainLauncher {
 
     }
 
-    private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException {
+    private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException {
         System.out.println("Please Enter Your Registered Email ID and Password to Login! ");
         System.out.print("Email: ");
         String email = scanChoice.nextLine();
@@ -142,7 +142,7 @@ public class mainLauncher {
         }
     }
 
-    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
         Employee currentEmp = (Employee) model.getUserByUsername(email);
 
         System.out.println("Welcome "+ currentEmp.getName() +" to S&E Real Estate" + currentEmp.getEmpRole());
@@ -198,7 +198,7 @@ public class mainLauncher {
 
     }
 
-    private static void handlePayroll(String email, Scanner scanChoice, mainModel model) throws MyException, SERException, SQLException, ParseException, IOException, UserException, PropertyException {
+    private static void handlePayroll(String email, Scanner scanChoice, mainModel model) throws MyException, SERException, SQLException, ParseException, IOException, UserException, PropertyException, ApplicationException {
         System.out.println("Enter the Employee id ");
         System.out.println(model.getEmpKeySets());
         String empid = scanChoice.nextLine();
@@ -242,7 +242,7 @@ public class mainLauncher {
         }
     }
 
-    private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+    private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
 
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println("CREATE INSPECTION");
@@ -351,7 +351,7 @@ public class mainLauncher {
 
 
 
-    private static void cancellInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException {
+    private static void cancellInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException {
 
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println("CANCEL INSPECTION");
@@ -365,7 +365,7 @@ public class mainLauncher {
 
     }
 
-    private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException {
+    private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println("BOOK INSPECTION");
         System.out.println("-----------------");
@@ -412,7 +412,7 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void listInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException {
+    private static void listInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
        if(currentUser instanceof Customer){
            model.listInspection();
            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
@@ -423,7 +423,7 @@ public class mainLauncher {
        }
     }
 
-    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException {
+    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException, ApplicationException {
 
         Customer currentUser = (Customer) model.getUserByUsername(username);
 
@@ -433,7 +433,7 @@ public class mainLauncher {
         //All LoggedInMenus
         String[] vendorMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS","AUCTION", "LOGOUT"};//Vendor Menu
         String[] landLordMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS", "LOGOUT"};//Landlord Menu
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LIST INSPECTION","BOOK INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "APPLY FOR PROPERTY" ,"BOOK INSPECTION", "LIST BOOKED INSPECTION", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorMenu;
@@ -480,18 +480,19 @@ public class mainLauncher {
             } else{
                 switch (choiceLoggedInMenu) {
                     case 1 -> searchProperty(currentUser, scanChoice, model);//Search Property
-                    case 2 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
-                    case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
-                    case 4 -> listInspection(currentUser, scanChoice, model); //List inspection
-                    case 5 -> bookInspection(currentUser, scanChoice, model);//book inspection
-                    case 6 -> renderMainMenu(model); //Logout
+                    case 2 -> rentBuyProperty(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 3 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
+                    case 4 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
+                    case 5 -> listInspection(currentUser, scanChoice, model); //List inspection
+                    case 6 -> bookInspection(currentUser, scanChoice, model);//book inspection
+                    case 7 -> renderMainMenu(model); //Logout
                 }
             }
 
         } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
 
     }
-    private static void searchProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    private static void searchProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
         System.out.println("Search Property by");
         System.out.println("1. Suburb");
         System.out.println("2. Price");
@@ -565,7 +566,7 @@ public class mainLauncher {
 
     }
 
-    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
         ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
         int loopCounter = 1;
         for (String suburb : suburbs){
@@ -575,7 +576,7 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
 
         do {
             System.out.print("Suburb Name to Add (press q to go Back): ");
@@ -589,7 +590,7 @@ public class mainLauncher {
 
     }
 
-    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
 
         System.out.println("Please Enter the property details !");
 
@@ -700,7 +701,7 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    public static void listProperty(User someuser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    public static void listProperty(User someuser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
 
         if(someuser instanceof Customer) {
             Customer currentUser = (Customer) someuser;
@@ -734,7 +735,7 @@ public class mainLauncher {
         }
     }
 
-    public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+    public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
 
             System.out.println("Select the Property id");
             int choice = scanChoice.nextInt();
@@ -744,7 +745,7 @@ public class mainLauncher {
 
         }
 
-    public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+    public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
             while (true) {
                 System.out.println("Select the Property id");
                 System.out.println(model.getPropertyDB());
@@ -796,7 +797,66 @@ public class mainLauncher {
             renderAdminLoggedInMenu(email, scanChoice, model);
         }
 
-    public static void rentProperty(Customer currentUser, Scanner scanChoice, mainModel model){
-        
+    public static void rentBuyProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+
+        System.out.println("Enter a Property ID you wish to apply for:");
+        String propID = scanChoice.nextLine();
+        while (true){
+            if(propID.length()>2){
+                System.out.println("Please enter a valid Property ID");
+                propID = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        Property property = null;
+
+        try {
+            property = model.listProperty(Integer.parseInt(propID));
+        }
+        catch (PropertyException e) {
+            //Invalid ID
+        }
+
+        if(property == null || !property.isEmployeeAssigned()){
+            System.out.println("The Property Is Either Not Yet Available or Invalid, Please try Again Later");
+        }else {
+
+            //Print Property Details
+            System.out.println(property.toString());
+
+            if (currentUser.getType().equals(CustomerType.RENTER) && property.isPropertyTypeRental()) {
+                //If the current user is a renter
+
+                //Enter the Rent
+                System.out.print("Enter the Weekly Rent:");
+                String tmpWeeklyRent = scanChoice.nextLine();
+                int weeklyRent;
+                while (true){
+                    try{
+                        weeklyRent = Integer.parseInt(tmpWeeklyRent);
+                        if(weeklyRent > 0){
+                            System.out.println("Rent should be greater then 0");
+                            System.out.print("Enter the Weekly Rent:");
+                            tmpWeeklyRent = scanChoice.nextLine();
+                        }else{
+                            break;
+                        }
+                    }catch(Exception e){
+                        System.out.println("Rent should be a number");
+                    }
+                }
+                System.out.println("Applying with the weekly rent " + weeklyRent);
+
+                model.rentApplication(property, currentUser, weeklyRent);
+
+            } else if (currentUser.getType().equals(CustomerType.BUYER) && property.isPropertyTypeSale()) {
+
+            } else {
+                System.out.println("An Error Occured!");
+            }
+        }
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 }
