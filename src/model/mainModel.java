@@ -16,6 +16,7 @@ public class mainModel {
     public static ArrayList<User> userDB = new ArrayList<>();
     public static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
     public static ArrayList<Application> applicationDB = new ArrayList<Application>();
+    public static ArrayList<Auction> auctionDB = new ArrayList<Auction>();
     public static HashMap<Integer, Property> propertyDB;
     Connection conn;
     Statement stmt;
@@ -848,6 +849,23 @@ public class mainModel {
         }else{
             throw new ApplicationException(msg);
         }
+
+    }
+
+    public int countMyProperties(Customer currentUser){
+        int counter = 0;
+
+        for (Map.Entry<Integer, Property> entry : propertyDB.entrySet()) {
+            Integer key = entry.getKey();
+            Property value = entry.getValue();
+            if(value.getCustomerId().equals(currentUser.getId()))
+                counter++;
+        }
+        return counter;
+
+    }
+
+    public void createAuction(){
 
     }
 }
