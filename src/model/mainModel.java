@@ -1,7 +1,6 @@
 package model;
 import config.CustomerType;
 import config.EmployeeType;
-import controller.InspectionController;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -456,15 +455,8 @@ public class mainModel {
     }
 
     public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
+
         Property thisProp = null;
-
-        /*int propertyId = propertyDB.size() + 1;
-        if(property.getPropertyId() == 0)
-            property.setPropertyId(propertyId);
-        propertyDB.put(propertyId,property);
-        */
-
-
 
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
             if(set.getValue().getPropertyId() == propertyID){
@@ -472,22 +464,193 @@ public class mainModel {
             }
         }
 
-        if(thisProp != null && thisProp.getEmployeeId().equals(currentEmployee.getId())&&thisProp.isEmployeeAssigned()){
-            InspectionController inspect = new InspectionController();
-            Inspection tempIns = new Inspection("3",thisProp.getPropertyId(), thisProp.getEmployeeId(), getdateslot,timeslots1 ,status);
+        if(thisProp != null && thisProp.isEmployeeAssigned()){
+            if(thisProp.getEmployeeId().equals(currentEmployee.getId())) {
+                //InspectionController inspect = new InspectionController();
+                Inspection tempIns = new Inspection(thisProp.getPropertyId(), thisProp.getEmployeeId(), getdateslot, timeslots1, status);
+                inspectionDB.add(tempIns);
+                System.out.println("Inspection has been created sucessfully!");
+            }else{
+                System.out.println("You are not assigned to this property!");
+            }
+        }
+        else if(thisProp == null){
+            System.out.println("Property does not exist..Enter another property!!");
+        }
+        else if(!thisProp.isEmployeeAssigned()){
+            System.out.println("No employee is assigned to this property yet! Please contact Branch Admin.");
+        }
+        System.out.println("---------------------------------------------------------------------------------");
+    }
 
-            inspect.createInspection(thisProp, tempIns);
-            inspectionDB.add(tempIns);
-            for(Inspection a:inspectionDB){
-                System.out.println(a.showDetails());
+    public void bookInspection(Customer currentUser, String id, String date, String time, String status) throws PropertyException {
+        if(currentUser.getType().equals(CustomerType.BUYER) || currentUser.getType().equals(CustomerType.RENTER)) {
+            for(Inspection a:inspectionDB) {
+                if (a.getId().equals(id)) {
+                    if (a.getStatus().equalsIgnoreCase("created")) {
+                        a.setCid(currentUser.getId());
+                        a.setDate(date);
+                        a.setTime(time);
+                        a.setStatus(status);
+
+                        System.out.println("Inspection has been created sucessfully!");
+                    }
+                    else{
+                        System.out.println("Inspection is not available for bookings");
+                    }
+                }
+            }
+        }
+        else{
+            System.out.println("Inspection is not available for bookings");
+        }
+    }
+
+    public void availableDates(String id){
+        System.out.println("Available dates for inspections are:");
+        for(Inspection a:inspectionDB){
+            if(a.getId().equals(id)){
+                System.out.println( a.getId());
+                String dates=a.getdatesl();
+                String[] split=dates.split(";");
+                String date1=split[0];
+                String date2=split[1];
+                String date3=split[2];
+                String date4=split[3];
+                String date5=split[4];
+                System.out.println("1. "+date1);
+                System.out.println("2. "+date2);
+                System.out.println("3. "+date3);
+                System.out.println("4. "+date4);
+                System.out.println("5. "+date5);
+                System.out.println("Select an opption");
             }
         }
     }
 
+    public void availableTimes(String id){
+        System.out.println("Available dates for inspections are:");
+        for(Inspection a:inspectionDB){
+            if(a.getId().equals(id)){
+                String times=a.gettimesl();
+                String[] split=times.split(";");
+                String date1=split[0];
+                String date2=split[1];
+                String date3=split[2];
+                String date4=split[3];
+                String date5=split[4];
+                System.out.println("1. "+date1);
+                System.out.println("2. "+date2);
+                System.out.println("3. "+date3);
+                System.out.println("4. "+date4);
+                System.out.println("5. "+date5);
+                System.out.println("Select an opption");
+            }
+        }
+    }
+
+    public String validateDate(int dateOption,String id){
+        String date="";
+        for(Inspection a:inspectionDB){
+            if(a.getId().equals(id)){
+                String dates=a.getdatesl();
+                String[] split=dates.split(";");
+                if(dateOption==1){
+                    date=split[0];
+                }else if(dateOption==2){
+                    date=split[1];
+                }else if(dateOption==3){
+                    date=split[2];
+                }else if(dateOption==4){
+                    date=split[3];
+                }else if(dateOption==5){
+                    date=split[4];
+                }
+            }
+        }
+        return date;
+    }
+
+    public String validateTime(int timeOption,String id) {
+        String time = "";
+        for (Inspection a : inspectionDB) {
+            if (a.getId().equals(id)) {
+                String times = a.gettimesl();
+                String[] split = times.split(";");
+                if (timeOption == 1) {
+                    time = split[0];
+                } else if (timeOption == 2) {
+                    time = split[1];
+                } else if (timeOption == 3) {
+                    time = split[2];
+                } else if (timeOption == 4) {
+                    time = split[3];
+                } else if (timeOption == 5) {
+                    time = split[4];
+                }
+            }
+        }
+        return time;
+    }
+
+    public void listInspectionBook(){
+        System.out.println("Available inspections:");
+        for(Inspection a:inspectionDB){
+            if(a.getStatus().equals("Created")){
+                System.out.println("Inspecion ID:" +a.getId() +"\tProperty ID:" +a.getpId());
+            }
+            if(a.getId().equals(null)){
+                System.out.println("No inpections are available");
+            }
+        }
+    }
+
+    public boolean validateInspection(String id){
+        Boolean flag=false;
+        for(Inspection a:inspectionDB){
+            if(a.getStatus().equals(id)){
+                flag=true;
+            }
+            else{
+                flag=false;
+            }
+        }
+        return flag;
+    }
+
     public void listInspection(){
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("LIST INSPECTION");
+        System.out.println("---------------");
         for(Inspection a:inspectionDB){
             System.out.println(a.showDetails());
+            System.out.println("*************************************");
         }
+        System.out.println("---------------------------------------------------------------------------------");
+
+    }
+
+    public void listInspectionID(){
+        System.out.println("Available inspections are:");
+        for(Inspection a:inspectionDB){
+            System.out.println(a.getId());
+        }
+    }
+
+    public void cancellInspection(String id) throws PropertyException {
+        for(Inspection a:inspectionDB){
+            if(a.getId().equals(id)){
+                a.setStatus("cancelled");
+                a.setDate(null);
+                a.setTime(null);
+                a.setTimeSlot(null);
+                a.setdatesSlot(null);
+                System.out.println("Inspection cancelled sucessfully");
+                System.out.println(a.showDetails());
+
+            }
+        }
+        System.out.println("---------------------------------------------------------------------------------");
     }
 
     public void updateSalary(String empid, double salary, Payroll payroll) throws MyException, UserException {

@@ -149,7 +149,7 @@ public class mainLauncher {
 
         int choiceLoggedInMenu = 0;
         //All LoggedInMenus
-        String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES","LIST INSPECTION", "LOGOUT"}; //Sales & Property Menu
+        String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION", "LOGOUT"}; //Sales & Property Menu
         String[] branchAdmin = {"LIST PROPERTIES", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL" ,"LOGOUT"}; //Branch Admin Menu
         String[] menu = new String[6];
 
@@ -182,7 +182,8 @@ public class mainLauncher {
                     case 1 -> listProperty(currentEmp, scanChoice, model);
                     case 2 -> createInspection(currentEmp, scanChoice, model); //Create Inspection Time
                     case 3 -> listInspection(currentEmp, scanChoice, model);//List inspections
-                    case 4 -> renderMainMenu(model); //Logout
+                    case 4 -> cancellInspection(currentEmp, scanChoice, model);//cancel inspection
+                    case 5 -> renderMainMenu(model); //Logout
                 }
             }else{
                 switch (choiceLoggedInMenu) {
@@ -243,6 +244,9 @@ public class mainLauncher {
 
     private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
 
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("CREATE INSPECTION");
+        System.out.println("-----------------");
         System.out.println("Please Enter the property details !");
 
         System.out.println("Property ID:");
@@ -258,23 +262,43 @@ public class mainLauncher {
         int count=5;
         String dateSlot = "";
         String date;
+        String date4="",date3="",date2,date1;
         System.out.println("Enter the Dates to conduct the inspection on:");
+        boolean loop=false;
         do {
-        System.out.println("Enter " +count +" more dates");
-        date = scanChoice.nextLine();
-            while (true) {
-                if (date.length() < 11 && !controller.registerController.validateDOB(date)) {
-                    String errorMsg = "A Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020\n";
-                    System.out.println("Please enter a valid Date" + errorMsg);
-                    date = scanChoice.nextLine();
-                } else {
+            do {
+                System.out.println("Enter " + count + " more dates");
+                date = scanChoice.nextLine();
+                while (true) {
+                    if (date.length() < 11 && !controller.registerController.validateDate(date)) {
+                        String errorMsg = "A Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020\n";
+                        System.out.println("Please enter a valid Date" + errorMsg);
+                        date = scanChoice.nextLine();
+                    } else {
+                        if (count == 5) {
+                            dateSlot = date;
+                            loop = false;
+                        }
 
-                    break;
+                        if (count < 5) {
+                            String[] split = dateSlot.split(";");
+                            for (int i = 0; i < split.length; i++) {
+                                if (date.equals(split[i])) {
+                                    System.out.println("Date already entered!!..Add a new date..");
+                                    loop = true;
+                                } else {
+                                    loop=false;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
                 }
+            }while(loop==true);
+            if(count<5) {
+                dateSlot = dateSlot + ";" + date;
             }
-            dateSlot=dateSlot+";" +date;
-            System.out.println(count);
-            System.out.println(dateSlot);
             count--;
         }
         while(count>=1);
@@ -283,26 +307,109 @@ public class mainLauncher {
         String timeSlot="";
         String time;
         System.out.println("Enter the timeslots for the inspection");
-        do {
-            System.out.println("Enter " +count +" more time slot:");
-            time = scanChoice.nextLine();
-            while (true) {
-                if (time.length() < 11 && !controller.registerController.validateJavaTime(time)) {
-                    String errorMsg = "A Valid Time is of hh:mm format.\n Example: 13:30\n";
-                    System.out.println("Please enter a valid Time" + errorMsg);
-                    time = scanChoice.nextLine();
-                } else {
-                    timeSlot = timeSlot + ";" + time;
-                    System.out.println(timeSlot);
-                    break;
+        loop=false;
+        do{
+            do {
+                System.out.println("Enter " +count +" more time slot:");
+                time = scanChoice.nextLine();
+                while (true) {
+                    if (time.length() < 11 && !controller.registerController.validateJavaTime(time)) {
+                        String errorMsg = "A Valid Time is of hh:mm format.\n Example: 13:30\n";
+                        System.out.println("Please enter a valid Time" + errorMsg);
+                        time = scanChoice.nextLine();
+                    } else {
+                        if (count == 5) {
+                            timeSlot = time;
+                            loop = false;
+                        }
+
+                        if (count < 5) {
+                            String[] split = timeSlot.split(";");
+                            for (int i = 0; i < split.length; i++) {
+                                if (time.equals(split[i])) {
+                                    System.out.println("Time already entered!!..Add a new time..");
+                                    loop = true;
+                                } else {
+                                    loop=false;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
                 }
+            }while(loop==true);
+            if(count<5) {
+                timeSlot = timeSlot + ";" + time;
             }
             count--;
         }while(count>=1);
 
         model.createInspection(Integer.parseInt(pID), currentEmp, dateSlot, timeSlot, "Created");
-        System.out.println("Inspection Times added!");
         renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+    }
+
+
+
+    private static void cancellInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException {
+
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("CANCEL INSPECTION");
+        System.out.println("-----------------");
+        model.listInspectionID();
+            System.out.println("Enter the inspection ID to cancel.");
+            String id=scanChoice.nextLine();
+
+        model.cancellInspection(id);
+        renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+
+    }
+
+    private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException {
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("BOOK INSPECTION");
+        System.out.println("-----------------");
+        String id="";
+        do {
+            model.listInspectionBook();
+            System.out.println("Enter the inspection ID you want to book. (Example: INS1)");
+            id = scanChoice.nextLine();
+            model.validateInspection(id);
+        }while(model.validateInspection(id)==true);
+
+        //setting date
+        String date,time = null;
+        boolean flag=true;
+        int option = 0;
+        do {
+            model.availableDates(id);
+            option = scanChoice.nextInt();
+           if(option==1||option==2||option==3||option==4||option==5) {
+               flag=false;
+           }
+           else{
+               System.out.println("select one of the options(1 to 5)");
+               flag=false;
+           }
+        }while(flag=false);
+        date=model.validateDate(option,id);
+
+        //setting time
+        do {
+            model.availableTimes(id);
+            option = scanChoice.nextInt();
+            if(option==1||option==2||option==3||option==4||option==5) {
+                flag=false;
+            }
+            else{
+                System.out.println("select one of the options(1 to 5)");
+                flag=false;
+            }
+        }while(flag=false);
+        time=model.validateTime(option,id);
+
+        model.bookInspection(currentUser,id,date,time,"Scheduled");
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
     private static void listInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException {
@@ -314,7 +421,6 @@ public class mainLauncher {
            model.listInspection();
            renderAdminLoggedInMenu(currentUser.getEmail(), scanChoice, model);
        }
-
     }
 
     private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException {
@@ -327,7 +433,7 @@ public class mainLauncher {
         //All LoggedInMenus
         String[] vendorMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS","AUCTION", "LOGOUT"};//Vendor Menu
         String[] landLordMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS", "LOGOUT"};//Landlord Menu
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "LIST INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LIST INSPECTION","BOOK INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorMenu;
@@ -377,7 +483,8 @@ public class mainLauncher {
                     case 2 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
                     case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
                     case 4 -> listInspection(currentUser, scanChoice, model); //List inspection
-                    case 5 -> renderMainMenu(model); //Logout
+                    case 5 -> bookInspection(currentUser, scanChoice, model);//book inspection
+                    case 6 -> renderMainMenu(model); //Logout
                 }
             }
 
