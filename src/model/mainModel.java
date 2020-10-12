@@ -265,6 +265,16 @@ public class mainModel {
         return true;
     }
 
+    public User getUserByID(String ID){
+
+        for(User user : userDB){
+            if ( user.getId().equals(ID) ) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     public User getUserByUsername(String email){
 
         for(User user : userDB){
@@ -527,7 +537,6 @@ public class mainModel {
     }
 
     public void listInspectionCustomer(User currentCustomer){
-        System.out.println("---------------------------------------------------------------------------------");
         System.out.println("LIST INSPECTION");
         System.out.println("---------------");
         if(currentCustomer instanceof Customer) {
@@ -538,11 +547,22 @@ public class mainModel {
                 }
             }
         }
-        System.out.println("---------------------------------------------------------------------------------");
+    }
+
+    public void listInspectionEmployee(User currentuser){
+        System.out.println("LIST INSPECTION");
+        System.out.println("---------------");
+        if(currentuser instanceof Employee) {
+            for (Inspection a : inspectionDB) {
+                if(currentuser.getId().equals(a.geteId())) {
+                    System.out.println(a.showDetails());
+                    System.out.println("*************************************");
+                }
+            }
+        }
     }
 
     public void listInspectionIDCustomer(User currentCustomer){
-        System.out.println("---------------------------------------------------------------------------------");
         if(currentCustomer instanceof Customer) {
             for (Inspection a : inspectionDB) {
                 if(currentCustomer.getId().equals(a.getcId())) {
@@ -550,13 +570,36 @@ public class mainModel {
                 }
             }
         }
-        System.out.println("---------------------------------------------------------------------------------");
+        }
+
+    public void listassignedProperties(Employee currentEmployee) {
+        try {
+            System.out.println(" ");
+            System.out.println("Assigned Properties");
+            propertyDB.values()
+                    .stream()
+                    .filter(i -> i.getEmployeeId().equals(currentEmployee.getId()))
+                    .forEach(p -> System.out.println(p.getPropertyId()));
+        } catch(NullPointerException e){
+            //System.out.println("None");
+            return;
+        }
+    }
+
+    public boolean validproperty(int propertyID){
+        boolean flag=false;
+        for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
+            if(set.getValue().getPropertyId() ==propertyID){
+                flag=true;
+            }
+            else{
+                flag=false;
+            }
+        }return flag;
     }
 
     public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
-
         Property thisProp = null;
-
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
             if(set.getValue().getPropertyId() == propertyID){
                 thisProp = set.getValue();
@@ -579,8 +622,7 @@ public class mainModel {
         else if(!thisProp.isEmployeeAssigned()){
             System.out.println("No employee is assigned to this property yet! Please contact Branch Admin.");
         }
-        System.out.println("---------------------------------------------------------------------------------");
-    }
+        }
 
     public void bookInspection(Customer currentUser, String id, String date, String time, String status) throws PropertyException {
         if(currentUser.getType().equals(CustomerType.BUYER) || currentUser.getType().equals(CustomerType.RENTER)) {
@@ -718,15 +760,13 @@ public class mainModel {
     }
 
     public void listInspection(){
-        System.out.println("---------------------------------------------------------------------------------");
         System.out.println("LIST INSPECTION");
         System.out.println("---------------");
         for(Inspection a:inspectionDB){
             System.out.println(a.showDetails());
             System.out.println("*************************************");
         }
-        System.out.println("---------------------------------------------------------------------------------");
-    }
+       }
 
     public void listInspectionID(Employee currentEmp){
         System.out.println("Available inspections are:");
@@ -751,8 +791,7 @@ public class mainModel {
                 }
             }
         }
-        System.out.println("---------------------------------------------------------------------------------");
-    }
+         }
 
     public void cancellInspectionCustomer(String id,Customer currentUser) throws PropertyException {
         for(Inspection a:inspectionDB){
@@ -768,8 +807,7 @@ public class mainModel {
                 }
             }
         }
-        System.out.println("---------------------------------------------------------------------------------");
-    }
+         }
 
     public void updateSalary(String empid, double salary, Payroll payroll) throws MyException, UserException {
         payroll.setSalary(salary);
@@ -803,6 +841,8 @@ public class mainModel {
         payroll.getSalary();
         //System.out.println("hello"+payroll.getSalary());
     }
+
+
 
     public boolean isInspectionDone(Customer customer, Property thisProp){
         for(Inspection i : inspectionDB){
@@ -858,13 +898,20 @@ public class mainModel {
         return false;
     }
 
-    public void viewApplicationsByUser(Customer currentUser) {
+    public void viewApplicationsByUser(User currentUser) {
         for(Application app : applicationDB){
             int totalApp = 0;
             String applications = "";
-            if(currentUser.getId().equals(app.getCustID())){
-                applications += app.getDetails()+"\n-----------------------------\n";
-                totalApp++;
+            if(currentUser instanceof Customer){
+                if(currentUser.getId().equals(app.getCustID())){
+                    applications += app.getDetails()+"\n-----------------------------\n";
+                    totalApp++;
+                }
+            }else{
+                if(currentUser.getId().equals(app.getEmpID())){
+                    applications += app.getDetails()+"\n-----------------------------\n";
+                    totalApp++;
+                }
             }
 
             System.out.println("You have overall " + totalApp + " applications, please see the details below.\n\n" + applications);
@@ -896,20 +943,15 @@ public class mainModel {
             msg += "You are not allowed to buy property.\n";
         }
 
-        if(isInspectionDone(applyingUser, selectedProperty)){
-            error = 1;
-            msg += "You need to inspect the property before applying.\n";
-        }
+//        if(isInspectionDone(applyingUser, selectedProperty)){
+//            error = 1;
+//            msg += "You need to inspect the property before applying.\n";
+//        }
 
         if(hasAlreadyApplied(applyingUser, selectedProperty)){
             error = 1;
             msg += "You have already applied for this property.\n";
         }
-
-//        if(weeklyRent < selectedProperty.getMinPrice()){
-//            error = 1;
-//            msg += "The weekly rent should be more then the minimum specified rent.\n";
-//        }
 
         if(error == 0){
             Application newSale = new SalesApplication(selectedProperty.getEmployeeId(), applyingUser.getId(), selectedProperty, price, saletype);
@@ -920,5 +962,95 @@ public class mainModel {
             throw new ApplicationException(msg);
         }
 
+    }
+
+    public int countMyProperties(Customer currentUser){
+        int counter = 0;
+
+        for (Map.Entry<Integer, Property> entry : propertyDB.entrySet()) {
+            Integer key = entry.getKey();
+            Property value = entry.getValue();
+            if(value.getCustomerId().equals(currentUser.getId()))
+                counter++;
+        }
+        return counter;
+
+    }
+
+    public void createAuction(String auctionDate, Property thisProperty){
+        Auction newAuc = new Auction(auctionDate, thisProperty);
+        auctionDB.add(newAuc);
+        System.out.println("Auction Created with ID " + newAuc.getId() + " for Property " + thisProperty.getPropertyName() + " on date: "+auctionDate);
+    }
+
+    public void listAuctions(){
+        if(auctionDB.size() > 0) {
+            for (Auction auction : auctionDB) {
+                System.out.println("Auction ID:" + auction.getId() + "\n" +
+                        "Property: " + auction.getProperty().getPropertyName() + "(" + auction.getProperty().getPropertyId() + ")\n" +
+                        "Auction Date: " + auction.getAuctionDate());
+            }
+        }else{
+            System.out.println("No Auction Available!");
+        }
+    }
+
+    public void addBid(String auctionID, double bid, Customer currentUser) throws ApplicationException {
+        Bids newBid = new Bids(auctionID, bid, currentUser.getId());
+        for(Auction auction : auctionDB){
+            if(auction.getId().equals(auctionID)){
+                auction.handleBids(newBid);
+                if(auction.getAuctionStatus().equals(AuctionStatus.COMPLETED)){
+                    this.saleApplication(auction.getProperty(), (Customer) this.getUserByID(auction.getHighestBidder()), auction.getHighestBid(),"auction");
+                }
+            }
+        }
+    }
+
+    public String getAuctionDetailsByID(String auctID) {
+        for(Auction auction : auctionDB){
+            if(auctID.equals(auction.getId())) {
+                return("Auction ID:" + auction.getId() + "\n" +
+                        "Property: " + auction.getProperty().getPropertyName() + "(" + auction.getProperty().getPropertyId() + ")\n" +
+                        "Auction Date: " + auction.getAuctionDate());
+            }
+        }
+        return "Invalid Auction ID";
+    }
+
+    public boolean isValidAuction(String auctID) {
+        for(Auction auction : auctionDB){
+            if(auctID.equals(auction.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public double getNextValidBid(String auctID){
+        for(Auction auction : auctionDB){
+            if(auctID.equals(auction.getId())) {
+                return (auction.getHighestBid() + auction.getMinIncrease());
+            }
+        }
+        return 0;
+    }
+
+    public void completeInspection(User currentuser,String id) throws PropertyException {
+        for(Inspection i : inspectionDB){
+            if(i.getId().equals(id)){
+                if(i.getStatus().equals("Scheduled")){
+                    if(i.getcId().equals(currentuser.getId()) ||i.geteId().equals(currentuser.getId())){
+                        i.setStatus("Completed");
+                    }
+                }
+                else if(!i.getStatus().equalsIgnoreCase("Scheduled")){
+                    System.out.println("Inspection has not yet been scheduled");
+                }
+                if(!i.getcId().equals(currentuser.getId()) || !i.geteId().equals(currentuser.getId())){
+                    System.out.println("You are not allowed to update this inspection status!!");
+                }
+            }
+        }
     }
 }
