@@ -751,6 +751,7 @@ public class mainLauncher {
                     case 1 -> model.listPropertiesForSale();
                     case 2 -> model.listPropertiesForRent();
                 }
+                renderLoggedInMenu(someuser.getEmail(), scanChoice, model);
             }
 
         }else if(someuser instanceof Employee) {
@@ -762,8 +763,9 @@ public class mainLauncher {
             }else{
                 model.listProperties();
             }
+            renderAdminLoggedInMenu(someuser.getEmail(), scanChoice, model);
         }
-        renderLoggedInMenu(someuser.getEmail(), scanChoice, model);
+
     }
 
     public static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
