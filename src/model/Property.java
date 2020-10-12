@@ -86,15 +86,7 @@ public class Property {
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
-
-    public boolean isAvailability() {
-        return Availability;
-    }
-
-    public void setAvailability(boolean availability) {
-        Availability = availability;
-    }
-
+    
     public int getPropertyId() {
         return propertyId;
     }
