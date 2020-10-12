@@ -1,6 +1,9 @@
 package model;
 
 import config.EmployeeType;
+import config.PropertyCategory;
+import config.PropertyState;
+import config.PropertyType;
 
 public class Property {
     private int propertyId;
@@ -18,6 +21,8 @@ public class Property {
     private String employeeId;
     private EmployeeType empRole;
     private boolean auction;
+    private PropertyState Availability;
+    private String customerId;
 
 
     public Property( String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
@@ -66,6 +71,22 @@ public class Property {
 
     }
 
+    public PropertyState getAvailability() {
+        return Availability;
+    }
+
+    public void setAvailability(PropertyState availability) {
+        Availability = availability;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+    
     public int getPropertyId() {
         return propertyId;
     }

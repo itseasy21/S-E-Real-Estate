@@ -31,4 +31,23 @@ public abstract class Application {
     public void setStatus(ApplicationStatus status) {
         this.status = status;
     }
+
+    public String getCustID() {
+        return this.custID;
+    }
+
+    public double getApplicationPrice() {
+        return this.applicationPrice;
+    }
+
+    public Property getProperty() {
+        return this.property;
+    }
+
+    public String getEmpID() {
+        return this.empID;
+    }
+
+    public abstract String getDetails();
+    public abstract void completeApplication();
 }

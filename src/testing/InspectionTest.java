@@ -2,9 +2,9 @@ package testing;
 
 import config.CustomerType;
 import config.EmployeeType;
-import model.InspectionController;
+import config.PropertyCategory;
+import config.PropertyType;
 import model.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

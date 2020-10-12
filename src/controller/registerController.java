@@ -94,7 +94,7 @@ public class registerController extends baseController{
                 return true;
             }
         }else{
-            throw new UserException("The following error(s) occurred:\n" +errorMsg);
+            throw new UserException("\u001B[31m" + "The following error(s) occurred:\n" +errorMsg + "\u001B[0m");
 //            System.out.println("\u001B[31m" + "The following error(s) occurred:\n" +errorMsg + "\u001B[0m");
 //            return false;
         }

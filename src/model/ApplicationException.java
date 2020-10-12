@@ -8,9 +8,7 @@ package model;
 
         @Override
         public String toString() {
-            return "ApplicationException{" +
-                    "message='" + message + '\'' +
-                    '}';
+            return "One or more Error Occurred:\n" + message;
         }
     }
 
