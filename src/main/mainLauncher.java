@@ -219,8 +219,8 @@ public class mainLauncher {
             Payroll payroll = new Payroll(empid, model.getEmployeeHour(empid), 40, model.EmployeeSalary(empid));
             System.out.println("Select the operation");
             int choice = 0;
-            while (choice != 4) {
-                System.out.println("1.Update salary \n 2.Update Hour\n 3.Current salary\n4.Quit");
+            while (choice != 5) {
+                System.out.println("1.Update salary \n 2.Update Hour\n 3.Current salary\n4.Adding Bonus to Salary\n5.Quit");
                 Scanner sc = new Scanner(System.in);
                 choice = sc.nextInt();
 
@@ -238,9 +238,14 @@ public class mainLauncher {
                        // renderAdminLoggedInMenu(email, scanChoice, model);
                         break;
                     case 3:
-                        model.getSalary(empid, payroll);
+                        double salary1=model.getSalary(empid, payroll);
+                        System.out.println(salary1);
+
                        // renderAdminLoggedInMenu(email, scanChoice, model);
                         break;
+                    case 4:
+                        double bonus = 100;
+                        model.calBonus(empid,payroll,bonus);
 
 
                 }

@@ -766,9 +766,11 @@ public class mainModel {
 
     }
 
-    public void getSalary(String empid, Payroll payroll) {
-        payroll.getSalary();
+    public double getSalary(String empid, Payroll payroll) {
+        double salary;
+       salary= payroll.getSalary();
         //System.out.println("hello"+payroll.getSalary());
+        return salary;
     }
 
 
@@ -981,5 +983,20 @@ public class mainModel {
                 }
             }
         }
+    }
+
+    public void calBonus(String empid, Payroll payroll,double bonus) throws UserException {
+        payroll.setBonus(bonus);
+        double salary = payroll.getSalary();
+        for(User user : userDB){
+            if(user instanceof Employee) {
+                if ((user.getId()).equalsIgnoreCase(empid)) {
+                    ((Employee) user).setSalary(salary);
+                }
+
+            }
+        }
+
+
     }
 }
