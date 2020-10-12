@@ -25,6 +25,18 @@ public class Auction {
         lastBidTime = calendar.getTimeInMillis();
     }
 
+    public Property getProperty() {
+        return property;
+    }
+
+    public double getHighestBid() {
+        return highestBid;
+    }
+
+    public String getAuctionDate() {
+        return auctionDate;
+    }
+
     public String getId() {
         return id;
     }
@@ -42,6 +54,10 @@ public class Auction {
         Long numberOfMilliSec = Calendar.getInstance().getTimeInMillis() - time;
         double numberOfSecondsPassed = numberOfMilliSec / 1000.0;
         return numberOfSecondsPassed >= 30;
+    }
+
+    public int getMinIncrease() {
+        return minIncrease;
     }
 
     public void handleBids(Bids bid){
