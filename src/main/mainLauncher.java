@@ -110,7 +110,7 @@ public class mainLauncher {
         catch (UserException e){
             System.out.println(e.toString());
         }
-        
+
         if(!registered)
             register(scanChoice, model);
         else
