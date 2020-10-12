@@ -1,5 +1,7 @@
 package model;
 
+import config.AuctionStatus;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -12,9 +14,10 @@ public class Auction {
     private Calendar calendar;
     private long lastBidTime;
     private Property property;
-    private boolean auctionStatus;
+    private AuctionStatus auctionStatus;
     private final int minIncrease = 1000;
     private double highestBid;
+    private String highestBidder;
     protected ArrayList<Bids> bidsList = new ArrayList<Bids>();
 
     public Auction(String auctionDate, Property property) {
@@ -23,6 +26,19 @@ public class Auction {
         this.property = property;
         calendar = Calendar.getInstance();
         lastBidTime = calendar.getTimeInMillis();
+        auctionStatus = AuctionStatus.PENDING;
+    }
+
+    public Property getProperty() {
+        return property;
+    }
+
+    public double getHighestBid() {
+        return highestBid;
+    }
+
+    public String getAuctionDate() {
+        return auctionDate;
     }
 
     public Property getProperty() {
@@ -60,15 +76,44 @@ public class Auction {
         return minIncrease;
     }
 
+    public void setAuctionStatus(AuctionStatus auctionStatus) {
+        this.auctionStatus = auctionStatus;
+    }
+
+    public AuctionStatus getAuctionStatus() {
+        return auctionStatus;
+    }
+
+    public void setHighestBid(double highestBid) {
+        this.highestBid = highestBid;
+    }
+
+    public void setHighestBidder(String highestBidder) {
+        this.highestBidder = highestBidder;
+    }
+
+    public String getHighestBidder() {
+        return highestBidder;
+    }
+
     public void handleBids(Bids bid){
         if(bid != null){
             if(bid.getValue() > 0
                     && bid.getPostID().equals(this.getId())
                     && bid.getValue() >= (this.highestBid + this.minIncrease)
-                    && !has30SecsPassed(getLastBidTime())){
-                bidsList.add(bid);
-                setLastBidTime(bid.getBidTime());
+                    && this.getAuctionStatus().equals(AuctionStatus.ONGOING)){
+                if(has30SecsPassed(getLastBidTime())) {
+                    this.setAuctionStatus(AuctionStatus.COMPLETED);
+                }else{
+                    this.setAuctionStatus(AuctionStatus.ONGOING);
+                    bidsList.add(bid);
+                    setLastBidTime(bid.getBidTime());
+                    setHighestBid(bid.getValue());
+                    setHighestBidder(bid.getResponderID());
+                }
             }
+
+
         }
     }
 

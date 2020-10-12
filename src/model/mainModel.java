@@ -1,8 +1,5 @@
 package model;
-import config.CustomerType;
-import config.EmployeeType;
-import config.PropertyCategory;
-import config.PropertyType;
+import config.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -195,6 +192,16 @@ public class mainModel {
             }
         }
         return true;
+    }
+
+    public User getUserByID(String ID){
+
+        for(User user : userDB){
+            if ( user.getId().equals(ID) ) {
+                return user;
+            }
+        }
+        return null;
     }
 
     public User getUserByUsername(String email){
@@ -865,20 +872,15 @@ public class mainModel {
             msg += "You are not allowed to buy property.\n";
         }
 
-        if(isInspectionDone(applyingUser, selectedProperty)){
-            error = 1;
-            msg += "You need to inspect the property before applying.\n";
-        }
+//        if(isInspectionDone(applyingUser, selectedProperty)){
+//            error = 1;
+//            msg += "You need to inspect the property before applying.\n";
+//        }
 
         if(hasAlreadyApplied(applyingUser, selectedProperty)){
             error = 1;
             msg += "You have already applied for this property.\n";
         }
-
-//        if(weeklyRent < selectedProperty.getMinPrice()){
-//            error = 1;
-//            msg += "The weekly rent should be more then the minimum specified rent.\n";
-//        }
 
         if(error == 0){
             Application newSale = new SalesApplication(selectedProperty.getEmployeeId(), applyingUser.getId(), selectedProperty, price, saletype);
@@ -922,11 +924,14 @@ public class mainModel {
         }
     }
 
-    public void addBid(String auctionID, double bid, Customer currentUser){
+    public void addBid(String auctionID, double bid, Customer currentUser) throws ApplicationException {
         Bids newBid = new Bids(auctionID, bid, currentUser.getId());
         for(Auction auction : auctionDB){
             if(auction.getId().equals(auctionID)){
                 auction.handleBids(newBid);
+                if(auction.getAuctionStatus().equals(AuctionStatus.COMPLETED)){
+                    this.saleApplication(auction.getProperty(), (Customer) this.getUserByID(auction.getHighestBidder()), auction.getHighestBid(),"auction");
+                }
             }
         }
     }

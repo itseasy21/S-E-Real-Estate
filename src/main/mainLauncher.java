@@ -155,7 +155,7 @@ public class mainLauncher {
 
         int choiceLoggedInMenu = 0;
         //All LoggedInMenus
-        String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION","UPDATE COMPLETED INSPECTION", "LOGOUT"}; //Sales & Property Menu
+        String[] salesPropertyManager = {"LIST PROPERTIES", "VIEW APPLICATIONS","CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION","UPDATE COMPLETED INSPECTION", "LOGOUT"}; //Sales & Property Menu
         String[] branchAdmin = {"LIST PROPERTIES", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL","LIST INSPECTIONS" ,"LOGOUT"}; //Branch Admin Menu
         String[] menu = new String[6];
 
@@ -186,11 +186,12 @@ public class mainLauncher {
             if(currentEmp.getEmpRole().equals(EmployeeType.PropertyManager) || currentEmp.getEmpRole().equals(EmployeeType.SalesConsultant)) {
                 switch (choiceLoggedInMenu) {
                     case 1 -> listProperty(currentEmp, scanChoice, model);
-                    case 2 -> createInspection(currentEmp, scanChoice, model); //Create Inspection Time
-                    case 3 -> listInspection(currentEmp, scanChoice, model);//List inspections
-                    case 4 -> cancellInspection(currentEmp, scanChoice, model);//cancel inspection
-                    case 5 -> completeInspection(currentEmp, scanChoice, model);//complete inspection
-                    case 6 -> renderMainMenu(model); //Logout
+                    case 2 -> viewApplications(currentEmp, scanChoice, model); //Create Inspection Time
+                    case 3 -> createInspection(currentEmp, scanChoice, model); //Create Inspection Time
+                    case 4 -> listInspection(currentEmp, scanChoice, model);//List inspections
+                    case 5 -> cancellInspection(currentEmp, scanChoice, model);//cancel inspection
+                    case 6 -> completeInspection(currentEmp, scanChoice, model);//complete inspection
+                    case 7 -> renderMainMenu(model); //Logout
                 }
             }else{
                 switch (choiceLoggedInMenu) {
@@ -638,7 +639,7 @@ public class mainLauncher {
         }
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
-    private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model){
+    private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
         auctionController auctionValidator = new auctionController();
         auctionValidator.initializeModel("",model);
 
@@ -678,6 +679,8 @@ public class mainLauncher {
         }else{
             model.createAuction(auctionDate, property);
         }
+
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
 
     }
 
@@ -997,7 +1000,7 @@ public class mainLauncher {
     }
 
 
-    private static void viewApplications(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+    private static void viewApplications(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
 
         model.viewApplicationsByUser(currentUser);
 
