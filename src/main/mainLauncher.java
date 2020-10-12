@@ -719,7 +719,9 @@ public class mainLauncher {
             }
         }
         PropertyCategory pCategory = PropertyCategory.values()[choice-1];
-        model.addProperty(new Property(pName,pType,pAddress,minPrice,suburb,Integer.parseInt(count.split("/")[0]),Integer.parseInt(count.split("/")[1]),Integer.parseInt(count.split("/")[2]),pricing,pCategory));
+        Property property = new Property(pName,pType,pAddress,minPrice,suburb,Integer.parseInt(count.split("/")[0]),Integer.parseInt(count.split("/")[1]),Integer.parseInt(count.split("/")[2]),pricing,pCategory);
+        property.setCustomerId(currentUser.getId());
+        model.addProperty(property);
         System.out.println("Property has been successfully added!");
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
@@ -752,10 +754,24 @@ public class mainLauncher {
                     case 2 -> model.listPropertiesForRent();
                 }
             }
-            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+
         }else if(someuser instanceof Employee) {
-          //do something
+            Employee currentUser = (Employee) someuser;
+            if (currentUser.getEmpType().equals(EmployeeType.BranchAdmin)) {
+                model.listAvailableProperties();
+            }else if((currentUser.getEmpType().equals(EmployeeType.SalesConsultant))){
+                model.listPropertiesForSale();
+            }else{
+                model.listProperties();
+            }
         }
+        renderLoggedInMenu(someuser.getEmail(), scanChoice, model);
+    }
+
+    public static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+        model.listAvailableProperties();
+        renderAdminLoggedInMenu(email,scanChoice,model);
+
     }
 
     public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
