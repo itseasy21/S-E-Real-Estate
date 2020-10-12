@@ -525,10 +525,10 @@ public class mainLauncher {
                     case 1 -> searchProperty(currentUser, scanChoice, model);//Search Property
                     case 2 -> rentBuyProperty(currentUser, scanChoice, model);//Rent or Buy Property
                     case 3 -> viewApplications(currentUser, scanChoice, model);//Rent or Buy Property
-                    case 4 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
-                    case 5 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
-                    case 6 -> listInspection(currentUser, scanChoice, model); //List inspection
-                    case 7 -> bookInspection(currentUser, scanChoice, model);//book inspection
+                    case 4 -> bookInspection(currentUser, scanChoice, model);//book inspection
+                    case 5 -> listInspection(currentUser, scanChoice, model); //List inspection
+                    case 6 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
+                    case 7 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
                     case 8 -> cancellInspection(currentUser, scanChoice, model);
                     case 9 -> renderMainMenu(model); //Logout
                 }
@@ -538,10 +538,10 @@ public class mainLauncher {
                     case 2 -> listAuction(currentUser, scanChoice, model);//Rent or Buy Property
                     case 3 -> submitBid(currentUser, scanChoice, model);//Rent or Buy Property
                     case 4 -> viewApplications(currentUser, scanChoice, model);//Rent or Buy Property
-                    case 5 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
-                    case 6 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
-                    case 7 -> listInspection(currentUser, scanChoice, model); //List inspection
-                    case 8 -> bookInspection(currentUser, scanChoice, model);//book inspection
+                    case 5 -> bookInspection(currentUser, scanChoice, model);//book inspection
+                    case 6 -> listInspection(currentUser, scanChoice, model); //List inspection
+                    case 7 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
+                    case 8 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
                     case 9 -> cancellInspection(currentUser, scanChoice, model);
                     case 10 -> renderMainMenu(model); //Logout
                 }

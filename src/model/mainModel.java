@@ -905,10 +905,14 @@ public class mainModel {
     }
 
     public void listAuctions(){
-        for(Auction auction : auctionDB){
-            System.out.println("Auction ID:" + auction.getId()+"\n" +
-                    "Property: "+auction.getProperty().getPropertyName()+"("+auction.getProperty().getPropertyId()+")\n" +
-                    "Auction Date: "+auction.getAuctionDate());
+        if(auctionDB.size() > 0) {
+            for (Auction auction : auctionDB) {
+                System.out.println("Auction ID:" + auction.getId() + "\n" +
+                        "Property: " + auction.getProperty().getPropertyName() + "(" + auction.getProperty().getPropertyId() + ")\n" +
+                        "Auction Date: " + auction.getAuctionDate());
+            }
+        }else{
+            System.out.println("No Auction Available!");
         }
     }
 
