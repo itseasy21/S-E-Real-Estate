@@ -1,8 +1,6 @@
 package main;
 
-import config.CustomerType;
-import config.EmployeeType;
-import config.menuOptions;
+import config.*;
 import controller.auctionController;
 import controller.loginController;
 import controller.registerController;

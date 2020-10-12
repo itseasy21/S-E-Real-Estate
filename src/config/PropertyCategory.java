@@ -1,4 +1,4 @@
-package model;
+package config;
 
 public enum PropertyCategory {
     Unit,
