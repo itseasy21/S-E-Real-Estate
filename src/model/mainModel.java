@@ -68,16 +68,6 @@ public class mainModel {
                     }
                 }
 
-//                    try {
-//                        stmt = this.conn.createStatement();
-//                        String findReplies = "select * from reply where postID = '" + rsCustomer.getString("id") + "';";
-//                        ResultSet rsReply = stmt.executeQuery(findReplies);
-//                        while (rsReply.next()) {
-//                            newEvent.handleReply(new Reply(rsReply.getString("postID"), rsReply.getInt("value"), rsReply.getString("responderID")));
-//                        }
-//                    } catch (SQLException e) {
-//                        e.printStackTrace();
-//                    }
             }
             rsCustomer.close();
 
@@ -85,59 +75,66 @@ public class mainModel {
             throwables.printStackTrace();
         }
 
-        //TODO: Populating UserDB with Employees
-        userDB.add(new Employee("admin@branch.com","pa33w0rd","Shubham",
-                "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,20));
-        userDB.add(new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
-                "673 La Trobe","401717860",(new Date()).toString(),"Male",
-                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
+        // Populating UserDB with Employees
+        try {
+            Statement stmt1 = this.conn.createStatement();
+            String findEmp = "select * from Employee;";
+            ResultSet rsEmp = stmt1.executeQuery(findEmp);
+            while(rsEmp.next()) {
+
+                EmployeeType thisType = null;
+                EmployeeType thisRole = null;
+
+                if (rsEmp.getString("employee_type").equals("FullTIme")) {
+                    thisType = EmployeeType.FullTIme;
+                } else if (rsEmp.getString("employee_type").equals("PartTime")) {
+                    thisType = EmployeeType.PartTime;
+                }
+
+                switch (rsEmp.getString("employee_role")) {
+                    case "BranchAdmin" -> thisRole = EmployeeType.BranchAdmin;
+                    case "SalesConsultant" -> thisRole = EmployeeType.SalesConsultant;
+                    case "PropertyManager" -> thisRole = EmployeeType.PropertyManager;
+                }
+
+                Employee newEmp = new Employee(
+                        rsEmp.getString("employee_id"),
+                        rsEmp.getString("email"),
+                        rsEmp.getString("password"),
+                        rsEmp.getString("name"),
+                        rsEmp.getString("address"),
+                        rsEmp.getString("phone_number"),
+                        rsEmp.getString("DOB"),
+                        rsEmp.getString("gender"),
+                        thisType,
+                        thisRole,
+                        rsEmp.getDouble("salary"),
+                        rsEmp.getDouble("hours")
+                    );
+                userDB.add(newEmp);
+            }
+                rsEmp.close();
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+//        userDB.add(new Employee("admin@branch.com","pa33w0rd","Shubham",
+//                "673 La Trobe","401717860",(new Date()).toString(),"Male",
+//                EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,20));
+//        userDB.add(new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
+//                "673 La Trobe","401717860",(new Date()).toString(),"Male",
+//                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
 
         //TODO: Populating PropertyDB with Properties
         addProperty(new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat));
         addProperty(new Property( "Jersey parade", PropertyType.Rent,"102 Plenty road", 26000,"Bundoora", 2,1,2,324_000.00, PropertyCategory.House));
-        addProperty(new Property( "Residency Towers", PropertyType.Sale,"2 Moreland road", 26000,"Coburg", 2,2,3,426_000.00, PropertyCategory.Unit));
+        addProperty(new Property( "Residency Towers", PropertyType.Sale,"2 Moreland road", 26000,"Bundoora", 2,2,3,426_000.00, PropertyCategory.Unit));
         addProperty(new Property( "Spring Waters", PropertyType.Sale,"200 Clifton Hill ", 26000,"Preston", 4,3,2,204_000.00, PropertyCategory.Studio));
         addProperty(new Property( "Salt Waters", PropertyType.Sale,"18 ivanhoe crescent", 26000,"Mill Park", 2,3,1,403_000.00, PropertyCategory.House));
         addProperty(new Property( "Jelly Craig", PropertyType.Rent,"5 Flinders street", 26000,"Reservoir", 1,3,3,304_000.00, PropertyCategory.Townhouse));
         addProperty(new Property( "France City", PropertyType.Rent,"10 Koornang road", 26000,"Carnegie", 3,3,2,236_000.00, PropertyCategory.Flat));
 
-        /*
-        try {
-            stmt = this.conn.createStatement();
-            String findPosts = "select * from Employee;";
-            ResultSet rsCustomer = stmt.executeQuery(findPosts);
-            while(rsCustomer.next()){
-
-                CustomerType thisCustomerType= null;
-                if(rsCustomer.getString("type").equals("VENDOR")){
-                    thisCustomerType = CustomerType.VENDOR;
-                }else if(rsCustomer.getString("type").equals("LANDLORD")){
-                    thisCustomerType = CustomerType.LANDLORD;
-                }else if(rsCustomer.getString("type").equals("CUSTOMER")){
-                    thisCustomerType = CustomerType.CUSTOMER;
-                }
-
-                Customer newCustomer = new Customer(
-                        rsCustomer.getInt("customer_id "),
-                        rsCustomer.getString("email"),
-                        rsCustomer.getString("password"),
-                        rsCustomer.getString("name"),
-                        rsCustomer.getString("address"),
-                        rsCustomer.getString("phoneNo"),
-                        rsCustomer.getDate("DOB"),
-                        rsCustomer.getString("gender"),
-                        rsCustomer.getString("nationality"),
-                        rsCustomer.getDouble("income"),
-                        thisCustomerType);
-                userDB.add(newCustomer);
-            }
-            rsCustomer.close();
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-         */
     }
 
     public void savetoDB() throws SQLException {
@@ -157,14 +154,27 @@ public class mainModel {
                             "'" + thisCustomer.getEmail() + "', '" + thisCustomer.getPassword() + "', '" + thisCustomer.getPhoneNo() + "'" +
                             ", '" + thisCustomer.getAddress() + "', '" + thisCustomer.getGender() + "', '" + thisCustomer.getDob() + "'" +
                             ", '" + thisCustomer.getNationality() + "', " + thisCustomer.getIncome() + ", '" + thisCustomer.getType().toString() + "', '" + intSuburb + "')";
-//                    System.out.println(insertQuery);
+
                     stmt.executeUpdate(insertQuery);
 
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
             }else{
-                //TODO: If user is a employee
+                //If user is a employee
+                try {
+                    Employee thisEmp = (Employee) user;
+                    String insertQuery = "insert into Employee(employee_id, name, email, password, phone_number, address, gender, DOB, salary, employee_type, employee_role)" +
+                            "VALUES('" + thisEmp.getId() + "', '" + thisEmp.getName() + "', " +
+                            "'" + thisEmp.getEmail() + "', '" + thisEmp.getPassword() + "', '" + thisEmp.getPhoneNo() + "'" +
+                            ", '" + thisEmp.getAddress() + "', '" + thisEmp.getGender() + "', '" + thisEmp.getDob() + "'" +
+                            ", '" + thisEmp.getSalary() + "', '" + thisEmp.getEmpType().toString() + "', '" + thisEmp.getEmpRole().toString() + "')";
+
+                    stmt.executeUpdate(insertQuery);
+
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         }
     }
@@ -290,6 +300,58 @@ public class mainModel {
        for(int property : propertyDB.keySet()){
            System.out.println(propertyDB.get(property).toString());
        }
+    }
+    public void searchPropertyByName(String name, String filter){
+       switch (name) {
+           case "Suburb":
+                try {
+                   System.out.println("Showing properties by " + name);
+                    propertyDB.values()
+                           .stream()
+                           .filter(e -> (e.getSuburb().equalsIgnoreCase(filter) && e.isEmployeeAssigned()))
+                        .forEach(p -> System.out.println(p.toString()));
+                } catch (NullPointerException e) {
+                   System.out.println("None");
+                return;
+                }
+           break;
+           case "Name":
+               try {
+                   System.out.println("Showing properties by " + name);
+                   propertyDB.values()
+                           .stream()
+                           .filter(e -> (e.getPropertyName().equalsIgnoreCase(filter)) && e.isEmployeeAssigned())
+                           .forEach(p -> System.out.println(p.toString()));
+               } catch (NullPointerException e) {
+                   System.out.println("None");
+                   return;
+               }
+               break;
+       }
+    }
+    public void searchPropertyByPrice(double minPrice, double maxPrice){
+        try {
+            System.out.println("Showing properties between " + minPrice +"- "+maxPrice);
+            propertyDB.values()
+                    .stream()
+                    .filter(e -> (e.getPropertyPrice() >= minPrice) && (e.getPropertyPrice()<= maxPrice) && e.isEmployeeAssigned())
+                    .forEach(p -> System.out.println(p.toString()));
+        } catch (NullPointerException e) {
+            System.out.println("None");
+            return;
+        }
+    }
+    public void searchPropertyByCategory(PropertyCategory propertyCategory){
+        try {
+            System.out.println("Showing properties of the Category" + propertyCategory);
+            propertyDB.values()
+                    .stream()
+                    .filter(e -> (e.getPropertyCategory().equals(propertyCategory)) && e.isEmployeeAssigned())
+                    .forEach(p -> System.out.println(p.toString()));
+        } catch (NullPointerException e) {
+            System.out.println("None");
+            return;
+        }
     }
     public void listPropertiesForSale() {
         try {

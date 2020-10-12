@@ -17,6 +17,7 @@ public class Property {
     private double rentalPrice;
     private String employeeId;
     private EmployeeType empRole;
+    private boolean auction;
 
 
     public Property( String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
@@ -30,6 +31,7 @@ public class Property {
         this.parkingCount = parkingCount;
         this.propertyCategory = propertyCategory;
         this.empRole = empRole;
+        this.auction = false;
 
         if (propertyType == PropertyType.Rent) {
             this.rentalPrice = pricing;
@@ -52,6 +54,7 @@ public class Property {
         this.bathroomCount = bathroomCount;
         this.parkingCount = parkingCount;
         this.propertyCategory = propertyCategory;
+        this.auction = false;
         this.empRole = empRole;
         if (propertyType == PropertyType.Rent) {
             this.rentalPrice = pricing;
@@ -101,10 +104,23 @@ public class Property {
         return propertyType == PropertyType.Sale;
     }
 
+    public boolean getAuctionStatus() {
+        return auction;
+    }
+
+    public void setAuctionStatus(boolean auction) {
+        this.auction = auction;
+    }
+
     public void setPropertyType(PropertyType propertyType) {
         this.propertyType = propertyType;
     }
-
+    public double getPropertyPrice(){
+        if(this.sellingPrice >0){
+            return sellingPrice;
+        }
+    return rentalPrice;
+    }
     public String getPropertyAddress() {
         return propertyAddress;
     }

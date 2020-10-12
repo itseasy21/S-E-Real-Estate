@@ -165,7 +165,6 @@ public class mainLauncher {
                 System.out.println(i+1 + ". " + menu[i]);
             }
             System.out.println("Please press q to quit.");
-
             String input = scanChoice.nextLine();
             if(input.equals("q") || input.isEmpty())
                 renderMainMenu(model);
@@ -180,7 +179,7 @@ public class mainLauncher {
             //Handling Choice
             if(currentEmp.getEmpRole().equals(EmployeeType.PropertyManager) || currentEmp.getEmpRole().equals(EmployeeType.SalesConsultant)) {
                 switch (choiceLoggedInMenu) {
-                    case 1 -> System.out.println("TODO"); //listProperty(currentUser, scanChoice, model);
+                    case 1 -> listProperties(email, scanChoice, model);
                     case 2 -> createInspection(currentEmp, scanChoice, model); //Create Inspection Time
                     case 3 -> listInspection(currentEmp, scanChoice, model);//List inspections
                     case 4 -> cancellInspection(currentEmp, scanChoice, model);//cancel inspection
@@ -451,7 +450,6 @@ public class mainLauncher {
                 System.out.println(i+1 + ". " + menu[i]);
             }
             System.out.println("Please press q to quit.");
-
             String input = scanChoice.nextLine();
             if(input.equals("q") || input.isEmpty())
                 renderMainMenu(model);
@@ -481,7 +479,7 @@ public class mainLauncher {
                 }
             } else{
                 switch (choiceLoggedInMenu) {
-                    case 1 -> System.out.println("test1");//Search Property TODO
+                    case 1 -> searchProperty(currentUser, scanChoice, model);//Search Property
                     case 2 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
                     case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
                     case 4 -> listInspection(currentUser, scanChoice, model); //List inspection
@@ -492,6 +490,66 @@ public class mainLauncher {
 
         } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
 
+    }
+    private static void searchProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+        System.out.println("Search Property by");
+        System.out.println("1. Suburb");
+        System.out.println("2. Price");
+        System.out.println("3. Property Category: (Flat/House/Studio/Unit/TownHouse)");
+        System.out.println("4. Property Name");
+        System.out.println("5. Property Type: (Sale/Rent) ");
+        int choice = scanChoice.nextInt();
+        if (choice < 0 || choice > 5){
+            System.out.println("Invalid option!");
+            return;
+        }else {
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter Suburb Name");
+                    scanChoice.nextLine();
+                    String suburb = scanChoice.nextLine();
+                    model.searchPropertyByName("Name", suburb);
+                    break;
+                case 2:
+                    System.out.println("Enter Min Price ");
+                    double minPrice = scanChoice.nextDouble();
+                    System.out.println("Enter Max Price");
+                    double maxPrice = scanChoice.nextDouble();
+                    model.searchPropertyByPrice(minPrice,maxPrice);
+                    break;
+                case 3:
+                    System.out.println("Select Property Category");
+                    System.out.println("1. Unit");
+                    System.out.println("2. House");
+                    System.out.println("3. Flat");
+                    System.out.println("4. Studio");
+                    System.out.println("5. Townhouse");
+                    int category = scanChoice.nextInt();
+                    model.searchPropertyByCategory(PropertyCategory.values()[category-1]);
+                    break;
+                case 4:
+                    System.out.println("Enter Property Name");
+                    scanChoice.nextLine();
+                    String name = scanChoice.nextLine();
+                    model.searchPropertyByName("Name", name);
+                    break;
+                case 5:
+                    System.out.println("Select Property Type");
+                    System.out.println("1. Sale");
+                    System.out.println("2. Rent");
+                    int type = scanChoice.nextInt();
+                    if(type == 1){
+                        model.listPropertiesForSale();
+                    }else if(type == 2){
+                        model.listPropertiesForRent();
+                    }else{
+                        System.out.println("Invalid Option");
+                    }
+                    break;
+
+            }
+        }
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
     private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model){
         System.out.println("Enter date for auction: eg. dd/MM/yyyy");
@@ -506,6 +564,7 @@ public class mainLauncher {
         }
 
     }
+
     private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
         ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
         int loopCounter = 1;
@@ -675,12 +734,14 @@ public class mainLauncher {
         }
     }
 
-        public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+    public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
 
             System.out.println("Select the Property id");
             int choice = scanChoice.nextInt();
             Property property = model.listProperty(choice);
             System.out.println(property.toString());
+            renderLoggedInMenu(email, scanChoice, model);
+
         }
         public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
             while (true) {
