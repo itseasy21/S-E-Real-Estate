@@ -18,6 +18,8 @@ public class Property {
     private String employeeId;
     private EmployeeType empRole;
     private boolean auction;
+    private boolean Availability;
+    private String customerId;
 
 
     public Property( String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
@@ -64,6 +66,22 @@ public class Property {
             this.sellingPrice = pricing;
         }
 
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public boolean isAvailability() {
+        return Availability;
+    }
+
+    public void setAvailability(boolean availability) {
+        Availability = availability;
     }
 
     public int getPropertyId() {
