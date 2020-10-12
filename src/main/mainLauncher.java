@@ -155,8 +155,8 @@ public class mainLauncher {
 
         int choiceLoggedInMenu = 0;
         //All LoggedInMenus
-        String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION", "LOGOUT"}; //Sales & Property Menu
-        String[] branchAdmin = {"LIST PROPERTIES", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL" ,"LOGOUT"}; //Branch Admin Menu
+        String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION","UPDATE COMPLETED INSPECTION", "LOGOUT"}; //Sales & Property Menu
+        String[] branchAdmin = {"LIST PROPERTIES", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL","LIST INSPECTIONS" ,"LOGOUT"}; //Branch Admin Menu
         String[] menu = new String[6];
 
         if(currentEmp.getEmpRole().equals(EmployeeType.PropertyManager) || currentEmp.getEmpRole().equals(EmployeeType.SalesConsultant)){
@@ -189,14 +189,16 @@ public class mainLauncher {
                     case 2 -> createInspection(currentEmp, scanChoice, model); //Create Inspection Time
                     case 3 -> listInspection(currentEmp, scanChoice, model);//List inspections
                     case 4 -> cancellInspection(currentEmp, scanChoice, model);//cancel inspection
-                    case 5 -> renderMainMenu(model); //Logout
+                    case 5 -> completeInspection(currentEmp, scanChoice, model);//complete inspection
+                    case 6 -> renderMainMenu(model); //Logout
                 }
             }else{
                 switch (choiceLoggedInMenu) {
                     case 1 -> listProperty(currentEmp, scanChoice, model);
                     case 2 -> addEmpToProperty(email, scanChoice, model);
                     case 3 -> handlePayroll(email,scanChoice,model);
-                    case 4 -> renderMainMenu(model); //Logout
+                    case 4 -> listInspectionAdmin(currentEmp, scanChoice, model);
+                    case 5 -> renderMainMenu(model); //Logout
                 }
             }
 
@@ -250,7 +252,6 @@ public class mainLauncher {
 
     private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
 
-        System.out.println("---------------------------------------------------------------------------------");
         System.out.println("CREATE INSPECTION");
         System.out.println("-----------------");
         System.out.println("available properties:\n" + model.getPropertyDB());
@@ -393,7 +394,6 @@ public class mainLauncher {
     }
 
     private static void cancellInspection(Customer currentUser, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException {
-        System.out.println("---------------------------------------------------------------------------------");
         System.out.println("CANCEL INSPECTION");
         System.out.println("-----------------");
         model.listInspectionIDCustomer(currentUser);
@@ -406,7 +406,6 @@ public class mainLauncher {
     }
 
     private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
-        System.out.println("---------------------------------------------------------------------------------");
         System.out.println("BOOK INSPECTION");
         System.out.println("-----------------");
         String id="";
@@ -458,9 +457,35 @@ public class mainLauncher {
            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
        }
        else if(currentUser instanceof Employee){
-           model.listInspection();
+           model.listInspectionEmployee(currentUser);
            renderAdminLoggedInMenu(currentUser.getEmail(), scanChoice, model);
        }
+    }
+
+    private static void listInspectionAdmin(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+         if(currentUser instanceof Employee){
+            model.listInspection();
+            renderAdminLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+        }
+    }
+
+    private static void completeInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+        if(currentUser instanceof Customer){
+            model.listInspectionCustomer(currentUser);
+        }
+        else if(currentUser instanceof Employee){
+            model.listInspectionEmployee(currentUser);
+        }
+        System.out.println("enter inspection id to update to completed");
+        String id=scanChoice.nextLine();
+        if(currentUser instanceof Customer){
+            model.completeInspection(currentUser,id);
+            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+        }
+        else if(currentUser instanceof Employee){
+            model.completeInspection(currentUser,id);
+            renderAdminLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+        }
     }
 
     private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException, ApplicationException {

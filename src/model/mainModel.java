@@ -459,7 +459,6 @@ public class mainModel {
     }
 
     public void listInspectionCustomer(User currentCustomer){
-        System.out.println("---------------------------------------------------------------------------------");
         System.out.println("LIST INSPECTION");
         System.out.println("---------------");
         if(currentCustomer instanceof Customer) {
@@ -470,11 +469,22 @@ public class mainModel {
                 }
             }
         }
-        System.out.println("---------------------------------------------------------------------------------");
+    }
+
+    public void listInspectionEmployee(User currentuser){
+        System.out.println("LIST INSPECTION");
+        System.out.println("---------------");
+        if(currentuser instanceof Employee) {
+            for (Inspection a : inspectionDB) {
+                if(currentuser.getId().equals(a.geteId())) {
+                    System.out.println(a.showDetails());
+                    System.out.println("*************************************");
+                }
+            }
+        }
     }
 
     public void listInspectionIDCustomer(User currentCustomer){
-        System.out.println("---------------------------------------------------------------------------------");
         if(currentCustomer instanceof Customer) {
             for (Inspection a : inspectionDB) {
                 if(currentCustomer.getId().equals(a.getcId())) {
@@ -482,8 +492,7 @@ public class mainModel {
                 }
             }
         }
-        System.out.println("---------------------------------------------------------------------------------");
-    }
+        }
 
     public void listassignedProperties(Employee currentEmployee) {
         try {
@@ -535,8 +544,7 @@ public class mainModel {
         else if(!thisProp.isEmployeeAssigned()){
             System.out.println("No employee is assigned to this property yet! Please contact Branch Admin.");
         }
-        System.out.println("---------------------------------------------------------------------------------");
-    }
+        }
 
     public void bookInspection(Customer currentUser, String id, String date, String time, String status) throws PropertyException {
         if(currentUser.getType().equals(CustomerType.BUYER) || currentUser.getType().equals(CustomerType.RENTER)) {
@@ -674,15 +682,13 @@ public class mainModel {
     }
 
     public void listInspection(){
-        System.out.println("---------------------------------------------------------------------------------");
         System.out.println("LIST INSPECTION");
         System.out.println("---------------");
         for(Inspection a:inspectionDB){
             System.out.println(a.showDetails());
             System.out.println("*************************************");
         }
-        System.out.println("---------------------------------------------------------------------------------");
-    }
+       }
 
     public void listInspectionID(Employee currentEmp){
         System.out.println("Available inspections are:");
@@ -707,8 +713,7 @@ public class mainModel {
                 }
             }
         }
-        System.out.println("---------------------------------------------------------------------------------");
-    }
+         }
 
     public void cancellInspectionCustomer(String id,Customer currentUser) throws PropertyException {
         for(Inspection a:inspectionDB){
@@ -724,8 +729,7 @@ public class mainModel {
                 }
             }
         }
-        System.out.println("---------------------------------------------------------------------------------");
-    }
+         }
 
     public void updateSalary(String empid, double salary, Payroll payroll) throws MyException, UserException {
         payroll.setSalary(salary);
@@ -759,6 +763,8 @@ public class mainModel {
         payroll.getSalary();
         //System.out.println("hello"+payroll.getSalary());
     }
+
+
 
     public boolean isInspectionDone(Customer customer, Property thisProp){
         for(Inspection i : inspectionDB){
@@ -893,5 +899,23 @@ public class mainModel {
 
     public void createAuction(){
 
+    }
+
+    public void completeInspection(User currentuser,String id) throws PropertyException {
+        for(Inspection i : inspectionDB){
+            if(i.getId().equals(id)){
+                if(i.getStatus().equals("Scheduled")){
+                    if(i.getcId().equals(currentuser.getId()) ||i.geteId().equals(currentuser.getId())){
+                        i.setStatus("Completed");
+                    }
+                }
+                else if(!i.getStatus().equalsIgnoreCase("Scheduled")){
+                    System.out.println("Inspection has not yet been scheduled");
+                }
+                if(!i.getcId().equals(currentuser.getId()) || !i.geteId().equals(currentuser.getId())){
+                    System.out.println("You are not allowed to update this inspection status!!");
+                }
+            }
+        }
     }
 }
