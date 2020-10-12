@@ -356,12 +356,25 @@ public class mainLauncher {
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println("CANCEL INSPECTION");
         System.out.println("-----------------");
-        model.listInspectionID();
+        model.listInspectionID(currentEmp);
             System.out.println("Enter the inspection ID to cancel.");
             String id=scanChoice.nextLine();
 
-        model.cancellInspection(id);
+        model.cancellInspection(id,currentEmp);
         renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+
+    }
+
+    private static void cancellInspection(Customer currentUser, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException {
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("CANCEL INSPECTION");
+        System.out.println("-----------------");
+        model.listInspectionIDCustomer(currentUser);
+        System.out.println("Enter the inspection ID to cancel.");
+        String id=scanChoice.nextLine();
+
+        model.cancellInspectionCustomer(id,currentUser);
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
 
     }
 
@@ -433,7 +446,7 @@ public class mainLauncher {
         //All LoggedInMenus
         String[] vendorMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS","AUCTION", "LOGOUT"};//Vendor Menu
         String[] landLordMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS", "LOGOUT"};//Landlord Menu
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LIST INSPECTION","BOOK INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE" ,"LIST INSPECTION","BOOK INSPECTION","CANCELL INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorMenu;
@@ -484,7 +497,8 @@ public class mainLauncher {
                     case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
                     case 4 -> listInspection(currentUser, scanChoice, model); //List inspection
                     case 5 -> bookInspection(currentUser, scanChoice, model);//book inspection
-                    case 6 -> renderMainMenu(model); //Logout
+                    case 6 -> cancellInspection(currentUser, scanChoice, model);
+                    case 7 -> renderMainMenu(model); //Logout
                 }
             }
 
@@ -586,7 +600,6 @@ public class mainLauncher {
                 model.addSuburb(currentUser, input);
             }
         }while(true);
-
     }
 
     public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
@@ -789,7 +802,6 @@ public class mainLauncher {
                         System.out.println("Invalid Employee id");
                     }
 
-
                 }
             }
             System.out.println("Employee Assigned to the Property !");
@@ -797,6 +809,5 @@ public class mainLauncher {
         }
 
     public static void rentProperty(Customer currentUser, Scanner scanChoice, mainModel model){
-        
     }
 }
