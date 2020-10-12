@@ -15,15 +15,14 @@ public class mainModel {
     public static ArrayList<User> userDB = new ArrayList<>();
     public static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
     public static ArrayList<Application> applicationDB = new ArrayList<Application>();
-    public static ArrayList<Auction> auctionDB = new ArrayList<Auction>();
-    public static HashMap<Integer, Property> propertyDB;
+    public static HashMap<Integer, Property> propertyDB =  new HashMap<>();;
     Connection conn;
     Statement stmt;
 
     public mainModel() {
         dbConnect dbHandler = new dbConnect();
         this.conn = dbHandler.getConn();
-        this.propertyDB = new HashMap<>();
+
     }
 
     public void syncDB() throws PropertyException {
@@ -119,6 +118,52 @@ public class mainModel {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
+        //popluating property DB
+        try{
+            Statement stmt1 = this.conn.createStatement();
+            String findEmp = "select * from Property;";
+            ResultSet rsProp = stmt1.executeQuery(findEmp);
+            while(rsProp.next()) {
+                double pricing = 0;
+                PropertyType ptype = PropertyType.valueOf(rsProp.getString("type"));
+                PropertyCategory pCategory = PropertyCategory.valueOf(rsProp.getString("property_category"));
+                if(rsProp.getDouble("rental_price") == 0){
+                    pricing = rsProp.getDouble("selling_price");
+                }else{
+                    pricing = rsProp.getDouble("rental_price");
+                }
+                Property property = new Property(
+                        rsProp.getInt("property_id"),
+                        rsProp.getString("name"),
+                        ptype,
+                        rsProp.getString("street_address"),
+                        rsProp.getDouble("min_price"),
+                        rsProp.getString("suburb"),
+                        rsProp.getInt("bedroom_count"),
+                        rsProp.getInt("bathroom_count"),
+                        rsProp.getInt("parking_count"),
+                        pricing,
+                        pCategory
+                        );
+
+                if (!rsProp.getString("employee_id").equalsIgnoreCase("null")) {
+                    property.setEmployeeId(rsProp.getString("employee_id"));
+                }
+                property.setCustomerId(rsProp.getString("customer_id"));
+
+                property.setAvailability(PropertyState.valueOf(rsProp.getString("availability")));
+                if (!rsProp.getString("emp_role").equalsIgnoreCase("null")) {
+                    property.setEmpRole(EmployeeType.valueOf(rsProp.getString("emp_role")));
+                }
+                propertyDB.put(property.getPropertyId(),property);
+
+            }
+            System.out.println(propertyDB.size());
+            rsProp.close();
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
 
 //        userDB.add(new Employee("admin@branch.com","pa33w0rd","Shubham",
 //                "673 La Trobe","401717860",(new Date()).toString(),"Male",
@@ -128,7 +173,7 @@ public class mainModel {
 //                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
 
         //TODO: Populating PropertyDB with Properties
-        Property p1 = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat);
+/*        Property p1 = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat);
         p1.setEmployeeId("EMP01");
         addProperty(p1);
 //        addProperty(new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat));
@@ -138,15 +183,16 @@ public class mainModel {
         addProperty(new Property( "Salt Waters", PropertyType.Sale,"18 ivanhoe crescent", 26000,"Mill Park", 2,3,1,403_000.00, PropertyCategory.House));
         addProperty(new Property( "Jelly Craig", PropertyType.Rent,"5 Flinders street", 26000,"Reservoir", 1,3,3,304_000.00, PropertyCategory.Townhouse));
         addProperty(new Property( "France City", PropertyType.Rent,"10 Koornang road", 26000,"Carnegie", 3,3,2,236_000.00, PropertyCategory.Flat));
-
+*/
     }
 
     public void savetoDB() throws SQLException {
         //Save userDB to Database
-
+        System.out.println(propertyDB.size());
         stmt = this.conn.createStatement();
         stmt.executeUpdate("DELETE FROM Customer;");
         stmt.executeUpdate("DELETE FROM Employee;");
+        stmt.executeUpdate("DELETE FROM Property;");
 
         for(User user : userDB){
             if(user instanceof Customer){ //If user is a customer
@@ -181,6 +227,31 @@ public class mainModel {
                 }
             }
         }
+        for( Property property : propertyDB.values()){
+            String empRole = null ;
+            if(property.getEmpRole() != null){
+                empRole = property.getEmpRole().toString();
+            }
+            try{
+                String insertQuery = "insert into Property(property_id, employee_id, name, type, street_address,min_price, suburb, bedroom_count, bathroom_count , parking_count, selling_price, rental_price, availability, customer_id, emp_role, property_category)" +
+                        "VALUES(" + property.getPropertyId() +", '"+ property.getEmployeeId() +"', '"+ property.getPropertyName() +"', '"+ property.getPropertyType().toString() +"', '"+ property.getPropertyAddress() +"', "+ property.getMinPrice() +", '"+ property.getSuburb() +
+                        "', "+ property.getBedroomCount() +", "+ property.getBathroomCount() +", "+ property.getParkingCount() +", "+ property.getSellingPrice() +", "+ property.getRentalPrice() +", '"+ property.getAvailability().toString() +
+                        "', "+ property.getCustomerId() +", '"+ empRole  +"', '"+ property.getPropertyCategory().toString() + "')";
+
+                stmt.executeUpdate(insertQuery);
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+
+
+
+        }
+
+
+
+
     }
 
     public boolean isEmailAvailable(String email){
