@@ -18,11 +18,11 @@ public class Property {
     private int parkingCount;
     private double sellingPrice;
     private double rentalPrice;
-    private String employeeId;
-    private EmployeeType empRole;
+    private String employeeId = null;
+    private EmployeeType empRole = null;
     private boolean auction;
     private PropertyState Availability;
-    private String customerId;
+    private String customerId = null;
 
 
     public Property( String propertyName, PropertyType propertyType, String propertyAddress, double minPrice, String suburb, int bedroomCount, int bathroomCount, int parkingCount, double pricing, PropertyCategory propertyCategory) {
@@ -35,8 +35,8 @@ public class Property {
         this.bathroomCount = bathroomCount;
         this.parkingCount = parkingCount;
         this.propertyCategory = propertyCategory;
-        this.empRole = empRole;
         this.auction = false;
+        this.Availability = PropertyState.AVAILABLE;
 
         if (propertyType == PropertyType.Rent) {
             this.rentalPrice = pricing;
@@ -60,7 +60,7 @@ public class Property {
         this.parkingCount = parkingCount;
         this.propertyCategory = propertyCategory;
         this.auction = false;
-        this.empRole = empRole;
+        this.Availability = PropertyState.AVAILABLE;
         if (propertyType == PropertyType.Rent) {
             this.rentalPrice = pricing;
             this.sellingPrice = 0;
@@ -70,6 +70,8 @@ public class Property {
         }
 
     }
+
+
 
     public PropertyState getAvailability() {
         return Availability;
@@ -86,7 +88,7 @@ public class Property {
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
-    
+
     public int getPropertyId() {
         return propertyId;
     }
@@ -156,6 +158,10 @@ public class Property {
 
     public String getSuburb() {
         return suburb;
+    }
+
+    public PropertyType getPropertyType() {
+        return propertyType;
     }
 
     public void setSuburb(String suburb) {

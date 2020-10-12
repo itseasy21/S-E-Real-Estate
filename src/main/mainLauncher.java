@@ -219,8 +219,8 @@ public class mainLauncher {
             Payroll payroll = new Payroll(empid, model.getEmployeeHour(empid), 40, model.EmployeeSalary(empid));
             System.out.println("Select the operation");
             int choice = 0;
-            while (choice != 4) {
-                System.out.println("1.Update salary \n 2.Update Hour\n 3.Current salary\n4.Quit");
+            while (choice != 5) {
+                System.out.println("1.Update salary \n 2.Update Hour\n 3.Current salary\n4.Adding Bonus to Salary\n5.Quit");
                 Scanner sc = new Scanner(System.in);
                 choice = sc.nextInt();
 
@@ -238,9 +238,14 @@ public class mainLauncher {
                        // renderAdminLoggedInMenu(email, scanChoice, model);
                         break;
                     case 3:
-                        model.getSalary(empid, payroll);
+                        double salary1=model.getSalary(empid, payroll);
+                        System.out.println(salary1);
+
                        // renderAdminLoggedInMenu(email, scanChoice, model);
                         break;
+                    case 4:
+                        double bonus = 100;
+                        model.calBonus(empid,payroll,bonus);
 
 
                 }
@@ -415,40 +420,48 @@ public class mainLauncher {
             System.out.println("Enter the inspection ID you want to book. (Example: INS1)");
             id = scanChoice.nextLine();
             model.validateInspection(id);
-        }while(model.validateInspection(id)==true);
+        }while(model.validateInspection(id)==false);
 
         //setting date
         String date,time = null;
         boolean flag=true;
         int option = 0;
-        do {
-            model.availableDates(id);
-            option = scanChoice.nextInt();
-           if(option==1||option==2||option==3||option==4||option==5) {
-               flag=false;
-           }
-           else{
-               System.out.println("select one of the options(1 to 5)");
-               flag=false;
-           }
-        }while(flag=false);
-        date=model.validateDate(option,id);
+        if(model.validateInspection(id)==true) {
+            do {
+                try {
+                    model.availableDates(id);
+                    option = scanChoice.nextInt();
+                    if (option == 1 || option == 2 || option == 3 || option == 4 || option == 5) {
+                        flag = true;
+                    } else {
+                        System.out.println("select one of the options(1 to 5)");
+                        flag = false;
+                    }
+                }
+                catch(Exception i){};
+            } while (flag = false);
+            date = model.validateDate(option, id);
 
-        //setting time
-        do {
-            model.availableTimes(id);
-            option = scanChoice.nextInt();
-            if(option==1||option==2||option==3||option==4||option==5) {
-                flag=false;
-            }
-            else{
-                System.out.println("select one of the options(1 to 5)");
-                flag=false;
-            }
-        }while(flag=false);
-        time=model.validateTime(option,id);
+            //setting time
+            do {
+                try {
+                    model.availableTimes(id);
+                    option = scanChoice.nextInt();
+                    if (option == 1 || option == 2 || option == 3 || option == 4 || option == 5) {
+                        flag = true;
+                    } else {
+                        System.out.println("select one of the options(1 to 5)");
+                        flag = false;
+                    }
+                }
+                catch(Exception i){
 
-        model.bookInspection(currentUser,id,date,time,"Scheduled");
+                }
+            } while (flag==false);
+            time = model.validateTime(option, id);
+
+            model.bookInspection(currentUser, id, date, time, "Scheduled");
+        }
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
@@ -847,6 +860,7 @@ public class mainLauncher {
                     case 1 -> model.listPropertiesForSale();
                     case 2 -> model.listPropertiesForRent();
                 }
+                renderLoggedInMenu(someuser.getEmail(), scanChoice, model);
             }
 
         }else if(someuser instanceof Employee) {
@@ -858,8 +872,9 @@ public class mainLauncher {
             }else{
                 model.listProperties();
             }
+            renderAdminLoggedInMenu(someuser.getEmail(), scanChoice, model);
         }
-        renderLoggedInMenu(someuser.getEmail(), scanChoice, model);
+
     }
 
     public static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {

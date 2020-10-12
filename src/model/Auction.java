@@ -41,17 +41,6 @@ public class Auction {
         return auctionDate;
     }
 
-    public Property getProperty() {
-        return property;
-    }
-
-    public double getHighestBid() {
-        return highestBid;
-    }
-
-    public String getAuctionDate() {
-        return auctionDate;
-    }
 
     public String getId() {
         return id;
