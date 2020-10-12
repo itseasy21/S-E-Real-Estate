@@ -102,7 +102,15 @@ public class mainLauncher {
 
         registerController registerNew = new registerController();
         registerNew.initializeModel("", model);
-        Boolean registered = registerNew.registerhandler(details.get(0),details.get(1),details.get(2),details.get(3),details.get(4),details.get(5),details.get(6),details.get(7),details.get(8),type);
+
+        Boolean registered = false;
+        try {
+            registered = registerNew.registerhandler(details.get(0), details.get(1), details.get(2), details.get(3), details.get(4), details.get(5), details.get(6), details.get(7), details.get(8), type);
+        }
+        catch (UserException e){
+            System.out.println(e.toString());
+        }
+        
         if(!registered)
             register(scanChoice, model);
         else
