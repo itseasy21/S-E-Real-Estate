@@ -16,6 +16,7 @@ public class mainModel {
     public static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
     public static ArrayList<Application> applicationDB = new ArrayList<Application>();
     public static HashMap<Integer, Property> propertyDB =  new HashMap<>();;
+    public static ArrayList<Auction> auctionDB = new ArrayList<Auction>();
     Connection conn;
     Statement stmt;
 
@@ -158,7 +159,6 @@ public class mainModel {
                 propertyDB.put(property.getPropertyId(),property);
 
             }
-            System.out.println(propertyDB.size());
             rsProp.close();
         }catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -173,7 +173,7 @@ public class mainModel {
 //                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
 
         //TODO: Populating PropertyDB with Properties
-/*        Property p1 = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat);
+/*       Property p1 = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat);
         p1.setEmployeeId("EMP01");
         addProperty(p1);
 //        addProperty(new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat));
@@ -188,7 +188,6 @@ public class mainModel {
 
     public void savetoDB() throws SQLException {
         //Save userDB to Database
-        System.out.println(propertyDB.size());
         stmt = this.conn.createStatement();
         stmt.executeUpdate("DELETE FROM Customer;");
         stmt.executeUpdate("DELETE FROM Employee;");
