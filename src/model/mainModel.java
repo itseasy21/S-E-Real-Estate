@@ -154,7 +154,7 @@ public class mainModel {
                     Customer thisCustomer = (Customer) user;
                     String intSuburb = String.join(",", thisCustomer.getInterestedSuburbs()); // a,b
                     String insertQuery = "insert into Customer(customer_id, name, email, password, phone_number, address, gender, DOB, nationality, income, type, interested_suburb)" +
-                            "VALUES(" + thisCustomer.getId() + ", '" + thisCustomer.getName() + "', " +
+                            "VALUES('" + thisCustomer.getId() + "', '" + thisCustomer.getName() + "', " +
                             "'" + thisCustomer.getEmail() + "', '" + thisCustomer.getPassword() + "', '" + thisCustomer.getPhoneNo() + "'" +
                             ", '" + thisCustomer.getAddress() + "', '" + thisCustomer.getGender() + "', '" + thisCustomer.getDob() + "'" +
                             ", '" + thisCustomer.getNationality() + "', " + thisCustomer.getIncome() + ", '" + thisCustomer.getType().toString() + "', '" + intSuburb + "')";
@@ -757,6 +757,11 @@ public class mainModel {
             msg += "You need to inspect the property before applying.\n";
         }
 
+        if(hasAlreadyApplied(applyingUser, selectedProperty)){
+            error = 1;
+            msg += "You have already applied for this property.\n";
+        }
+
         if(weeklyRent < selectedProperty.getMinPrice()){
             error = 1;
             msg += "The weekly rent should be more then the minimum specified rent.\n";
@@ -765,11 +770,34 @@ public class mainModel {
         if(error == 0){
             Application newRental = new RentalApplication(selectedProperty.getEmployeeId(), applyingUser.getId(), selectedProperty, weeklyRent);
             System.out.println("Your Application for Rental of " + selectedProperty.getPropertyName() + " is submitted with ID: " + newRental.getId() + "\n" +
-                    "The Property Manager will be in touch th you!");
+                    "The Property Manager will be in touch with you!");
             applicationDB.add(newRental);
         }else{
             throw new ApplicationException(msg);
         }
 
+    }
+
+    public boolean hasAlreadyApplied(Customer currentUser, Property thisProp){
+        for(Application app : applicationDB){
+            if(currentUser.getId().equals(app.getCustID())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void viewApplicationsByUser(Customer currentUser) {
+        for(Application app : applicationDB){
+            int totalApp = 0;
+            String applications = "";
+            if(currentUser.getId().equals(app.getCustID())){
+                applications += app.getDetails()+"\n-----------------------------\n";
+                totalApp++;
+            }
+
+            System.out.println("You have overall " + totalApp + " applications, please see the details below.\n\n" + applications);
+
+        }
     }
 }
