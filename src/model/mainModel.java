@@ -790,13 +790,20 @@ public class mainModel {
         return false;
     }
 
-    public void viewApplicationsByUser(Customer currentUser) {
+    public void viewApplicationsByUser(User currentUser) {
         for(Application app : applicationDB){
             int totalApp = 0;
             String applications = "";
-            if(currentUser.getId().equals(app.getCustID())){
-                applications += app.getDetails()+"\n-----------------------------\n";
-                totalApp++;
+            if(currentUser instanceof Customer){
+                if(currentUser.getId().equals(app.getCustID())){
+                    applications += app.getDetails()+"\n-----------------------------\n";
+                    totalApp++;
+                }
+            }else{
+                if(currentUser.getId().equals(app.getEmpID())){
+                    applications += app.getDetails()+"\n-----------------------------\n";
+                    totalApp++;
+                }
             }
 
             System.out.println("You have overall " + totalApp + " applications, please see the details below.\n\n" + applications);
@@ -867,7 +874,55 @@ public class mainModel {
 
     }
 
-    public void createAuction(){
+    public void createAuction(String auctionDate, Property thisProperty){
+        Auction newAuc = new Auction(auctionDate, thisProperty);
+        auctionDB.add(newAuc);
+        System.out.println("Auction Created with ID " + newAuc.getId() + " for Property " + thisProperty.getPropertyName() + " on date: "+auctionDate);
+    }
 
+    public void listAuctions(){
+        for(Auction auction : auctionDB){
+            System.out.println("Auction ID:" + auction.getId()+"\n" +
+                    "Property: "+auction.getProperty().getPropertyName()+"("+auction.getProperty().getPropertyId()+")\n" +
+                    "Auction Date: "+auction.getAuctionDate());
+        }
+    }
+
+    public void addBid(String auctionID, double bid, Customer currentUser){
+        Bids newBid = new Bids(auctionID, bid, currentUser.getId());
+        for(Auction auction : auctionDB){
+            if(auction.getId().equals(auctionID)){
+                auction.handleBids(newBid);
+            }
+        }
+    }
+
+    public String getAuctionDetailsByID(String auctID) {
+        for(Auction auction : auctionDB){
+            if(auctID.equals(auction.getId())) {
+                return("Auction ID:" + auction.getId() + "\n" +
+                        "Property: " + auction.getProperty().getPropertyName() + "(" + auction.getProperty().getPropertyId() + ")\n" +
+                        "Auction Date: " + auction.getAuctionDate());
+            }
+        }
+        return "Invalid Auction ID";
+    }
+
+    public boolean isValidAuction(String auctID) {
+        for(Auction auction : auctionDB){
+            if(auctID.equals(auction.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public double getNextValidBid(String auctID){
+        for(Auction auction : auctionDB){
+            if(auctID.equals(auction.getId())) {
+                return (auction.getHighestBid() + auction.getMinIncrease());
+            }
+        }
+        return 0;
     }
 }

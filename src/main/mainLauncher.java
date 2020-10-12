@@ -452,15 +452,18 @@ public class mainLauncher {
         //All LoggedInMenus
         String[] vendorMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS","AUCTION", "LOGOUT"};//Vendor Menu
         String[] landLordMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS", "LOGOUT"};//Landlord Menu
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "APPLY FOR PROPERTY", "VIEW APPLICATIONS" ,"BOOK INSPECTION", "LIST BOOKED INSPECTION", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "CANCEL INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
+        String[] RenterMenu = {"SEARCH PROPERTY", "APPLY FOR PROPERTY", "VIEW APPLICATIONS" ,"BOOK INSPECTION", "LIST BOOKED INSPECTION", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "CANCEL INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
+        String[] buyerMenu = {"SEARCH PROPERTY", "LIST AUCTIONS", "SUBMIT BID","VIEW APPLICATIONS" ,"BOOK INSPECTION", "LIST BOOKED INSPECTION", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "CANCEL INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorMenu;
         }else if(currentUser.getType().equals(CustomerType.LANDLORD)){
             menu  = landLordMenu;
         }
-        else if(currentUser.getType().equals(CustomerType.BUYER) || currentUser.getType().equals(CustomerType.RENTER)){
-            menu = buyerRenterMenu;
+        else if(currentUser.getType().equals(CustomerType.RENTER)){
+            menu = RenterMenu;
+        }else if(currentUser.getType().equals(CustomerType.BUYER)){
+            menu = buyerMenu;
         }
 
         do {
@@ -496,7 +499,7 @@ public class mainLauncher {
                     case 4 -> createAuction(currentUser, scanChoice, model);
                     case 5 -> renderMainMenu(model); //Logout
                 }
-            } else{
+            }else if(currentUser.getType().equals(CustomerType.RENTER)){
                 switch (choiceLoggedInMenu) {
                     case 1 -> searchProperty(currentUser, scanChoice, model);//Search Property
                     case 2 -> rentBuyProperty(currentUser, scanChoice, model);//Rent or Buy Property
@@ -508,6 +511,21 @@ public class mainLauncher {
                     case 8 -> cancellInspection(currentUser, scanChoice, model);
                     case 9 -> renderMainMenu(model); //Logout
                 }
+            }else if(currentUser.getType().equals(CustomerType.BUYER)){
+                switch (choiceLoggedInMenu) {
+                    case 1 -> searchProperty(currentUser, scanChoice, model);//Search Property
+                    case 2 -> listAuction(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 3 -> submitBid(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 4 -> viewApplications(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 5 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
+                    case 6 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
+                    case 7 -> listInspection(currentUser, scanChoice, model); //List inspection
+                    case 8 -> bookInspection(currentUser, scanChoice, model);//book inspection
+                    case 9 -> cancellInspection(currentUser, scanChoice, model);
+                    case 10 -> renderMainMenu(model); //Logout
+                }
+            } else{
+                System.out.println("ERROR");
             }
 
         } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
@@ -575,15 +593,44 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
     private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model){
-        System.out.println("Enter date for auction: eg. dd/MM/yyyy");
-        String auctionDate = scanChoice.nextLine();
         auctionController auctionValidator = new auctionController();
         auctionValidator.initializeModel("",model);
-        boolean dateValidate = auctionValidator.validateJavaDate(auctionDate);
-        if(dateValidate){
-            System.out.println("select properties for auction ");
+
+        System.out.println("Enter date for auction: eg. dd/MM/yyyy");
+        String auctionDate = scanChoice.nextLine();
+        while (true){
+            if(auctionDate.length()<10 && !auctionValidator.validateJavaDate(auctionDate)){
+                System.out.println("Please enter a valid Date");
+                auctionDate = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        System.out.println("Enter the property ID for Auction.");
+        String propID = scanChoice.nextLine();
+        while (true){
+            if(propID.length()>2){
+                System.out.println("Please enter a valid Property ID");
+                propID = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        Property property = null;
+
+        try {
+            property = model.listProperty(Integer.parseInt(propID));
+        }
+        catch (PropertyException e) {
+            //Invalid ID
+        }
+
+        if(property == null || !property.isEmployeeAssigned() || !property.isPropertyTypeSale()){
+            System.out.println("The Property Is Either Not Yet Available or Invalid, Please try Again Later");
         }else{
-            System.out.println("Please enter a valid date");
+            model.createAuction(auctionDate, property);
         }
 
     }
@@ -912,4 +959,39 @@ public class mainLauncher {
 
     }
 
+    private static void submitBid(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+
+        System.out.println("Enter the Auction ID");
+        String auctID = scanChoice.nextLine();
+        while (true){
+            if(auctID.length()<2 && model.isValidAuction(auctID)){
+                System.out.println("Please enter a valid Auction ID");
+                auctID = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        System.out.println("Auction Details:\n" + model.getAuctionDetailsByID(auctID));
+
+        System.out.println("Enter the bid");
+        double bid = scanChoice.nextDouble();
+        while (true){
+            if(bid < model.getNextValidBid(auctID)){
+                System.out.println("Please enter a valid Bid Amount");
+                bid = scanChoice.nextDouble();
+            }else{
+                break;
+            }
+        }
+
+        model.addBid(auctID, bid, currentUser);
+
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+    }
+
+    private static void listAuction(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+        model.listAuctions();
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+    }
 }
