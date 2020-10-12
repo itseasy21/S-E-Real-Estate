@@ -802,4 +802,54 @@ public class mainModel {
 
         }
     }
+
+    public void viewApplicationsByProperty(int propertID) {
+        for(Application app : applicationDB){
+            int totalApp = 0;
+            String applications = "";
+            if(propertID == app.getProperty().getPropertyId()){
+                applications += app.getDetails()+"\n-----------------------------\n";
+                totalApp++;
+            }
+
+            System.out.println("There are overall " + totalApp + " applications for property, please see the details below.\n\n" + applications);
+
+        }
+    }
+
+    public void saleApplication(Property selectedProperty, Customer applyingUser, double price, String saletype) throws ApplicationException {
+
+        int error = 0;
+        String msg = "";
+
+        if(!applyingUser.getType().equals(CustomerType.BUYER)){
+            error = 1;
+            msg += "You are not allowed to buy property.\n";
+        }
+
+        if(isInspectionDone(applyingUser, selectedProperty)){
+            error = 1;
+            msg += "You need to inspect the property before applying.\n";
+        }
+
+        if(hasAlreadyApplied(applyingUser, selectedProperty)){
+            error = 1;
+            msg += "You have already applied for this property.\n";
+        }
+
+//        if(weeklyRent < selectedProperty.getMinPrice()){
+//            error = 1;
+//            msg += "The weekly rent should be more then the minimum specified rent.\n";
+//        }
+
+        if(error == 0){
+            Application newSale = new SalesApplication(selectedProperty.getEmployeeId(), applyingUser.getId(), selectedProperty, price, saletype);
+            System.out.println("Your Application for Purchase of " + selectedProperty.getPropertyName() + " is submitted with ID: " + newSale.getId() + "\n" +
+                    "The Property Manager will be in touch with you!");
+            applicationDB.add(newSale);
+        }else{
+            throw new ApplicationException(msg);
+        }
+
+    }
 }
