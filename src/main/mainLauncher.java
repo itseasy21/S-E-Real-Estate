@@ -1,8 +1,6 @@
 package main;
 
-import config.CustomerType;
-import config.EmployeeType;
-import config.menuOptions;
+import config.*;
 import controller.auctionController;
 import controller.loginController;
 import controller.registerController;
@@ -768,7 +766,7 @@ public class mainLauncher {
         renderLoggedInMenu(someuser.getEmail(), scanChoice, model);
     }
 
-    public static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+    public static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
         model.listAvailableProperties();
         renderAdminLoggedInMenu(email,scanChoice,model);
 

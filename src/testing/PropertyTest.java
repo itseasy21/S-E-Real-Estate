@@ -1,6 +1,8 @@
 package testing;
 
 
+import config.PropertyCategory;
+import config.PropertyType;
 import model.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

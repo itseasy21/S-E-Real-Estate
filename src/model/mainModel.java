@@ -1,6 +1,8 @@
 package model;
 import config.CustomerType;
 import config.EmployeeType;
+import config.PropertyCategory;
+import config.PropertyType;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
