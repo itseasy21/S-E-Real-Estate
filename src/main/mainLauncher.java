@@ -614,7 +614,7 @@ public class mainLauncher {
         }
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
-    private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model){
+    private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
         auctionController auctionValidator = new auctionController();
         auctionValidator.initializeModel("",model);
 
@@ -654,6 +654,8 @@ public class mainLauncher {
         }else{
             model.createAuction(auctionDate, property);
         }
+
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
 
     }
 
