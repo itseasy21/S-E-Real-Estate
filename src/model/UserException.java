@@ -8,8 +8,6 @@ public class UserException extends Throwable {
 
     @Override
     public String toString() {
-        return "UserException{" +
-                "message='" + message + '\'' +
-                '}';
+        return "One or more Error Occurred:\n" + message;
     }
 }

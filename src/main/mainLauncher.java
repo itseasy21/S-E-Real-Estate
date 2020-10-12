@@ -18,7 +18,7 @@ public class mainLauncher {
 
     private static mainModel model;
 
-    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException {
+    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException {
         model = new mainModel(); //Initialize Model
         model.syncDB(); //Synchronize the data into memory from DB
         renderMainMenu(model); //Render Main Menu
@@ -29,7 +29,7 @@ public class mainLauncher {
         System.exit(0);
     }
 
-    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException {
+    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException {
         int choiceMainMenu = 0;
         Scanner scanChoice = new Scanner(System.in);
 
@@ -64,7 +64,7 @@ public class mainLauncher {
         scanChoice.close();
     }
 
-    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException {
+    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException, ApplicationException {
         System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
         int registerChoice = 0;
@@ -102,7 +102,15 @@ public class mainLauncher {
 
         registerController registerNew = new registerController();
         registerNew.initializeModel("", model);
-        Boolean registered = registerNew.registerhandler(details.get(0),details.get(1),details.get(2),details.get(3),details.get(4),details.get(5),details.get(6),details.get(7),details.get(8),type);
+
+        Boolean registered = false;
+        try {
+            registered = registerNew.registerhandler(details.get(0), details.get(1), details.get(2), details.get(3), details.get(4), details.get(5), details.get(6), details.get(7), details.get(8), type);
+        }
+        catch (UserException e){
+            System.out.println(e.toString());
+        }
+        
         if(!registered)
             register(scanChoice, model);
         else
@@ -110,7 +118,7 @@ public class mainLauncher {
 
     }
 
-    private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException {
+    private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException {
         System.out.println("Please Enter Your Registered Email ID and Password to Login! ");
         System.out.print("Email: ");
         String email = scanChoice.nextLine();
@@ -142,14 +150,14 @@ public class mainLauncher {
         }
     }
 
-    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
         Employee currentEmp = (Employee) model.getUserByUsername(email);
 
         System.out.println("Welcome "+ currentEmp.getName() +" to S&E Real Estate" + currentEmp.getEmpRole());
 
         int choiceLoggedInMenu = 0;
         //All LoggedInMenus
-        String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES","LIST INSPECTION", "LOGOUT"}; //Sales & Property Menu
+        String[] salesPropertyManager = {"LIST PROPERTIES", "CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION", "LOGOUT"}; //Sales & Property Menu
         String[] branchAdmin = {"LIST PROPERTIES", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL" ,"LOGOUT"}; //Branch Admin Menu
         String[] menu = new String[6];
 
@@ -182,7 +190,8 @@ public class mainLauncher {
                     case 1 -> listProperty(currentEmp, scanChoice, model);
                     case 2 -> createInspection(currentEmp, scanChoice, model); //Create Inspection Time
                     case 3 -> listInspection(currentEmp, scanChoice, model);//List inspections
-                    case 4 -> renderMainMenu(model); //Logout
+                    case 4 -> cancellInspection(currentEmp, scanChoice, model);//cancel inspection
+                    case 5 -> renderMainMenu(model); //Logout
                 }
             }else{
                 switch (choiceLoggedInMenu) {
@@ -197,7 +206,7 @@ public class mainLauncher {
 
     }
 
-    private static void handlePayroll(String email, Scanner scanChoice, mainModel model) throws MyException, SERException, SQLException, ParseException, IOException, UserException, PropertyException {
+    private static void handlePayroll(String email, Scanner scanChoice, mainModel model) throws MyException, SERException, SQLException, ParseException, IOException, UserException, PropertyException, ApplicationException {
         System.out.println("Enter the Employee id ");
         System.out.println(model.getEmpKeySets());
         String empid = scanChoice.nextLine();
@@ -241,8 +250,11 @@ public class mainLauncher {
         }
     }
 
-    private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+    private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
 
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("CREATE INSPECTION");
+        System.out.println("-----------------");
         System.out.println("Please Enter the property details !");
 
         System.out.println("Property ID:");
@@ -258,23 +270,43 @@ public class mainLauncher {
         int count=5;
         String dateSlot = "";
         String date;
+        String date4="",date3="",date2,date1;
         System.out.println("Enter the Dates to conduct the inspection on:");
+        boolean loop=false;
         do {
-        System.out.println("Enter " +count +" more dates");
-        date = scanChoice.nextLine();
-            while (true) {
-                if (date.length() < 11 && !controller.registerController.validateDOB(date)) {
-                    String errorMsg = "A Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020\n";
-                    System.out.println("Please enter a valid Date" + errorMsg);
-                    date = scanChoice.nextLine();
-                } else {
+            do {
+                System.out.println("Enter " + count + " more dates");
+                date = scanChoice.nextLine();
+                while (true) {
+                    if (date.length() < 11 && !controller.registerController.validateDate(date)) {
+                        String errorMsg = "A Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020\n";
+                        System.out.println("Please enter a valid Date" + errorMsg);
+                        date = scanChoice.nextLine();
+                    } else {
+                        if (count == 5) {
+                            dateSlot = date;
+                            loop = false;
+                        }
 
-                    break;
+                        if (count < 5) {
+                            String[] split = dateSlot.split(";");
+                            for (int i = 0; i < split.length; i++) {
+                                if (date.equals(split[i])) {
+                                    System.out.println("Date already entered!!..Add a new date..");
+                                    loop = true;
+                                } else {
+                                    loop=false;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
                 }
+            }while(loop==true);
+            if(count<5) {
+                dateSlot = dateSlot + ";" + date;
             }
-            dateSlot=dateSlot+";" +date;
-            System.out.println(count);
-            System.out.println(dateSlot);
             count--;
         }
         while(count>=1);
@@ -283,41 +315,136 @@ public class mainLauncher {
         String timeSlot="";
         String time;
         System.out.println("Enter the timeslots for the inspection");
-        do {
-            System.out.println("Enter " +count +" more time slot:");
-            time = scanChoice.nextLine();
-            while (true) {
-                if (time.length() < 11 && !controller.registerController.validateJavaTime(time)) {
-                    String errorMsg = "A Valid Time is of hh:mm format.\n Example: 13:30\n";
-                    System.out.println("Please enter a valid Time" + errorMsg);
-                    time = scanChoice.nextLine();
-                } else {
-                    timeSlot = timeSlot + ";" + time;
-                    System.out.println(timeSlot);
-                    break;
+        loop=false;
+        do{
+            do {
+                System.out.println("Enter " +count +" more time slot:");
+                time = scanChoice.nextLine();
+                while (true) {
+                    if (time.length() < 11 && !controller.registerController.validateJavaTime(time)) {
+                        String errorMsg = "A Valid Time is of hh:mm format.\n Example: 13:30\n";
+                        System.out.println("Please enter a valid Time" + errorMsg);
+                        time = scanChoice.nextLine();
+                    } else {
+                        if (count == 5) {
+                            timeSlot = time;
+                            loop = false;
+                        }
+
+                        if (count < 5) {
+                            String[] split = timeSlot.split(";");
+                            for (int i = 0; i < split.length; i++) {
+                                if (time.equals(split[i])) {
+                                    System.out.println("Time already entered!!..Add a new time..");
+                                    loop = true;
+                                } else {
+                                    loop=false;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
                 }
+            }while(loop==true);
+            if(count<5) {
+                timeSlot = timeSlot + ";" + time;
             }
             count--;
         }while(count>=1);
 
         model.createInspection(Integer.parseInt(pID), currentEmp, dateSlot, timeSlot, "Created");
-        System.out.println("Inspection Times added!");
         renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
     }
 
-    private static void listInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException {
+
+
+    private static void cancellInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException {
+
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("CANCEL INSPECTION");
+        System.out.println("-----------------");
+        model.listInspectionID(currentEmp);
+            System.out.println("Enter the inspection ID to cancel.");
+            String id=scanChoice.nextLine();
+
+        model.cancellInspection(id,currentEmp);
+        renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+
+    }
+
+    private static void cancellInspection(Customer currentUser, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException {
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("CANCEL INSPECTION");
+        System.out.println("-----------------");
+        model.listInspectionIDCustomer(currentUser);
+        System.out.println("Enter the inspection ID to cancel.");
+        String id=scanChoice.nextLine();
+
+        model.cancellInspectionCustomer(id,currentUser);
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+
+    }
+
+    private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("BOOK INSPECTION");
+        System.out.println("-----------------");
+        String id="";
+        do {
+            model.listInspectionBook();
+            System.out.println("Enter the inspection ID you want to book. (Example: INS1)");
+            id = scanChoice.nextLine();
+            model.validateInspection(id);
+        }while(model.validateInspection(id)==true);
+
+        //setting date
+        String date,time = null;
+        boolean flag=true;
+        int option = 0;
+        do {
+            model.availableDates(id);
+            option = scanChoice.nextInt();
+           if(option==1||option==2||option==3||option==4||option==5) {
+               flag=false;
+           }
+           else{
+               System.out.println("select one of the options(1 to 5)");
+               flag=false;
+           }
+        }while(flag=false);
+        date=model.validateDate(option,id);
+
+        //setting time
+        do {
+            model.availableTimes(id);
+            option = scanChoice.nextInt();
+            if(option==1||option==2||option==3||option==4||option==5) {
+                flag=false;
+            }
+            else{
+                System.out.println("select one of the options(1 to 5)");
+                flag=false;
+            }
+        }while(flag=false);
+        time=model.validateTime(option,id);
+
+        model.bookInspection(currentUser,id,date,time,"Scheduled");
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+    }
+
+    private static void listInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
        if(currentUser instanceof Customer){
-           model.listInspection();
+           model.listInspectionCustomer(currentUser);
            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
        }
        else if(currentUser instanceof Employee){
            model.listInspection();
            renderAdminLoggedInMenu(currentUser.getEmail(), scanChoice, model);
        }
-
     }
 
-    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException {
+    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException, ApplicationException {
 
         Customer currentUser = (Customer) model.getUserByUsername(username);
 
@@ -327,7 +454,7 @@ public class mainLauncher {
         //All LoggedInMenus
         String[] vendorMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS","AUCTION", "LOGOUT"};//Vendor Menu
         String[] landLordMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS", "LOGOUT"};//Landlord Menu
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "LIST INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "APPLY FOR PROPERTY", "VIEW APPLICATIONS" ,"BOOK INSPECTION", "LIST BOOKED INSPECTION", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "CANCEL INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorMenu;
@@ -374,17 +501,22 @@ public class mainLauncher {
             } else{
                 switch (choiceLoggedInMenu) {
                     case 1 -> searchProperty(currentUser, scanChoice, model);//Search Property
-                    case 2 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
-                    case 3 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
-                    case 4 -> listInspection(currentUser, scanChoice, model); //List inspection
-                    case 5 -> renderMainMenu(model); //Logout
+                    case 2 -> rentBuyProperty(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 3 -> viewApplications(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 4 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
+                    case 5 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
+                    case 6 -> listInspection(currentUser, scanChoice, model); //List inspection
+                    case 7 -> bookInspection(currentUser, scanChoice, model);//book inspection
+                    case 8 -> cancellInspection(currentUser, scanChoice, model);
+                    case 9 -> renderMainMenu(model); //Logout
                 }
             }
 
         } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
 
     }
-    private static void searchProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+
+    private static void searchProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
         System.out.println("Search Property by");
         System.out.println("1. Suburb");
         System.out.println("2. Price");
@@ -458,7 +590,7 @@ public class mainLauncher {
 
     }
 
-    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
         ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
         int loopCounter = 1;
         for (String suburb : suburbs){
@@ -468,7 +600,7 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
 
         do {
             System.out.print("Suburb Name to Add (press q to go Back): ");
@@ -479,10 +611,9 @@ public class mainLauncher {
                 model.addSuburb(currentUser, input);
             }
         }while(true);
-
     }
 
-    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
 
         System.out.println("Please Enter the property details !");
 
@@ -595,7 +726,7 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    public static void listProperty(User someuser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException {
+    public static void listProperty(User someuser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
 
         if(someuser instanceof Customer) {
             Customer currentUser = (Customer) someuser;
@@ -643,7 +774,7 @@ public class mainLauncher {
 
     }
 
-    public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+    public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
 
             System.out.println("Select the Property id");
             int choice = scanChoice.nextInt();
@@ -652,7 +783,8 @@ public class mainLauncher {
             renderLoggedInMenu(email, scanChoice, model);
 
         }
-        public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+
+    public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
             while (true) {
                 System.out.println("Select the Property id");
                 System.out.println(model.getPropertyDB());
@@ -697,11 +829,89 @@ public class mainLauncher {
                         System.out.println("Invalid Employee id");
                     }
 
-
                 }
             }
             System.out.println("Employee Assigned to the Property !");
             renderAdminLoggedInMenu(email, scanChoice, model);
         }
+
+    public static void rentBuyProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+
+        System.out.println("Enter a Property ID you wish to apply for:");
+        String propID = scanChoice.nextLine();
+        while (true){
+            if(propID.length()>2){
+                System.out.println("Please enter a valid Property ID");
+                propID = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        Property property = null;
+
+        try {
+            property = model.listProperty(Integer.parseInt(propID));
+        }
+        catch (PropertyException e) {
+            //Invalid ID
+        }
+
+        if(property == null || !property.isEmployeeAssigned()){
+            System.out.println("The Property Is Either Not Yet Available or Invalid, Please try Again Later");
+        }else {
+
+            //Print Property Details
+            System.out.println(property.toString());
+
+            if (currentUser.getType().equals(CustomerType.RENTER) && property.isPropertyTypeRental()) {
+                //If the current user is a renter
+
+                //Enter the Rent
+                System.out.print("Enter the Weekly Rent:");
+                String tmpWeeklyRent = scanChoice.nextLine();
+                int weeklyRent;
+                while (true){
+                    try{
+                        weeklyRent = Integer.parseInt(tmpWeeklyRent);
+                        if(weeklyRent < 0){
+                            System.out.println("Rent should be greater then 0");
+                            System.out.print("Enter the Weekly Rent:");
+                            tmpWeeklyRent = scanChoice.nextLine();
+                        }else{
+                            break;
+                        }
+                    }catch(Exception e){
+                        System.out.println("Rent should be a number");
+                        System.out.print("Enter the Weekly Rent:");
+                        tmpWeeklyRent = scanChoice.nextLine();
+                    }
+                }
+                System.out.println("Applying with the weekly rent " + weeklyRent);
+
+                try{
+                    model.rentApplication(property, currentUser, weeklyRent);
+                }
+                catch (ApplicationException e){
+                    System.out.println(e.toString());
+                }
+
+            } else if (currentUser.getType().equals(CustomerType.BUYER) && property.isPropertyTypeSale()) {
+
+            } else {
+                System.out.println("An Error Occured!");
+            }
+        }
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+    }
+
+
+    private static void viewApplications(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+
+        model.viewApplicationsByUser(currentUser);
+
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+
+    }
 
 }

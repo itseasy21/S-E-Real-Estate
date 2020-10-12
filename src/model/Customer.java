@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class Customer extends User{
 
-    // Counter to keep track of event post
+    // Counter to keep track of customers
     static int customerCounter = 0;
 
     String nationality;

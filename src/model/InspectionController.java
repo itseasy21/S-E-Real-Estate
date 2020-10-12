@@ -1,4 +1,4 @@
-package controller;
+package model;
 import config.CustomerType;
 import config.EmployeeType;
 import model.*;

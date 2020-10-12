@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -93,7 +94,7 @@ public class registerController extends baseController{
                 return true;
             }
         }else{
-            throw new UserException("The following error(s) occurred:\n" +errorMsg);
+            throw new UserException("\u001B[31m" + "The following error(s) occurred:\n" +errorMsg + "\u001B[0m");
 //            System.out.println("\u001B[31m" + "The following error(s) occurred:\n" +errorMsg + "\u001B[0m");
 //            return false;
         }
@@ -131,6 +132,39 @@ public class registerController extends baseController{
         return true;
     }
 
+    public static boolean validateDate(String strDate)
+    {
+        /*
+         * Set preferred date format,
+         * For example MM-dd-yyyy, MM.dd.yyyy,dd.MM.yyyy etc.*/
+        SimpleDateFormat sdfrmt = new SimpleDateFormat("dd/MM/yyyy");
+        sdfrmt.setLenient(false);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH,0);
+        /* Create Date object
+         * parse the string into date
+         */
+        try
+        {
+            Date javaDate = sdfrmt.parse(strDate);
+            String newDate = sdfrmt.format(cal.getTime());
+
+            //checking id date entered is after the current date
+            if(javaDate.after(cal.getTime())==false){
+                System.out.println("Old date entered");
+                return false;
+            }
+        }
+        /* Date format is invalid */
+        catch (ParseException e)
+        {
+//            System.out.println(strDate+" is Invalid Date format\nA Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020");
+            return false;
+        }
+        /* Return true if date format is valid */
+        return true;
+    }
+
     public static boolean validateJavaTime(String strDate)
     {
         /*
@@ -144,6 +178,13 @@ public class registerController extends baseController{
         try
         {
             LocalTime t = LocalTime.parse(strDate);
+            String startTime="08:00";
+            String endTime="17:00";
+            /*if(t.isAfter(LocalTime.parse(startTime))&&t.isBefore(LocalTime.parse(endTime))){
+
+                System.out.println("Entered time is not within working hours..\nEnter a time between 07:00 and 17:00");
+                return false;
+            }*/
 //		        System.out.println(strDate+" is valid date format");
         }
         /* Date format is invalid */

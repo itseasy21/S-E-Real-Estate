@@ -93,7 +93,7 @@ public class Property {
     }
 
     public String getEmployeeId() {
-        return employeeId;
+        return this.employeeId;
     }
 
     public void setEmployeeId(String employeeId) {

@@ -1,7 +1,6 @@
 package model;
 import config.CustomerType;
 import config.EmployeeType;
-import controller.InspectionController;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -16,6 +15,7 @@ public class mainModel {
 
     public static ArrayList<User> userDB = new ArrayList<>();
     public static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
+    public static ArrayList<Application> applicationDB = new ArrayList<Application>();
     public static HashMap<Integer, Property> propertyDB;
     Connection conn;
     Statement stmt;
@@ -128,7 +128,10 @@ public class mainModel {
 //                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
 
         //TODO: Populating PropertyDB with Properties
-        addProperty(new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat));
+        Property p1 = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat);
+        p1.setEmployeeId("EMP01");
+        addProperty(p1);
+//        addProperty(new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat));
         addProperty(new Property( "Jersey parade", PropertyType.Rent,"102 Plenty road", 26000,"Bundoora", 2,1,2,324_000.00, PropertyCategory.House));
         addProperty(new Property( "Residency Towers", PropertyType.Sale,"2 Moreland road", 26000,"Bundoora", 2,2,3,426_000.00, PropertyCategory.Unit));
         addProperty(new Property( "Spring Waters", PropertyType.Sale,"200 Clifton Hill ", 26000,"Preston", 4,3,2,204_000.00, PropertyCategory.Studio));
@@ -151,7 +154,7 @@ public class mainModel {
                     Customer thisCustomer = (Customer) user;
                     String intSuburb = String.join(",", thisCustomer.getInterestedSuburbs()); // a,b
                     String insertQuery = "insert into Customer(customer_id, name, email, password, phone_number, address, gender, DOB, nationality, income, type, interested_suburb)" +
-                            "VALUES(" + thisCustomer.getId() + ", '" + thisCustomer.getName() + "', " +
+                            "VALUES('" + thisCustomer.getId() + "', '" + thisCustomer.getName() + "', " +
                             "'" + thisCustomer.getEmail() + "', '" + thisCustomer.getPassword() + "', '" + thisCustomer.getPhoneNo() + "'" +
                             ", '" + thisCustomer.getAddress() + "', '" + thisCustomer.getGender() + "', '" + thisCustomer.getDob() + "'" +
                             ", '" + thisCustomer.getNationality() + "', " + thisCustomer.getIncome() + ", '" + thisCustomer.getType().toString() + "', '" + intSuburb + "')";
@@ -179,8 +182,6 @@ public class mainModel {
             }
         }
     }
-
-
 
     public boolean isEmailAvailable(String email){
         for(User user : userDB){
@@ -255,8 +256,8 @@ public class mainModel {
         }
         return null;
     }
-    public double EmployeeSalary(String id)
-    { for(User user : userDB){
+    public double EmployeeSalary(String id) {
+        for(User user : userDB){
         if(user instanceof Employee) {
             if ((user.getId()).equalsIgnoreCase(id)) {
                 return ((Employee) user).getSalary();
@@ -267,8 +268,8 @@ public class mainModel {
     return 0;
 
     }
-    public double getEmployeeHour(String id)
-    { for(User user : userDB){
+    public double getEmployeeHour(String id) {
+        for(User user : userDB){
         if(user instanceof Employee) {
             if ((user.getId()).equalsIgnoreCase(id)) {
                 System.out.println(((Employee) user).getWorkingHours());
@@ -279,6 +280,7 @@ public class mainModel {
     }
         return 0;
     }
+
 //Property Class Functionalities
     public void addProperty(Property property) throws PropertyException{
         int propertyId = propertyDB.size() + 1;
@@ -295,7 +297,6 @@ public class mainModel {
         }
 
     }
-
 
     public void listAvailableProperties(){
        for(int property : propertyDB.keySet()){
@@ -454,16 +455,36 @@ public class mainModel {
             System.out.println("An Error Occurred While Adding, Please Retry!");
     }
 
+    public void listInspectionCustomer(User currentCustomer){
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("LIST INSPECTION");
+        System.out.println("---------------");
+        if(currentCustomer instanceof Customer) {
+            for (Inspection a : inspectionDB) {
+                if(currentCustomer.getId().equals(a.getcId())) {
+                    System.out.println(a.showDetails());
+                    System.out.println("*************************************");
+                }
+            }
+        }
+        System.out.println("---------------------------------------------------------------------------------");
+    }
+
+    public void listInspectionIDCustomer(User currentCustomer){
+        System.out.println("---------------------------------------------------------------------------------");
+        if(currentCustomer instanceof Customer) {
+            for (Inspection a : inspectionDB) {
+                if(currentCustomer.getId().equals(a.getcId())) {
+                    System.out.println(a.getId());
+                }
+            }
+        }
+        System.out.println("---------------------------------------------------------------------------------");
+    }
+
     public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
+
         Property thisProp = null;
-
-        /*int propertyId = propertyDB.size() + 1;
-        if(property.getPropertyId() == 0)
-            property.setPropertyId(propertyId);
-        propertyDB.put(propertyId,property);
-        */
-
-
 
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
             if(set.getValue().getPropertyId() == propertyID){
@@ -471,22 +492,212 @@ public class mainModel {
             }
         }
 
-        if(thisProp != null && thisProp.getEmployeeId().equals(currentEmployee.getId())&&thisProp.isEmployeeAssigned()){
-            InspectionController inspect = new InspectionController();
-            Inspection tempIns = new Inspection("3",thisProp.getPropertyId(), thisProp.getEmployeeId(), getdateslot,timeslots1 ,status);
+        if(thisProp != null && thisProp.isEmployeeAssigned()){
+            if(thisProp.getEmployeeId().equals(currentEmployee.getId())) {
+                //InspectionController inspect = new InspectionController();
+                Inspection tempIns = new Inspection(thisProp.getPropertyId(), thisProp.getEmployeeId(), getdateslot, timeslots1, status);
+                inspectionDB.add(tempIns);
+                System.out.println("Inspection has been created sucessfully!");
+            }else{
+                System.out.println("You are not assigned to this property!");
+            }
+        }
+        else if(thisProp == null){
+            System.out.println("Property does not exist..Enter another property!!");
+        }
+        else if(!thisProp.isEmployeeAssigned()){
+            System.out.println("No employee is assigned to this property yet! Please contact Branch Admin.");
+        }
+        System.out.println("---------------------------------------------------------------------------------");
+    }
 
-            inspect.createInspection(thisProp, tempIns);
-            inspectionDB.add(tempIns);
-            for(Inspection a:inspectionDB){
-                System.out.println(a.showDetails());
+    public void bookInspection(Customer currentUser, String id, String date, String time, String status) throws PropertyException {
+        if(currentUser.getType().equals(CustomerType.BUYER) || currentUser.getType().equals(CustomerType.RENTER)) {
+            for(Inspection a:inspectionDB) {
+                if (a.getId().equals(id)) {
+                    if (a.getStatus().equalsIgnoreCase("created")) {
+                        a.setCid(currentUser.getId());
+                        a.setDate(date);
+                        a.setTime(time);
+                        a.setStatus(status);
+
+                        System.out.println("Inspection has been created sucessfully!");
+                    }
+                    else{
+                        System.out.println("Inspection is not available for bookings");
+                    }
+                }
+            }
+        }
+        else{
+            System.out.println("Inspection is not available for bookings");
+        }
+    }
+
+    public void availableDates(String id){
+        System.out.println("Available dates for inspections are:");
+        for(Inspection a:inspectionDB){
+            if(a.getId().equals(id)){
+                System.out.println( a.getId());
+                String dates=a.getdatesl();
+                String[] split=dates.split(";");
+                String date1=split[0];
+                String date2=split[1];
+                String date3=split[2];
+                String date4=split[3];
+                String date5=split[4];
+                System.out.println("1. "+date1);
+                System.out.println("2. "+date2);
+                System.out.println("3. "+date3);
+                System.out.println("4. "+date4);
+                System.out.println("5. "+date5);
+                System.out.println("Select an opption");
             }
         }
     }
 
+    public void availableTimes(String id){
+        System.out.println("Available dates for inspections are:");
+        for(Inspection a:inspectionDB){
+            if(a.getId().equals(id)){
+                String times=a.gettimesl();
+                String[] split=times.split(";");
+                String date1=split[0];
+                String date2=split[1];
+                String date3=split[2];
+                String date4=split[3];
+                String date5=split[4];
+                System.out.println("1. "+date1);
+                System.out.println("2. "+date2);
+                System.out.println("3. "+date3);
+                System.out.println("4. "+date4);
+                System.out.println("5. "+date5);
+                System.out.println("Select an opption");
+            }
+        }
+    }
+
+    public String validateDate(int dateOption,String id){
+        String date="";
+        for(Inspection a:inspectionDB){
+            if(a.getId().equals(id)){
+                String dates=a.getdatesl();
+                String[] split=dates.split(";");
+                if(dateOption==1){
+                    date=split[0];
+                }else if(dateOption==2){
+                    date=split[1];
+                }else if(dateOption==3){
+                    date=split[2];
+                }else if(dateOption==4){
+                    date=split[3];
+                }else if(dateOption==5){
+                    date=split[4];
+                }
+            }
+        }
+        return date;
+    }
+
+    public String validateTime(int timeOption,String id) {
+        String time = "";
+        for (Inspection a : inspectionDB) {
+            if (a.getId().equals(id)) {
+                String times = a.gettimesl();
+                String[] split = times.split(";");
+                if (timeOption == 1) {
+                    time = split[0];
+                } else if (timeOption == 2) {
+                    time = split[1];
+                } else if (timeOption == 3) {
+                    time = split[2];
+                } else if (timeOption == 4) {
+                    time = split[3];
+                } else if (timeOption == 5) {
+                    time = split[4];
+                }
+            }
+        }
+        return time;
+    }
+
+    public void listInspectionBook(){
+        System.out.println("Available inspections:");
+        for(Inspection a:inspectionDB){
+            if(a.getStatus().equals("Created")){
+                System.out.println("Inspecion ID:" +a.getId() +"\tProperty ID:" +a.getpId());
+            }
+            if(a.getId().equals(null)){
+                System.out.println("No inpections are available");
+            }
+        }
+    }
+
+    public boolean validateInspection(String id){
+        Boolean flag=false;
+        for(Inspection a:inspectionDB){
+            if(a.getStatus().equals(id)){
+                flag=true;
+            }
+            else{
+                flag=false;
+            }
+        }
+        return flag;
+    }
+
     public void listInspection(){
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("LIST INSPECTION");
+        System.out.println("---------------");
         for(Inspection a:inspectionDB){
             System.out.println(a.showDetails());
+            System.out.println("*************************************");
         }
+        System.out.println("---------------------------------------------------------------------------------");
+    }
+
+    public void listInspectionID(Employee currentEmp){
+        System.out.println("Available inspections are:");
+        for(Inspection a:inspectionDB){
+            if(a.geteId().equals(currentEmp.getId())) {
+                System.out.println(a.getId());
+            }
+        }
+    }
+
+    public void cancellInspection(String id,Employee currentEmployee) throws PropertyException {
+        for(Inspection a:inspectionDB){
+            if(a.getId().equals(id)){
+                if(a.geteId().equals(currentEmployee.getId())) {
+                    a.setStatus("Cancelled");
+                    a.setDate(null);
+                    a.setTime(null);
+                    a.setTimeSlot(null);
+                    a.setdatesSlot(null);
+                    System.out.println("Inspection cancelled sucessfully");
+                    System.out.println(a.showDetails());
+                }
+            }
+        }
+        System.out.println("---------------------------------------------------------------------------------");
+    }
+
+    public void cancellInspectionCustomer(String id,Customer currentUser) throws PropertyException {
+        for(Inspection a:inspectionDB){
+            if(a.getId().equals(id)){
+                if(a.getcId().equals(currentUser.getId())) {
+                    a.setStatus("cancelled");
+                    a.setDate(null);
+                    a.setTime(null);
+                    a.setTimeSlot(null);
+                    a.setdatesSlot(null);
+                    System.out.println("Inspection cancelled sucessfully");
+                    System.out.println(a.showDetails());
+                }
+            }
+        }
+        System.out.println("---------------------------------------------------------------------------------");
     }
 
     public void updateSalary(String empid, double salary, Payroll payroll) throws MyException, UserException {
@@ -520,5 +731,73 @@ public class mainModel {
     public void getSalary(String empid, Payroll payroll) {
         payroll.getSalary();
         //System.out.println("hello"+payroll.getSalary());
+    }
+
+    public boolean isInspectionDone(Customer customer, Property thisProp){
+        for(Inspection i : inspectionDB){
+            if(i.getcId().equals(customer.getId()) && i.getpId() == thisProp.getPropertyId() && i.getStatus().equalsIgnoreCase("Completed")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void rentApplication(Property selectedProperty, Customer applyingUser, double weeklyRent) throws ApplicationException {
+
+        int error = 0;
+        String msg = "";
+
+        if(!applyingUser.getType().equals(CustomerType.RENTER)){
+            error = 1;
+            msg += "You are not allowed to rent.\n";
+        }
+
+        if(isInspectionDone(applyingUser, selectedProperty)){
+            error = 1;
+            msg += "You need to inspect the property before applying.\n";
+        }
+
+        if(hasAlreadyApplied(applyingUser, selectedProperty)){
+            error = 1;
+            msg += "You have already applied for this property.\n";
+        }
+
+        if(weeklyRent < selectedProperty.getMinPrice()){
+            error = 1;
+            msg += "The weekly rent should be more then the minimum specified rent.\n";
+        }
+
+        if(error == 0){
+            Application newRental = new RentalApplication(selectedProperty.getEmployeeId(), applyingUser.getId(), selectedProperty, weeklyRent);
+            System.out.println("Your Application for Rental of " + selectedProperty.getPropertyName() + " is submitted with ID: " + newRental.getId() + "\n" +
+                    "The Property Manager will be in touch with you!");
+            applicationDB.add(newRental);
+        }else{
+            throw new ApplicationException(msg);
+        }
+
+    }
+
+    public boolean hasAlreadyApplied(Customer currentUser, Property thisProp){
+        for(Application app : applicationDB){
+            if(currentUser.getId().equals(app.getCustID())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void viewApplicationsByUser(Customer currentUser) {
+        for(Application app : applicationDB){
+            int totalApp = 0;
+            String applications = "";
+            if(currentUser.getId().equals(app.getCustID())){
+                applications += app.getDetails()+"\n-----------------------------\n";
+                totalApp++;
+            }
+
+            System.out.println("You have overall " + totalApp + " applications, please see the details below.\n\n" + applications);
+
+        }
     }
 }
