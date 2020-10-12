@@ -356,16 +356,29 @@ public class mainLauncher {
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println("CANCEL INSPECTION");
         System.out.println("-----------------");
-        model.listInspectionID();
+        model.listInspectionID(currentEmp);
             System.out.println("Enter the inspection ID to cancel.");
             String id=scanChoice.nextLine();
 
-        model.cancellInspection(id);
+        model.cancellInspection(id,currentEmp);
         renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
 
     }
 
-    private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+    private static void cancellInspection(Customer currentUser, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException {
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("CANCEL INSPECTION");
+        System.out.println("-----------------");
+        model.listInspectionIDCustomer(currentUser);
+        System.out.println("Enter the inspection ID to cancel.");
+        String id=scanChoice.nextLine();
+
+        model.cancellInspectionCustomer(id,currentUser);
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+
+    }
+
+    private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException {
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println("BOOK INSPECTION");
         System.out.println("-----------------");
@@ -414,7 +427,7 @@ public class mainLauncher {
 
     private static void listInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
        if(currentUser instanceof Customer){
-           model.listInspection();
+           model.listInspectionCustomer(currentUser);
            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
        }
        else if(currentUser instanceof Employee){
@@ -433,7 +446,7 @@ public class mainLauncher {
         //All LoggedInMenus
         String[] vendorMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS","AUCTION", "LOGOUT"};//Vendor Menu
         String[] landLordMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS", "LOGOUT"};//Landlord Menu
-        String[] buyerRenterMenu = {"SEARCH PROPERTY", "APPLY FOR PROPERTY" ,"BOOK INSPECTION", "LIST BOOKED INSPECTION", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "LOGOUT"}; //Buyer & Renter Menu
+        String[] buyerRenterMenu = {"SEARCH PROPERTY", "APPLY FOR PROPERTY" ,"BOOK INSPECTION", "LIST BOOKED INSPECTION", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "CANCELL INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorMenu;
@@ -485,7 +498,8 @@ public class mainLauncher {
                     case 4 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
                     case 5 -> listInspection(currentUser, scanChoice, model); //List inspection
                     case 6 -> bookInspection(currentUser, scanChoice, model);//book inspection
-                    case 7 -> renderMainMenu(model); //Logout
+                    case 7 -> cancellInspection(currentUser, scanChoice, model);
+                    case 8 -> renderMainMenu(model); //Logout
                 }
             }
 
@@ -587,7 +601,6 @@ public class mainLauncher {
                 model.addSuburb(currentUser, input);
             }
         }while(true);
-
     }
 
     public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
@@ -789,7 +802,6 @@ public class mainLauncher {
                     } else {
                         System.out.println("Invalid Employee id");
                     }
-
 
                 }
             }

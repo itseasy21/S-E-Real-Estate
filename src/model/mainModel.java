@@ -183,8 +183,6 @@ public class mainModel {
         }
     }
 
-
-
     public boolean isEmailAvailable(String email){
         for(User user : userDB){
             if(user instanceof Customer) {
@@ -299,7 +297,6 @@ public class mainModel {
         }
 
     }
-
 
     public void listAvailableProperties(){
        for(int property : propertyDB.keySet()){
@@ -456,6 +453,33 @@ public class mainModel {
             currentUser.addSuburb(suburb);
         else
             System.out.println("An Error Occurred While Adding, Please Retry!");
+    }
+
+    public void listInspectionCustomer(User currentCustomer){
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("LIST INSPECTION");
+        System.out.println("---------------");
+        if(currentCustomer instanceof Customer) {
+            for (Inspection a : inspectionDB) {
+                if(currentCustomer.getId().equals(a.getcId())) {
+                    System.out.println(a.showDetails());
+                    System.out.println("*************************************");
+                }
+            }
+        }
+        System.out.println("---------------------------------------------------------------------------------");
+    }
+
+    public void listInspectionIDCustomer(User currentCustomer){
+        System.out.println("---------------------------------------------------------------------------------");
+        if(currentCustomer instanceof Customer) {
+            for (Inspection a : inspectionDB) {
+                if(currentCustomer.getId().equals(a.getcId())) {
+                    System.out.println(a.getId());
+                }
+            }
+        }
+        System.out.println("---------------------------------------------------------------------------------");
     }
 
     public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
@@ -631,27 +655,46 @@ public class mainModel {
             System.out.println("*************************************");
         }
         System.out.println("---------------------------------------------------------------------------------");
-
     }
 
-    public void listInspectionID(){
+    public void listInspectionID(Employee currentEmp){
         System.out.println("Available inspections are:");
         for(Inspection a:inspectionDB){
-            System.out.println(a.getId());
+            if(a.geteId().equals(currentEmp.getId())) {
+                System.out.println(a.getId());
+            }
         }
     }
 
-    public void cancellInspection(String id) throws PropertyException {
+    public void cancellInspection(String id,Employee currentEmployee) throws PropertyException {
         for(Inspection a:inspectionDB){
             if(a.getId().equals(id)){
-                a.setStatus("cancelled");
-                a.setDate(null);
-                a.setTime(null);
-                a.setTimeSlot(null);
-                a.setdatesSlot(null);
-                System.out.println("Inspection cancelled sucessfully");
-                System.out.println(a.showDetails());
+                if(a.geteId().equals(currentEmployee.getId())) {
+                    a.setStatus("Cancelled");
+                    a.setDate(null);
+                    a.setTime(null);
+                    a.setTimeSlot(null);
+                    a.setdatesSlot(null);
+                    System.out.println("Inspection cancelled sucessfully");
+                    System.out.println(a.showDetails());
+                }
+            }
+        }
+        System.out.println("---------------------------------------------------------------------------------");
+    }
 
+    public void cancellInspectionCustomer(String id,Customer currentUser) throws PropertyException {
+        for(Inspection a:inspectionDB){
+            if(a.getId().equals(id)){
+                if(a.getcId().equals(currentUser.getId())) {
+                    a.setStatus("cancelled");
+                    a.setDate(null);
+                    a.setTime(null);
+                    a.setTimeSlot(null);
+                    a.setdatesSlot(null);
+                    System.out.println("Inspection cancelled sucessfully");
+                    System.out.println(a.showDetails());
+                }
             }
         }
         System.out.println("---------------------------------------------------------------------------------");
