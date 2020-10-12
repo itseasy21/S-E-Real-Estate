@@ -485,10 +485,34 @@ public class mainModel {
         System.out.println("---------------------------------------------------------------------------------");
     }
 
+    public void listassignedProperties(Employee currentEmployee) {
+        try {
+            System.out.println(" ");
+            System.out.println("Assigned Properties");
+            propertyDB.values()
+                    .stream()
+                    .filter(i -> i.getEmployeeId().equals(currentEmployee.getId()))
+                    .forEach(p -> System.out.println(p.getPropertyId()));
+        } catch(NullPointerException e){
+            //System.out.println("None");
+            return;
+        }
+    }
+
+    public boolean validproperty(int propertyID){
+        boolean flag=false;
+        for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
+            if(set.getValue().getPropertyId() ==propertyID){
+                flag=true;
+            }
+            else{
+                flag=false;
+            }
+        }return flag;
+    }
+
     public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
-
         Property thisProp = null;
-
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
             if(set.getValue().getPropertyId() == propertyID){
                 thisProp = set.getValue();
