@@ -254,8 +254,8 @@ public class mainModel {
         }
         return null;
     }
-    public double EmployeeSalary(String id)
-    { for(User user : userDB){
+    public double EmployeeSalary(String id) {
+        for(User user : userDB){
         if(user instanceof Employee) {
             if ((user.getId()).equalsIgnoreCase(id)) {
                 return ((Employee) user).getSalary();
@@ -266,8 +266,8 @@ public class mainModel {
     return 0;
 
     }
-    public double getEmployeeHour(String id)
-    { for(User user : userDB){
+    public double getEmployeeHour(String id) {
+        for(User user : userDB){
         if(user instanceof Employee) {
             if ((user.getId()).equalsIgnoreCase(id)) {
                 System.out.println(((Employee) user).getWorkingHours());
@@ -278,6 +278,7 @@ public class mainModel {
     }
         return 0;
     }
+
 //Property Class Functionalities
     public void addProperty(Property property) throws PropertyException{
         int propertyId = propertyDB.size() + 1;

@@ -179,7 +179,7 @@ public class mainLauncher {
             //Handling Choice
             if(currentEmp.getEmpRole().equals(EmployeeType.PropertyManager) || currentEmp.getEmpRole().equals(EmployeeType.SalesConsultant)) {
                 switch (choiceLoggedInMenu) {
-                    case 1 -> listProperties(email, scanChoice, model);
+                    case 1 -> listProperty(currentEmp, scanChoice, model);
                     case 2 -> createInspection(currentEmp, scanChoice, model); //Create Inspection Time
                     case 3 -> listInspection(currentEmp, scanChoice, model);//List inspections
                     case 4 -> cancellInspection(currentEmp, scanChoice, model);//cancel inspection
@@ -743,7 +743,8 @@ public class mainLauncher {
             renderLoggedInMenu(email, scanChoice, model);
 
         }
-        public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
+
+    public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException {
             while (true) {
                 System.out.println("Select the Property id");
                 System.out.println(model.getPropertyDB());
@@ -795,4 +796,7 @@ public class mainLauncher {
             renderAdminLoggedInMenu(email, scanChoice, model);
         }
 
+    public static void rentProperty(Customer currentUser, Scanner scanChoice, mainModel model){
+        
+    }
 }
