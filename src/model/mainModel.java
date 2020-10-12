@@ -453,6 +453,22 @@ public class mainModel {
             System.out.println("An Error Occurred While Adding, Please Retry!");
     }
 
+    public void listInspectionCustomer(User currentCustomer){
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("LIST INSPECTION");
+        System.out.println("---------------");
+        if(currentCustomer instanceof Customer) {
+            for (Inspection a : inspectionDB) {
+                if(currentCustomer.getId().equals(a.getcId())) {
+                    System.out.println(a.showDetails());
+                    System.out.println("*************************************");
+                }
+            }
+        }
+        System.out.println("---------------------------------------------------------------------------------");
+
+    }
+
     public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
 
         Property thisProp = null;
@@ -635,6 +651,7 @@ public class mainModel {
             System.out.println(a.getId());
         }
     }
+
 
     public void cancellInspection(String id) throws PropertyException {
         for(Inspection a:inspectionDB){

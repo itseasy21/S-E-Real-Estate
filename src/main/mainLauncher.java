@@ -414,7 +414,7 @@ public class mainLauncher {
 
     private static void listInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException {
        if(currentUser instanceof Customer){
-           model.listInspection();
+           model.listInspectionCustomer(currentUser);
            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
        }
        else if(currentUser instanceof Employee){
