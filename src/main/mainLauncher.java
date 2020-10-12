@@ -365,7 +365,7 @@ public class mainLauncher {
 
     }
 
-    private static void cancellInspection(Customer currentUser, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException {
+    private static void cancellInspection(Customer currentUser, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException {
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println("CANCEL INSPECTION");
         System.out.println("-----------------");
@@ -378,7 +378,7 @@ public class mainLauncher {
 
     }
 
-    private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException {
+    private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println("BOOK INSPECTION");
         System.out.println("-----------------");
