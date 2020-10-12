@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
+import static junit.framework.TestCase.assertEquals;
+
 public class InspectionTest {
     static mainModel i,in;
     static Inspection i1,i2;
@@ -43,9 +45,10 @@ public class InspectionTest {
     @Test
     public void createins() throws PropertyException, UserException {
         System.out.println("\nCREATE INSPECTION");
-        //rentalProperty.setEmployeeId("EMP1");
-        i.createInspection(rentalProperty.getPropertyId(),e1,date,time,"Created");
-        System.out.print(i1.showDetails());
+        i.syncDB();
+        i.createInspection(1,e1,date,time,"Created");
+        i.listInspection();
+
     }
     @Test
     public void bookins() throws PropertyException, UserException {

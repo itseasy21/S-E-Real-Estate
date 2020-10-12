@@ -247,24 +247,40 @@ public class mainLauncher {
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println("CREATE INSPECTION");
         System.out.println("-----------------");
-        System.out.println("Please Enter the property details !");
-
+        System.out.println("available properties:\n" + model.getPropertyDB());
+        model.listassignedProperties(currentEmp);
+        int pID;
+        Property property = null;
+        boolean exit = false;
+        boolean loop = false;
+        // do{
+        System.out.println("Please Enter the property details!");
         System.out.println("Property ID:");
-        String pID = scanChoice.nextLine();
-        while (true){
-            if(pID.length()>2){
-                System.out.println("Please enter a valid Property ID");
-                pID = scanChoice.nextLine();
-            }else{
-                break;
+        pID = scanChoice.nextInt();
+            /*
+            try {
+                property = model.listProperty(pID);
             }
-        }
-        int count=5;
+            catch (PropertyException e) {
+                //Invalid ID
+            }
+
+            if(property == null || !property.isEmployeeAssigned()) {
+                exit = true;
+                loop = false;
+                System.out.println("The Property Is Either Not Yet Available or Invalid, Please try Again Later");
+            }*/
+        //}while (loop==false);
+        //if (exit = false) {
+        int count = 5;
         String dateSlot = "";
         String date;
-        String date4="",date3="",date2,date1;
+        String date4 = "", date3 = "", date2, date1;
+        loop = false;
+
+        //while (exit = false) {
         System.out.println("Enter the Dates to conduct the inspection on:");
-        boolean loop=false;
+
         do {
             do {
                 System.out.println("Enter " + count + " more dates");
@@ -287,7 +303,7 @@ public class mainLauncher {
                                     System.out.println("Date already entered!!..Add a new date..");
                                     loop = true;
                                 } else {
-                                    loop=false;
+                                    loop = false;
                                     break;
                                 }
                             }
@@ -295,22 +311,22 @@ public class mainLauncher {
                         break;
                     }
                 }
-            }while(loop==true);
-            if(count<5) {
+            } while (loop == true);
+            if (count < 5) {
                 dateSlot = dateSlot + ";" + date;
             }
             count--;
         }
-        while(count>=1);
+        while (count >= 1);
 
-        count=5;
-        String timeSlot="";
+        count = 5;
+        String timeSlot = "";
         String time;
         System.out.println("Enter the timeslots for the inspection");
-        loop=false;
-        do{
+        loop = false;
+        do {
             do {
-                System.out.println("Enter " +count +" more time slot:");
+                System.out.println("Enter " + count + " more time slot:");
                 time = scanChoice.nextLine();
                 while (true) {
                     if (time.length() < 11 && !controller.registerController.validateJavaTime(time)) {
@@ -330,7 +346,7 @@ public class mainLauncher {
                                     System.out.println("Time already entered!!..Add a new time..");
                                     loop = true;
                                 } else {
-                                    loop=false;
+                                    loop = false;
                                     break;
                                 }
                             }
@@ -338,15 +354,20 @@ public class mainLauncher {
                         break;
                     }
                 }
-            }while(loop==true);
-            if(count<5) {
+            } while (loop == true);
+            if (count < 5) {
                 timeSlot = timeSlot + ";" + time;
             }
             count--;
-        }while(count>=1);
+        } while (count >= 1);
 
-        model.createInspection(Integer.parseInt(pID), currentEmp, dateSlot, timeSlot, "Created");
-        renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+        model.createInspection(pID, currentEmp, dateSlot, timeSlot, "Created");
+    //}
+            renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+        /*}
+        else{
+            renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+        }*/
     }
 
 
