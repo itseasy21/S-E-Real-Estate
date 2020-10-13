@@ -12,13 +12,13 @@ import java.util.*;
 
 public class mainModel {
 
-    public static ArrayList<User> userDB = new ArrayList<>();
-    public static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
-    public static ArrayList<Application> applicationDB = new ArrayList<Application>();
-    public static HashMap<Integer, Property> propertyDB =  new HashMap<>();;
-    public static ArrayList<SalesMedium> contractDB = new ArrayList<>();
-    Connection conn;
-    Statement stmt;
+    private static ArrayList<User> userDB = new ArrayList<>();
+    private static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
+    private static ArrayList<Application> applicationDB = new ArrayList<Application>();
+    private static HashMap<Integer, Property> propertyDB =  new HashMap<>();;
+    private static ArrayList<SalesMedium> contractDB = new ArrayList<>();
+    private Connection conn;
+    private Statement stmt;
 
     public mainModel() {
         dbConnect dbHandler = new dbConnect();

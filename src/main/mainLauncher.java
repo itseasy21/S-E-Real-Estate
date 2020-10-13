@@ -23,7 +23,9 @@ public class mainLauncher {
     }
 
     public static void quitApp(mainModel model) throws SQLException {
+        System.out.println("Saving Everything and Closing Application!");
         model.savetoDB();
+        System.out.println("GoodBye!");
         System.exit(0);
     }
 
