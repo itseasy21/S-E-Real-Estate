@@ -980,6 +980,7 @@ public class mainLauncher {
                 }
             }
                 System.out.println("Employee Assigned to the Property !");
+            scanChoice.reset();
                 renderAdminLoggedInMenu(email, scanChoice, model);
             }
 
