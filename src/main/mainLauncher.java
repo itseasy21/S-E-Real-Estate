@@ -179,7 +179,9 @@ public class mainLauncher {
             }
             System.out.println("Please press q to quit.");
             String input = scanChoice.nextLine();
-            if(input.equals("q") || input.isEmpty())
+            if(input.equals("q"))
+                quitApp(model);
+            else if(input.isEmpty())
                 renderMainMenu(model);
             else {
                 try {
@@ -540,7 +542,9 @@ public class mainLauncher {
             }
             System.out.println("Please press q to quit.");
             String input = scanChoice.nextLine();
-            if(input.equals("q") || input.isEmpty())
+            if(input.equals("q"))
+                quitApp(model);
+            else if(input.isEmpty())
                 renderMainMenu(model);
             else {
                 try {
