@@ -1053,13 +1053,9 @@ public class mainModel {
                     }
                 }
             }else if(contract instanceof Negotiation) {
-                //TODO
                 Negotiation thisNegotiation = (Negotiation) contract;
                 if (thisNegotiation.getId().equals(contractID) && thisNegotiation.getSaleStatus().equals(SaleStatus.ONGOING)) {
                     thisNegotiation.handleBids(newBid);
-//                    if(thisNegotiation.getSaleStatus().equals(SaleStatus.COMPLETED)){
-//
-//                    }
                 }
             }
         }
@@ -1159,6 +1155,7 @@ public class mainModel {
         contractDB.add(newNegotiation);
 
         //add initial bid
+        newNegotiation.setBidderID(customer.getId());
         this.addBid(newNegotiation.getId(), bidPrice, customer);
 
         System.out.println("Negotiation Created with ID " + newNegotiation.getId() + " for Property " + thisProperty.getPropertyName() + " with first Bid of $" +bidPrice);
