@@ -541,11 +541,16 @@ public class mainModel {
     public void listInspectionCustomer(User currentCustomer){
         System.out.println("LIST INSPECTION");
         System.out.println("---------------");
-        if(currentCustomer instanceof Customer) {
-            for (Inspection a : inspectionDB) {
-                if(currentCustomer.getId().equals(a.getcId())) {
-                    System.out.println(a.showDetails());
-                    System.out.println("*************************************");
+        if(inspectionDB.size() == 0) {
+            System.out.println("No inspection available!");
+        }
+        else {
+            if (currentCustomer instanceof Customer) {
+                for (Inspection a : inspectionDB) {
+                    if (currentCustomer.getId().equals(a.getcId())) {
+                        System.out.println(a.showDetails());
+                        System.out.println("*************************************");
+                    }
                 }
             }
         }
@@ -554,11 +559,16 @@ public class mainModel {
     public void listInspectionEmployee(User currentuser){
         System.out.println("LIST INSPECTION");
         System.out.println("---------------");
-        if(currentuser instanceof Employee) {
-            for (Inspection a : inspectionDB) {
-                if(currentuser.getId().equals(a.geteId())) {
-                    System.out.println(a.showDetails());
-                    System.out.println("*************************************");
+        if(inspectionDB.size() == 0) {
+            System.out.println("No inspection available!");
+        }
+        else {
+            if (currentuser instanceof Employee) {
+                for (Inspection a : inspectionDB) {
+                    if (currentuser.getId().equals(a.geteId())) {
+                        System.out.println(a.showDetails());
+                        System.out.println("*************************************");
+                    }
                 }
             }
         }
@@ -738,12 +748,17 @@ public class mainModel {
 
     public void listInspectionBook(){
         System.out.println("Available inspections:");
-        for(Inspection a:inspectionDB){
-            if(a.getStatus().equals("Created")){
-                System.out.println("Inspecion ID:" +a.getId() +"\tProperty ID:" +a.getpId());
-            }
-            if(a.getId().equals(null)){
-                System.out.println("No inpections are available");
+        if(inspectionDB.size()==0) {
+            System.out.println("No inspections available!");
+        }
+        else {
+            for (Inspection a : inspectionDB) {
+                if (a.getStatus().equals("Created")) {
+                    System.out.println("Inspecion ID:" + a.getId() + "\tProperty ID:" + a.getpId());
+                }
+                if (a.getId().equals(null)) {
+                    System.out.println("No inpections are available");
+                }
             }
         }
     }
@@ -770,17 +785,27 @@ public class mainModel {
     public void listInspection(){
         System.out.println("LIST INSPECTION");
         System.out.println("---------------");
-        for(Inspection a:inspectionDB){
-            System.out.println(a.showDetails());
-            System.out.println("*************************************");
+        if(inspectionDB.size() == 0) {
+            System.out.println("No inspection available!");
+        }
+        else {
+            for (Inspection a : inspectionDB) {
+                System.out.println(a.showDetails());
+                System.out.println("*************************************");
+            }
         }
        }
 
     public void listInspectionID(Employee currentEmp){
         System.out.println("Available inspections are:");
-        for(Inspection a:inspectionDB){
-            if(a.geteId().equals(currentEmp.getId())) {
-                System.out.println(a.getId());
+        if(inspectionDB.size()==0) {
+            System.out.println("No inspections available!");
+        }
+        else {
+            for (Inspection a : inspectionDB) {
+                if (a.geteId().equals(currentEmp.getId())) {
+                    System.out.println(a.getId());
+                }
             }
         }
     }
@@ -788,14 +813,17 @@ public class mainModel {
     public void cancellInspection(String id,Employee currentEmployee) throws PropertyException {
         for(Inspection a:inspectionDB){
             if(a.getId().equals(id)){
-                if(a.geteId().equals(currentEmployee.getId())) {
-                    a.setStatus("Cancelled");
-                    a.setDate(null);
-                    a.setTime(null);
-                    a.setTimeSlot(null);
-                    a.setdatesSlot(null);
-                    System.out.println("Inspection cancelled sucessfully");
-                    System.out.println(a.showDetails());
+                if(a.geteId().equals(currentEmployee.getId())&&a.getStatus().equals("Created")||a.getStatus().equals("Scheduled")) {
+                        a.setStatus("Cancelled");
+                        a.setDate(null);
+                        a.setTime(null);
+                        a.setTimeSlot(null);
+                        a.setdatesSlot(null);
+                        System.out.println("Inspection cancelled sucessfully");
+                        System.out.println(a.showDetails());
+                }
+                else{
+                    System.out.println("Inspection cannot be cancelled!!");
                 }
             }
         }
@@ -804,7 +832,7 @@ public class mainModel {
     public void cancellInspectionCustomer(String id,Customer currentUser) throws PropertyException {
         for(Inspection a:inspectionDB){
             if(a.getId().equals(id)){
-                if(a.getcId().equals(currentUser.getId())) {
+                if(a.getcId().equals(currentUser.getId())&&a.getStatus().equals("Created")||a.getStatus().equals("Scheduled")) {
                     a.setStatus("cancelled");
                     a.setDate(null);
                     a.setTime(null);
@@ -812,6 +840,9 @@ public class mainModel {
                     a.setdatesSlot(null);
                     System.out.println("Inspection cancelled sucessfully");
                     System.out.println(a.showDetails());
+                }
+                else{
+                    System.out.println("Error!! Inspection already completed!! Cannot cancell it.");
                 }
             }
         }
@@ -842,7 +873,6 @@ public class mainModel {
 
             }
         }
-
     }
 
     public double getSalary(String empid, Payroll payroll) {
