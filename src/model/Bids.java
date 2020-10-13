@@ -4,14 +4,14 @@ import java.util.Calendar;
 
 public class Bids {
 
-    private String auctionID;
+    private String contractID;
     private double value = 0;
     private String responderID;
     private long bidTime;
     Calendar now = Calendar.getInstance();
 
     public Bids(String postID, double value, String responderID) {
-        this.auctionID = postID;
+        this.contractID = postID;
         this.value = value;
         this.responderID = responderID;
         this.bidTime = now.getTimeInMillis();
@@ -21,8 +21,8 @@ public class Bids {
         return bidTime;
     }
 
-    public void setAuctionID(String id) {
-        this.auctionID = id;
+    public void setContractID(String id) {
+        this.contractID = id;
     }
 
     public void setValue(double value) {
@@ -34,7 +34,7 @@ public class Bids {
     }
 
     public String getPostID() {
-        return this.auctionID;
+        return this.contractID;
     }
 
     public double getValue() {

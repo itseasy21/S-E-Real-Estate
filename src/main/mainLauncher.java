@@ -23,7 +23,9 @@ public class mainLauncher {
     }
 
     public static void quitApp(mainModel model) throws SQLException {
+        System.out.println("Saving Everything and Closing Application!");
         model.savetoDB();
+        System.out.println("GoodBye!");
         System.exit(0);
     }
 
@@ -179,7 +181,9 @@ public class mainLauncher {
             }
             System.out.println("Please press q to quit.");
             String input = scanChoice.nextLine();
-            if(input.equals("q") || input.isEmpty())
+            if(input.equals("q"))
+                quitApp(model);
+            else if(input.isEmpty())
                 renderMainMenu(model);
             else {
                 try {
@@ -559,7 +563,9 @@ public class mainLauncher {
             }
             System.out.println("Please press q to quit.");
             String input = scanChoice.nextLine();
-            if(input.equals("q") || input.isEmpty())
+            if(input.equals("q"))
+                quitApp(model);
+            else if(input.isEmpty())
                 renderMainMenu(model);
             else {
                 try {

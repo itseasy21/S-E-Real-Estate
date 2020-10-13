@@ -12,13 +12,13 @@ import java.util.*;
 
 public class mainModel {
 
-    public static ArrayList<User> userDB = new ArrayList<>();
-    public static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
-    public static ArrayList<Application> applicationDB = new ArrayList<Application>();
-    public static HashMap<Integer, Property> propertyDB =  new HashMap<>();;
-    public static ArrayList<SalesMedium> contractDB = new ArrayList<>();
-    Connection conn;
-    Statement stmt;
+    private static ArrayList<User> userDB = new ArrayList<>();
+    private static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
+    private static ArrayList<Application> applicationDB = new ArrayList<Application>();
+    private static HashMap<Integer, Property> propertyDB =  new HashMap<>();;
+    private static ArrayList<SalesMedium> contractDB = new ArrayList<>();
+    private Connection conn;
+    private Statement stmt;
 
     public mainModel() {
         dbConnect dbHandler = new dbConnect();
@@ -1064,13 +1064,9 @@ public class mainModel {
                     }
                 }
             }else if(contract instanceof Negotiation) {
-                //TODO
                 Negotiation thisNegotiation = (Negotiation) contract;
                 if (thisNegotiation.getId().equals(contractID) && thisNegotiation.getSaleStatus().equals(SaleStatus.ONGOING)) {
                     thisNegotiation.handleBids(newBid);
-//                    if(thisNegotiation.getSaleStatus().equals(SaleStatus.COMPLETED)){
-//
-//                    }
                 }
             }
         }
@@ -1170,6 +1166,7 @@ public class mainModel {
         contractDB.add(newNegotiation);
 
         //add initial bid
+        newNegotiation.setBidderID(customer.getId());
         this.addBid(newNegotiation.getId(), bidPrice, customer);
 
         System.out.println("Negotiation Created with ID " + newNegotiation.getId() + " for Property " + thisProperty.getPropertyName() + " with first Bid of $" +bidPrice);
