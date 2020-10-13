@@ -1044,7 +1044,7 @@ public class mainLauncher {
             } else if (currentUser.getType().equals(CustomerType.BUYER) && property.isPropertyTypeSale()) {
 
             } else {
-                System.out.println("An Error Occured!");
+                System.out.println("An Error Occurred!");
             }
         }
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);

@@ -1,6 +1,7 @@
 package model;
 
 import config.ApplicationStatus;
+import config.PropertyState;
 
 import java.util.Scanner;
 
@@ -22,8 +23,7 @@ public class RentalApplication extends Application{
 
     public void completeApplication(){
         this.setStatus(ApplicationStatus.APPROVED);
-//        property.setStatus("Rented");
-//        property.setAvailable(false);
+        property.setAvailability(PropertyState.RENTED);
     }
 }
 
