@@ -1041,7 +1041,7 @@ public class mainLauncher {
 
         model.viewApplicationsByUser(currentUser);
 
-        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+        renderAdminLoggedInMenu(currentUser.getEmail(), scanChoice, model);
 
     }
 
