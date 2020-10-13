@@ -10,11 +10,7 @@ public class Payroll
     public Payroll(String empid, double hours, double rate,double salary)throws MyException
     {
         this.id = empid;
-        if(hours<=0)
-        {
-            throw new MyException("hours Cannot be 0 or less!");}
-        else{
-        this.hours = hours ;}
+        this.hours = hours ;
         if(rate<=0)
         {throw new MyException("rates Cannot be 0 or less!");}
         this.rate = rate ;

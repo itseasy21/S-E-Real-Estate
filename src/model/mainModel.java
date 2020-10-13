@@ -937,6 +937,17 @@ public class mainModel {
         }
         return false;
     }
+    public boolean isApplicationExist(String appID) {
+        for (Application app : applicationDB) {
+            if (app.getId().equals(appID)) {
+                return true;
+            }
+
+
+        }
+        return false;
+    }
+
 
     public void viewApplicationsByUser(User currentUser) {
         for(Application app : applicationDB){
@@ -1163,5 +1174,17 @@ public class mainModel {
 
         System.out.println("Negotiation Created with ID " + newNegotiation.getId() + " for Property " + thisProperty.getPropertyName() + " with first Bid of $" +bidPrice);
 
+    }
+
+    public void setApplication(String appID) {
+        for (Application app : applicationDB) {
+            if (app.getId().equals(appID)) {
+                app.completeApplication();
+                System.out.println(app.getStatus());
+
+            }
+
+        }
+        System.out.println("done");
     }
 }
