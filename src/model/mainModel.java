@@ -1077,4 +1077,19 @@ public class mainModel {
 
 
     }
+
+    public void calBonus(String empid, Payroll payroll,double bonus) throws UserException {
+        payroll.setBonus(bonus);
+        double salary = payroll.getSalary();
+        for(User user : userDB){
+            if(user instanceof Employee) {
+                if ((user.getId()).equalsIgnoreCase(empid)) {
+                    ((Employee) user).setSalary(salary);
+                }
+
+            }
+        }
+
+
+    }
 }
