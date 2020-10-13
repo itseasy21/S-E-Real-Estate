@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class auctionController extends baseController{
+public class salesMediumController extends baseController{
     /**
      * Additional Validation Methods
      * @source https://beginnersbook.com/2013/05/java-date-format-validation/
