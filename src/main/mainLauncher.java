@@ -681,7 +681,7 @@ public class mainLauncher {
             //Invalid ID
         }
 
-        if(property == null || !property.isEmployeeAssigned() || !property.isPropertyTypeSale()){
+        if(property == null || !property.isEmployeeAssigned() || !property.isPropertyTypeSale() || !property.getAvailability().equals(PropertyState.AVAILABLE)){
             System.out.println("The Property Is Either Not Yet Available or Invalid, Please try Again Later");
         }else{
             model.createAuction(auctionDate, property);

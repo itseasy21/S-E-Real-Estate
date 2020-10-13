@@ -165,12 +165,15 @@ public class mainModel {
         }
 
 
-//        userDB.add(new Employee("admin@branch.com","pa33w0rd","Shubham",
+//        userDB.add(new Employee("amanda@mail.comm","11111111","Amanda",
+//                "673 La Trobe","401717860",(new Date()).toString(),"Female",
+//                EmployeeType.FullTIme, EmployeeType.PropertyManager, 25000,20));
+//        userDB.add(new Employee("paul@mail.comm","11111111","Paul",
 //                "673 La Trobe","401717860",(new Date()).toString(),"Male",
-//                EmployeeType.FullTIme, EmployeeType.SalesConsultant, 45000,20));
-//        userDB.add(new Employee("s3801882@student.rmit.edu.au","sa52521","Shubham",
+//                EmployeeType.PartTime, EmployeeType.PropertyManager, 30000,10));
+//        userDB.add(new Employee("john@gmail.com","11111111","John",
 //                "673 La Trobe","401717860",(new Date()).toString(),"Male",
-//                EmployeeType.PartTime,EmployeeType.BranchAdmin, 22000,10));
+//                EmployeeType.PartTime,EmployeeType.SalesConsultant, 29000,25));
 
         //TODO: Populating PropertyDB with Properties
 /*       Property p1 = new Property( "Green Brigade", PropertyType.Rent,"1216 coorkston road", 26000,"Thornbury", 2,3,3,234_000.00, PropertyCategory.Flat);
@@ -981,6 +984,8 @@ public class mainModel {
     public void createAuction(String auctionDate, Property thisProperty){
         Auction newAuc = new Auction(auctionDate, thisProperty);
         auctionDB.add(newAuc);
+        thisProperty.setAuctionStatus(true);
+        thisProperty.setAvailability(PropertyState.UNDER_CONTRACT);
         System.out.println("Auction Created with ID " + newAuc.getId() + " for Property " + thisProperty.getPropertyName() + " on date: "+auctionDate);
     }
 
@@ -1002,6 +1007,7 @@ public class mainModel {
             if(auction.getId().equals(auctionID)){
                 auction.handleBids(newBid);
                 if(auction.getAuctionStatus().equals(AuctionStatus.COMPLETED)){
+                    auction.getProperty().setAvailability(PropertyState.SOLD);
                     this.saleApplication(auction.getProperty(), (Customer) this.getUserByID(auction.getHighestBidder()), auction.getHighestBid(),"auction");
                 }
             }
