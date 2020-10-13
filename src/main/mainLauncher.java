@@ -644,6 +644,7 @@ public class mainLauncher {
 
             }
         }
+        scanChoice.reset();
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
     private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
@@ -896,28 +897,48 @@ public class mainLauncher {
                 }
                 int choice = scanChoice.nextInt();
                 scanChoice.nextLine();
-                Property property = model.listProperty(choice);
-                Set<String> employees = new HashSet<>();
-                if(property.isPropertyTypeSale()) {
-                    for(String employee : model.getEmpKeySets()){
-                        EmployeeType empRole = model.getEmployeeRole(employee);
-                        if(empRole.equals(EmployeeType.SalesConsultant)){
-                            employees.add(employee);
+                try {
+                   Property property = model.listProperty(choice);
+                    Set<String> employees = new HashSet<>();
+                    if(property.isPropertyTypeSale()) {
+                        for(String employee : model.getEmpKeySets()){
+                            EmployeeType empRole = model.getEmployeeRole(employee);
+                            if(empRole.equals(EmployeeType.SalesConsultant)){
+                                employees.add(employee);
+                            }
+
+                        }
+                    }else{
+                        for(String employee : model.getEmpKeySets()){
+                            EmployeeType empRole = model.getEmployeeRole(employee);
+                            if(empRole.equals(EmployeeType.PropertyManager)){
+                                employees.add(employee);
+                            }
+                        }
+                    }
+                    if (property.isEmployeeAssigned()) {
+                        System.out.println("Employee has been assigned for the selected property! would you like to re-assign ? (y/n) ");
+                        String response = scanChoice.nextLine();
+                        if (response.equalsIgnoreCase("Y")) {
+                            System.out.println("Enter Employee Id:");
+                            System.out.println(employees);
+                            String empId = scanChoice.nextLine();
+                            if (model.checkEmployeeExists(empId) && employees.contains(empId)) {
+                                EmployeeType empRole = model.getEmployeeRole(empId);
+                                System.out.println("Emp Role is "+ empRole);
+                                if (empRole != null) {
+                                    property.setEmployeeId(empId);
+                                    property.setEmpRole(empRole);
+                                    break;
+                                }
+                            } else {
+                                System.out.println("Invalid Employee ID");
+                            }
+                        }else{
+                            continue;
                         }
 
-                    }
-                }else{
-                    for(String employee : model.getEmpKeySets()){
-                        EmployeeType empRole = model.getEmployeeRole(employee);
-                        if(empRole.equals(EmployeeType.PropertyManager)){
-                            employees.add(employee);
-                        }
-                    }
-                }
-                if (property.isEmployeeAssigned()) {
-                    System.out.println("Employee has been assigned for the selected property! would you like to re-assign ? (y/n) ");
-                    String response = scanChoice.nextLine();
-                    if (response.equalsIgnoreCase("Y")) {
+                    } else if(!property.isEmployeeAssigned()) {
                         System.out.println("Enter Employee Id:");
                         System.out.println(employees);
                         String empId = scanChoice.nextLine();
@@ -930,33 +951,18 @@ public class mainLauncher {
                                 break;
                             }
                         } else {
-                            System.out.println("Invalid Employee ID");
+                            System.out.println("Invalid Employee id");
                         }
-                }else{
-                        continue;
-                    }
-
-                } else if(!property.isEmployeeAssigned()) {
-                    System.out.println("Enter Employee Id:");
-                    System.out.println(employees);
-                    String empId = scanChoice.nextLine();
-                    if (model.checkEmployeeExists(empId) && employees.contains(empId)) {
-                        EmployeeType empRole = model.getEmployeeRole(empId);
-                        System.out.println("Emp Role is "+ empRole);
-                        if (empRole != null) {
-                            property.setEmployeeId(empId);
-                            property.setEmpRole(empRole);
-                            break;
-                        }
-                    } else {
-                        System.out.println("Invalid Employee id");
-                    }
 
                 }
+                } catch(PropertyException e){
+
+                    System.out.println("Invalid Property id");
+                }
             }
-            System.out.println("Employee Assigned to the Property !");
-            renderAdminLoggedInMenu(email, scanChoice, model);
-        }
+                System.out.println("Employee Assigned to the Property !");
+                renderAdminLoggedInMenu(email, scanChoice, model);
+            }
 
     private static void rentBuyProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
 
