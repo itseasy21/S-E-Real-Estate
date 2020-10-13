@@ -1,6 +1,6 @@
 package config;
 
-public enum AuctionStatus {
+public enum SaleStatus {
     PENDING,
     ONGOING,
     CANCELLED,
