@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class mainLauncher {
 
@@ -687,7 +689,7 @@ public class mainLauncher {
             //Invalid ID
         }
 
-        if(property == null || !property.isEmployeeAssigned() || !property.isPropertyTypeSale()){
+        if(property == null || !property.isEmployeeAssigned() || !property.isPropertyTypeSale() || !property.getAvailability().equals(PropertyState.AVAILABLE)){
             System.out.println("The Property Is Either Not Yet Available or Invalid, Please try Again Later");
         }else{
             model.createAuction(auctionDate, property);
@@ -720,7 +722,7 @@ public class mainLauncher {
         }while(true);
     }
 
-    public static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
+    private static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
 
         System.out.println("Please Enter the property details !");
 
@@ -833,7 +835,7 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    public static void listProperty(User someuser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
+    private static void listProperty(User someuser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
 
         if(someuser instanceof Customer) {
             Customer currentUser = (Customer) someuser;
@@ -877,13 +879,13 @@ public class mainLauncher {
 
     }
 
-    public static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
+    private static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
         model.listAvailableProperties();
         renderAdminLoggedInMenu(email,scanChoice,model);
 
     }
 
-    public static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
+    private static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
 
             System.out.println("Select the Property id");
             int choice = scanChoice.nextInt();
@@ -893,21 +895,41 @@ public class mainLauncher {
 
         }
 
-    public static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
+    private static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
             while (true) {
                 System.out.println("Select the Property id");
                 System.out.println(model.getPropertyDB());
+                if(model.getPropertyDB().size() == 0){
+                    break;
+                }
                 int choice = scanChoice.nextInt();
                 scanChoice.nextLine();
                 Property property = model.listProperty(choice);
+                Set<String> employees = new HashSet<>();
+                if(property.isPropertyTypeSale()) {
+                    for(String employee : model.getEmpKeySets()){
+                        EmployeeType empRole = model.getEmployeeRole(employee);
+                        if(empRole.equals(EmployeeType.SalesConsultant)){
+                            employees.add(employee);
+                        }
+
+                    }
+                }else{
+                    for(String employee : model.getEmpKeySets()){
+                        EmployeeType empRole = model.getEmployeeRole(employee);
+                        if(empRole.equals(EmployeeType.PropertyManager)){
+                            employees.add(employee);
+                        }
+                    }
+                }
                 if (property.isEmployeeAssigned()) {
                     System.out.println("Employee has been assigned for the selected property! would you like to re-assign ? (y/n) ");
                     String response = scanChoice.nextLine();
                     if (response.equalsIgnoreCase("Y")) {
                         System.out.println("Enter Employee Id:");
-                        System.out.println(model.getEmpKeySets());
+                        System.out.println(employees);
                         String empId = scanChoice.nextLine();
-                        if (model.checkEmployeeExists(empId)) {
+                        if (model.checkEmployeeExists(empId) && employees.contains(empId)) {
                             EmployeeType empRole = model.getEmployeeRole(empId);
                             System.out.println("Emp Role is "+ empRole);
                             if (empRole != null) {
@@ -924,9 +946,9 @@ public class mainLauncher {
 
                 } else if(!property.isEmployeeAssigned()) {
                     System.out.println("Enter Employee Id:");
-                    System.out.println(model.getEmpKeySets());
+                    System.out.println(employees);
                     String empId = scanChoice.nextLine();
-                    if (model.checkEmployeeExists(empId)) {
+                    if (model.checkEmployeeExists(empId) && employees.contains(empId)) {
                         EmployeeType empRole = model.getEmployeeRole(empId);
                         System.out.println("Emp Role is "+ empRole);
                         if (empRole != null) {
@@ -944,7 +966,7 @@ public class mainLauncher {
             renderAdminLoggedInMenu(email, scanChoice, model);
         }
 
-    public static void rentBuyProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+    private static void rentBuyProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
 
         System.out.println("Enter a Property ID you wish to apply for:");
         String propID = scanChoice.nextLine();
