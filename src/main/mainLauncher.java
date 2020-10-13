@@ -111,8 +111,15 @@ public class mainLauncher {
 
         if(!registered)
             register(scanChoice, model);
-        else
-            renderMainMenu(model);
+        else {
+            loginController lg = new loginController();
+            lg.initializeModel("",model);
+            boolean loggedin = lg.loginHandler(details.get(1),details.get(2));
+            if(loggedin)
+                renderLoggedInMenu(details.get(1),scanChoice,model);
+            else
+                renderMainMenu(model);
+        }
 
     }
 

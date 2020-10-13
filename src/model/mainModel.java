@@ -1055,7 +1055,7 @@ public class mainModel {
             }else if(contract instanceof Negotiation) {
                 //TODO
                 Negotiation thisNegotiation = (Negotiation) contract;
-                if (thisNegotiation.getId().equals(contractID)) {
+                if (thisNegotiation.getId().equals(contractID) && thisNegotiation.getSaleStatus().equals(SaleStatus.ONGOING)) {
                     thisNegotiation.handleBids(newBid);
 //                    if(thisNegotiation.getSaleStatus().equals(SaleStatus.COMPLETED)){
 //
@@ -1143,7 +1143,6 @@ public class mainModel {
                     if(currentUser.getId().equals(thisNegotiation.getBidderID())) {
                         System.out.println("Negotiation ID:" + thisNegotiation.getId() + "\n" +
                                 "Property: " + thisNegotiation.getProperty().getPropertyName() + "(" + thisNegotiation.getProperty().getPropertyId() + ")\n" +
-                                "Auction Date: " + thisNegotiation.getContractDate() +
                                 "Reserve Price: " + thisNegotiation.getMinPrice() +
                                 "Current Bid: " + thisNegotiation.getCurrentPrice());
                     }
