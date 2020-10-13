@@ -1,7 +1,7 @@
 package main;
 
 import config.*;
-import controller.auctionController;
+import controller.salesMediumController;
 import controller.loginController;
 import controller.registerController;
 import model.*;
@@ -9,10 +9,8 @@ import model.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class mainLauncher {
 
@@ -515,7 +513,7 @@ public class mainLauncher {
         String[] vendorMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS","AUCTION", "LOGOUT"};//Vendor Menu
         String[] landLordMenu = {"ADD PROPERTY", "LIST PROPERTIES","VIEW PROPERTY DETAILS", "LOGOUT"};//Landlord Menu
         String[] RenterMenu = {"SEARCH PROPERTY", "APPLY FOR PROPERTY", "VIEW APPLICATIONS" ,"BOOK INSPECTION", "LIST BOOKED INSPECTION", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "CANCEL INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
-        String[] buyerMenu = {"SEARCH PROPERTY", "LIST AUCTIONS", "SUBMIT BID","VIEW APPLICATIONS" ,"BOOK INSPECTION", "LIST BOOKED INSPECTION", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "CANCEL INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
+        String[] buyerMenu = {"SEARCH PROPERTY", "START NEGOTIATION", "LIST AUCTIONS", "LIST NEGOTIATIONS" ,"SUBMIT BID","VIEW APPLICATIONS" ,"BOOK INSPECTION", "LIST BOOKED INSPECTION", "LIST PREFERENCES","UPDATE SUBURB PREFERENCE", "CANCEL INSPECTION", "LOGOUT"}; //Buyer & Renter Menu
         String[] menu = new String[4];
         if(currentUser.getType().equals(CustomerType.VENDOR)){
             menu = vendorMenu;
@@ -576,15 +574,17 @@ public class mainLauncher {
             }else if(currentUser.getType().equals(CustomerType.BUYER)){
                 switch (choiceLoggedInMenu) {
                     case 1 -> searchProperty(currentUser, scanChoice, model);//Search Property
-                    case 2 -> listAuction(currentUser, scanChoice, model);//Rent or Buy Property
-                    case 3 -> submitBid(currentUser, scanChoice, model);//Rent or Buy Property
-                    case 4 -> viewApplications(currentUser, scanChoice, model);//Rent or Buy Property
-                    case 5 -> bookInspection(currentUser, scanChoice, model);//book inspection
-                    case 6 -> listInspection(currentUser, scanChoice, model); //List inspection
-                    case 7 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
-                    case 8 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
-                    case 9 -> cancellInspection(currentUser, scanChoice, model);
-                    case 10 -> renderMainMenu(model); //Logout
+                    case 2 -> startNegotiation(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 3 -> listAuction(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 4 -> listNegotiation(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 5 -> submitBid(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 6 -> viewApplications(currentUser, scanChoice, model);//Rent or Buy Property
+                    case 7 -> bookInspection(currentUser, scanChoice, model);//book inspection
+                    case 8 -> listInspection(currentUser, scanChoice, model); //List inspection
+                    case 9 -> listSuburb(currentUser, scanChoice, model);//List Suburb Pref
+                    case 10 -> updateSuburb(currentUser, scanChoice, model);//Update Suburb Pref
+                    case 11 -> cancellInspection(currentUser, scanChoice, model);
+                    case 12 -> renderMainMenu(model); //Logout
                 }
             } else{
                 System.out.println("ERROR");
@@ -655,7 +655,7 @@ public class mainLauncher {
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
     private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
-        auctionController auctionValidator = new auctionController();
+        salesMediumController auctionValidator = new salesMediumController();
         auctionValidator.initializeModel("",model);
 
         System.out.println("Enter date for auction: eg. dd/MM/yyyy");
@@ -1078,6 +1078,71 @@ public class mainLauncher {
 
     private static void listAuction(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
         model.listAuctions();
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+    }
+
+    private static void listNegotiation(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+        model.listNegotiation(currentUser);
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+    }
+
+    private static void startNegotiation(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+        salesMediumController auctionValidator = new salesMediumController();
+        auctionValidator.initializeModel("",model);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        String negDate = formatter.format(date);
+
+        System.out.println("Enter the property ID to Start Negotiating On.");
+        String propID = scanChoice.nextLine();
+        while (true){
+            if(propID.length()>2){
+                System.out.println("Please enter a valid Property ID");
+                propID = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
+        Property property = null;
+
+        try {
+            property = model.listProperty(Integer.parseInt(propID));
+        }
+        catch (PropertyException e) {
+            //Invalid ID
+        }
+
+        if(property == null || !property.isEmployeeAssigned() || !property.isPropertyTypeSale() || !property.getAvailability().equals(PropertyState.AVAILABLE)){
+            System.out.println("The Property Is Either Not Yet Available or Invalid, Please try Again Later");
+        }else{
+
+            System.out.println("Enter the Price:");
+            Double bidPrice = 0.0;
+            try{
+                bidPrice = scanChoice.nextDouble();
+            }
+            catch (Exception e){
+                System.out.println("Only Numbers are allowed");
+            }
+            while (true){
+                if(bidPrice <= 0 && bidPrice < property.getMinPrice()){
+                    System.out.println("Please enter a valid Price");
+                    try{
+                        bidPrice = scanChoice.nextDouble();
+                    }
+                    catch (Exception e){
+                        System.out.println("Only Numbers are allowed");
+                    }
+                }else{
+                    break;
+                }
+            }
+
+            model.createNegotiation(currentUser, negDate, property, bidPrice);
+        }
+
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 }

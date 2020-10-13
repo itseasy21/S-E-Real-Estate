@@ -16,7 +16,7 @@ public class mainModel {
     public static ArrayList<Inspection> inspectionDB = new ArrayList<Inspection>();
     public static ArrayList<Application> applicationDB = new ArrayList<Application>();
     public static HashMap<Integer, Property> propertyDB =  new HashMap<>();;
-    public static ArrayList<Auction> auctionDB = new ArrayList<Auction>();
+    public static ArrayList<SalesMedium> contractDB = new ArrayList<>();
     Connection conn;
     Statement stmt;
 
@@ -216,11 +216,11 @@ public class mainModel {
                 //If user is a employee
                 try {
                     Employee thisEmp = (Employee) user;
-                    String insertQuery = "insert into Employee(employee_id, name, email, password, phone_number, address, gender, DOB, salary, employee_type, employee_role)" +
+                    String insertQuery = "insert into Employee(employee_id, name, email, password, phone_number, address, gender, DOB, salary, employee_type, employee_role, hours)" +
                             "VALUES('" + thisEmp.getId() + "', '" + thisEmp.getName() + "', " +
                             "'" + thisEmp.getEmail() + "', '" + thisEmp.getPassword() + "', '" + thisEmp.getPhoneNo() + "'" +
                             ", '" + thisEmp.getAddress() + "', '" + thisEmp.getGender() + "', '" + thisEmp.getDob() + "'" +
-                            ", '" + thisEmp.getSalary() + "', '" + thisEmp.getEmpType().toString() + "', '" + thisEmp.getEmpRole().toString() + "')";
+                            ", '" + thisEmp.getSalary() + "', '" + thisEmp.getEmpType().toString() + "', '" + thisEmp.getEmpRole().toString() + "', " + thisEmp.getWorkingHours() +")";
 
                     stmt.executeUpdate(insertQuery);
 
@@ -989,61 +989,85 @@ public class mainModel {
 
     public void createAuction(String auctionDate, Property thisProperty){
         Auction newAuc = new Auction(auctionDate, thisProperty);
-        auctionDB.add(newAuc);
+        contractDB.add(newAuc);
         thisProperty.setAuctionStatus(true);
         thisProperty.setAvailability(PropertyState.UNDER_CONTRACT);
         System.out.println("Auction Created with ID " + newAuc.getId() + " for Property " + thisProperty.getPropertyName() + " on date: "+auctionDate);
     }
 
     public void listAuctions(){
-        if(auctionDB.size() > 0) {
-            for (Auction auction : auctionDB) {
-                System.out.println("Auction ID:" + auction.getId() + "\n" +
-                        "Property: " + auction.getProperty().getPropertyName() + "(" + auction.getProperty().getPropertyId() + ")\n" +
-                        "Auction Date: " + auction.getAuctionDate());
+        if(contractDB.size() > 0) {
+            for (SalesMedium contract : contractDB) {
+                if(contract instanceof Auction) {
+                    Auction auction = (Auction) contract;
+                    System.out.println("Auction ID:" + auction.getId() + "\n" +
+                            "Property: " + auction.getProperty().getPropertyName() + "(" + auction.getProperty().getPropertyId() + ")\n" +
+                            "Auction Date: " + auction.getContractDate());
+                }
             }
         }else{
             System.out.println("No Auction Available!");
         }
     }
 
-    public void addBid(String auctionID, double bid, Customer currentUser) throws ApplicationException {
-        Bids newBid = new Bids(auctionID, bid, currentUser.getId());
-        for(Auction auction : auctionDB){
-            if(auction.getId().equals(auctionID)){
-                auction.handleBids(newBid);
-                if(auction.getAuctionStatus().equals(AuctionStatus.COMPLETED)){
-                    auction.getProperty().setAvailability(PropertyState.SOLD);
-                    this.saleApplication(auction.getProperty(), (Customer) this.getUserByID(auction.getHighestBidder()), auction.getHighestBid(),"auction");
+    public void addBid(String contractID, double bid, Customer currentUser) throws ApplicationException {
+        Bids newBid = new Bids(contractID, bid, currentUser.getId());
+        for(SalesMedium contract : contractDB){
+            if(contract instanceof Auction) {
+                Auction auction = (Auction) contract;
+                if (auction.getId().equals(contractID)) {
+                    auction.handleBids(newBid);
+                    if (auction.getSaleStatus().equals(SaleStatus.COMPLETED)) {
+                        auction.getProperty().setAvailability(PropertyState.SOLD);
+                        this.saleApplication(auction.getProperty(), (Customer) this.getUserByID(auction.getHighestBidder()), auction.getHighestBid(), "auction");
+                    }
+                }
+            }else if(contract instanceof Negotiation) {
+                //TODO
+                Negotiation thisNegotiation = (Negotiation) contract;
+                if (thisNegotiation.getId().equals(contractID)) {
+                    thisNegotiation.handleBids(newBid);
+//                    if(thisNegotiation.getSaleStatus().equals(SaleStatus.COMPLETED)){
+//
+//                    }
                 }
             }
         }
     }
 
     public String getAuctionDetailsByID(String auctID) {
-        for(Auction auction : auctionDB){
-            if(auctID.equals(auction.getId())) {
-                return("Auction ID:" + auction.getId() + "\n" +
-                        "Property: " + auction.getProperty().getPropertyName() + "(" + auction.getProperty().getPropertyId() + ")\n" +
-                        "Auction Date: " + auction.getAuctionDate());
+        for(SalesMedium contract : contractDB){
+            if(contract instanceof Auction) {
+                Auction auction = (Auction) contract;
+                if (auctID.equals(auction.getId())) {
+                    return ("Auction ID:" + auction.getId() + "\n" +
+                            "Property: " + auction.getProperty().getPropertyName() + "(" + auction.getProperty().getPropertyId() + ")\n" +
+                            "Auction Date: " + auction.getContractDate());
+                }
             }
         }
         return "Invalid Auction ID";
     }
 
     public boolean isValidAuction(String auctID) {
-        for(Auction auction : auctionDB){
-            if(auctID.equals(auction.getId())) {
-                return true;
+        for(SalesMedium contract : contractDB){
+            if(contract instanceof Auction) {
+                Auction auction = (Auction) contract;
+                if (auctID.equals(auction.getId())) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     public double getNextValidBid(String auctID){
-        for(Auction auction : auctionDB){
-            if(auctID.equals(auction.getId())) {
-                return (auction.getHighestBid() + auction.getMinIncrease());
+        for(SalesMedium contract : contractDB){
+            if(contract instanceof Auction) {
+                Auction auction = (Auction) contract;
+                if (auctID.equals(auction.getId())) {
+                    return (auction.getHighestBid() + auction.getMinIncrease());
+                }
             }
         }
         return 0;
@@ -1079,8 +1103,36 @@ public class mainModel {
 
             }
         }
-
-
     }
 
+    public void listNegotiation(Customer currentUser){
+        if(contractDB.size() > 0) {
+            for (SalesMedium contract : contractDB) {
+                if(contract instanceof Negotiation) {
+                    Negotiation thisNegotiation = (Negotiation) contract;
+                    if(currentUser.getId().equals(thisNegotiation.getBidderID())) {
+                        System.out.println("Negotiation ID:" + thisNegotiation.getId() + "\n" +
+                                "Property: " + thisNegotiation.getProperty().getPropertyName() + "(" + thisNegotiation.getProperty().getPropertyId() + ")\n" +
+                                "Auction Date: " + thisNegotiation.getContractDate() +
+                                "Reserve Price: " + thisNegotiation.getMinPrice() +
+                                "Current Bid: " + thisNegotiation.getCurrentPrice());
+                    }
+                }
+            }
+        }else{
+            System.out.println("No Ongoing/Past Negotiations Available!");
+        }
+    }
+
+    public void createNegotiation(Customer customer, String negDate, Property thisProperty, Double bidPrice) throws ApplicationException {
+
+        Negotiation newNegotiation = new Negotiation(thisProperty.getMinPrice(), bidPrice, customer.getId(), thisProperty, negDate);
+        contractDB.add(newNegotiation);
+
+        //add initial bid
+        this.addBid(newNegotiation.getId(), bidPrice, customer);
+
+        System.out.println("Negotiation Created with ID " + newNegotiation.getId() + " for Property " + thisProperty.getPropertyName() + " with first Bid of $" +bidPrice);
+
+    }
 }
