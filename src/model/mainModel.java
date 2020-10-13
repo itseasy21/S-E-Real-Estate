@@ -913,9 +913,9 @@ public class mainModel {
             msg += "You have already applied for this property.\n";
         }
 
-        if(weeklyRent < selectedProperty.getMinPrice()){
+        if(weeklyRent < selectedProperty.getPropertyPrice()){
             error = 1;
-            msg += "The weekly rent should be more then the minimum specified rent.\n";
+            msg += "The weekly rent should be more then the specified rent.\n";
         }
 
         if(error == 0){
