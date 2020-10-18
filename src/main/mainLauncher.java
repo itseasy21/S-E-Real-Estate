@@ -1177,4 +1177,7 @@ public class mainLauncher {
     private static void errorOUT(String toPrint){
         System.out.println("\u001B[31m" + toPrint + "\u001B[0m");
     }
+    private static void infoOUT(String toPrint){
+        System.out.println("\u001B[34m" + toPrint + "\u001B[0m");
+    }
 }
