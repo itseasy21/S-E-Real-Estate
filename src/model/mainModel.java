@@ -598,6 +598,23 @@ public class mainModel {
         }
     }
 
+    public boolean validpropertyEmployee(int propertyID,Employee id){
+        boolean flag=false;
+        try {
+            for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
+                if (set.getValue().getPropertyId() == propertyID) {
+                    if (set.getValue().getEmployeeId().equals(id.getId())) {
+                        flag = true;
+                    } else {
+                        flag = false;
+                    }
+                }
+            }
+        }
+        catch(Exception i){}
+        return flag;
+    }
+
     public boolean validproperty(int propertyID){
         boolean flag=false;
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
@@ -1110,7 +1127,7 @@ public class mainModel {
                     if(i.getcId().equals(currentuser.getId()) ||i.geteId().equals(currentuser.getId())){
                         i.setStatus("Completed");
                     }
-                    if(!i.getcId().equals(currentuser.getId()) || !i.geteId().equals(currentuser.getId())){
+                    else {
                         System.out.println("You are not allowed to update this inspection status!!");
                     }
                 }

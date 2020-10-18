@@ -277,11 +277,11 @@ public class mainLauncher {
         Property property = null;
         boolean exit = false;
         boolean loop = false;
-        // do{
+         do{
         System.out.println("Please Enter the property details!");
         System.out.println("Property ID:");
         pID = scanChoice.nextInt();
-            /*
+
             try {
                 property = model.listProperty(pID);
             }
@@ -289,12 +289,17 @@ public class mainLauncher {
                 //Invalid ID
             }
 
-            if(property == null || !property.isEmployeeAssigned()) {
+            if( model.validpropertyEmployee(pID,currentEmp)==false) {
                 exit = true;
                 loop = false;
                 System.out.println("The Property Is Either Not Yet Available or Invalid, Please try Again Later");
-            }*/
-        //}while (loop==false);
+                System.out.println("available properties:\n");
+                model.listassignedProperties(currentEmp);
+            }
+            else{
+                loop=true;
+            }
+        }while (loop==false);
         //if (exit = false) {
         int count = 5;
         String dateSlot = "";
@@ -326,9 +331,10 @@ public class mainLauncher {
                                 if (date.equals(split[i])) {
                                     System.out.println("Date already entered!!..Add a new date..");
                                     loop = true;
+                                    break;
                                 } else {
                                     loop = false;
-                                    break;
+                                    //break;
                                 }
                             }
                         }
@@ -369,9 +375,10 @@ public class mainLauncher {
                                 if (time.equals(split[i])) {
                                     System.out.println("Time already entered!!..Add a new time..");
                                     loop = true;
+                                    break;
                                 } else {
                                     loop = false;
-                                    break;
+                                    //break;
                                 }
                             }
                         }
