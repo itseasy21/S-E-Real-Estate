@@ -8,6 +8,7 @@ import model.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 import static junit.framework.TestCase.assertEquals;
@@ -43,7 +44,7 @@ public class InspectionTest {
     }
 
     @Test
-    public void createins() throws PropertyException, UserException {
+    public void createins() throws PropertyException, UserException, SQLException {
         System.out.println("\nCREATE INSPECTION");
         i.syncDB();
         i.createInspection(1,e1,date,time,"Created");
@@ -51,14 +52,14 @@ public class InspectionTest {
 
     }
     @Test
-    public void bookins() throws PropertyException, UserException {
+    public void bookins() throws PropertyException, UserException, SQLException {
         System.out.println("\nBOOK INSPECTION");
        i.createInspection(rentalProperty.getPropertyId(),e1,date,time,"Created");
        // i.bookInspection(c1,i1);
     }
 
     @Test//(expected = UserException.class)
-    public void bookinsnegative() throws PropertyException, UserException {
+    public void bookinsnegative() throws PropertyException, UserException, SQLException {
         System.out.println("\nBOOK INSPECTION");
         i.createInspection(rentalProperty.getPropertyId(),e1,date,time,"Created");
         // i.bookInspection(c2,i1);

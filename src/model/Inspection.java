@@ -31,7 +31,8 @@ public class Inspection {
         this.gettimesl=timeslots1;
     }
 
-    public Inspection(String id, int propertyid, String eid, String getdateslot, String timeslots1, String status) {
+
+    public Inspection(String id, int propertyid, String eid, String cid, String date, String status, String getdatesl, String timeslots1, String time) {
         this.id = id;
         ++inspectionCounter;
         this.propertyId = propertyid;
@@ -39,11 +40,12 @@ public class Inspection {
         this.eid = eid;
         this.date = date;
         this.time = time;
-        this.dates= dates;
         this.status = status;
-        this.getdatesl=getdateslot;
+        this.getdatesl=getdatesl;
         this.gettimesl=timeslots1;
     }
+
+
 
     public void cancellInspection() throws PropertyException {
         System.out.println(getStatus());
