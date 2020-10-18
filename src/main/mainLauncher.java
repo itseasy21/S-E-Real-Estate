@@ -678,6 +678,7 @@ public class mainLauncher {
         }
 
         System.out.println("Enter the property ID for Auction.");
+        System.out.println(model.getPropertyDB());
         String propID = scanChoice.nextLine();
         while (true){
             if(propID.length()>2){
@@ -884,7 +885,7 @@ public class mainLauncher {
             }
             renderAdminLoggedInMenu(someuser.getEmail(), scanChoice, model);
         }
-
+        renderLoggedInMenu(someuser.getEmail(), scanChoice, model);
     }
 
     private static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
