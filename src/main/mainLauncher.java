@@ -164,7 +164,7 @@ public class mainLauncher {
 
         int choiceLoggedInMenu = 0;
         //All LoggedInMenus
-        String[] salesPropertyManager = {"LIST PROPERTIES", "VIEW APPLICATIONS","CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION","UPDATE COMPLETED INSPECTION", "LOGOUT"}; //Sales & Property Menu
+        String[] salesPropertyManager = {"LIST PROPERTIES", "VIEW APPLICATIONS","CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION","UPDATE COMPLETED INSPECTION","UPDATE THE APPLICATION", "LOGOUT"}; //Sales & Property Menu
         String[] branchAdmin = {"LIST PROPERTIES", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL","LIST INSPECTIONS" ,"LOGOUT"}; //Branch Admin Menu
         String[] menu = new String[6];
 
@@ -202,7 +202,8 @@ public class mainLauncher {
                     case 4 -> listInspection(currentEmp, scanChoice, model);//List inspections
                     case 5 -> cancellInspection(currentEmp, scanChoice, model);//cancel inspection
                     case 6 -> completeInspection(currentEmp, scanChoice, model);//complete inspection
-                    case 7 -> renderMainMenu(model); //Logout
+                    case 7-> updateApplication(currentEmp,scanChoice,model);
+                    case 8 -> renderMainMenu(model); //Logout
                 }
             }else{
                 switch (choiceLoggedInMenu) {
@@ -215,6 +216,24 @@ public class mainLauncher {
             }
 
         } while (choiceLoggedInMenu < 1 || choiceLoggedInMenu > menu.length);
+
+    }
+
+    private static void updateApplication(Employee currentEmp, Scanner scanChoice, mainModel model) throws UserException, ParseException, PropertyException, IOException, SERException, SQLException, MyException, ApplicationException {
+        model.viewApplicationsByUser(currentEmp);
+            System.out.println("Select the Application ID to Accept");
+            String appID =scanChoice.nextLine();
+            if(model.isApplicationExist(appID)==true)
+                model.setApplication(appID);
+            else
+            {
+                System.out.println("Invalid Application ID");
+                renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+            }
+
+
+        renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+
 
     }
 
