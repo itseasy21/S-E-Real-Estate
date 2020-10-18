@@ -590,7 +590,22 @@ public class mainModel {
             }
         }
     }
-
+    public boolean validpropertyEmployee(int propertyID,Employee id){
+        boolean flag=false;
+        try {
+            for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
+                if (set.getValue().getPropertyId() == propertyID) {
+                    if (set.getValue().getEmployeeId().equals(id.getId())) {
+                        flag = true;
+                    } else {
+                        flag = false;
+                    }
+                }
+            }
+        }
+        catch(Exception i){}
+        return flag;
+    }
     public void listInspectionEmployee(User currentuser){
         System.out.println("LIST INSPECTION");
         System.out.println("---------------");

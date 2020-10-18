@@ -313,7 +313,7 @@ public class mainLauncher {
             catch (PropertyException e) {
                 //Invalid ID
             }
-
+        do {
             if( model.validpropertyEmployee(pID,currentEmp)==false) {
                 exit = true;
                 loop = false;
