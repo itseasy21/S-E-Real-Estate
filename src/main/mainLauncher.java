@@ -23,7 +23,9 @@ public class mainLauncher {
     }
 
     public static void quitApp(mainModel model) throws SQLException {
+        successSOUT("Saving Everything and Closing Application!");
         model.savetoDB();
+        successSOUT("GoodBye!");
         System.exit(0);
     }
 
@@ -32,7 +34,7 @@ public class mainLauncher {
         Scanner scanChoice = new Scanner(System.in);
 
         do {
-            System.out.println("Welcome to S&E Real Estate!");
+            successSOUT("Welcome to S&E Real Estate!");
             for(int i = 0; i < menuOptions.values().length; i++){
                 System.out.println(i+1 + ". " + menuOptions.values()[i]);
             }
@@ -45,9 +47,10 @@ public class mainLauncher {
                 try {
                     choiceMainMenu = Integer.parseInt(input.trim());
                 }catch(NumberFormatException exp){
-                    System.out.println("Invalid Input! Please retry.");
+                    errorOUT("Invalid Input! Please retry.");
                 }
             }
+            System.out.println("");
 
             //Handling Choice
             switch (choiceMainMenu) {
@@ -63,14 +66,14 @@ public class mainLauncher {
     }
 
     private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException, ApplicationException {
-        System.out.println("Glad you decided to register with Us!\nPlease Select Your Account Type:");
+        successSOUT("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
         int registerChoice = 0;
         do {
             for(int i = 0; i < CustomerType.values().length; i++){
                 System.out.println(i+1 + ". " + CustomerType.values()[i]);
             }
-            System.out.println("Please press q to quit.");
+            errorOUT("Please press q to quit.");
             input = scanChoice.nextLine();
             if(input.equals("q") || input.trim().isEmpty())
                 renderMainMenu(model);
@@ -78,13 +81,13 @@ public class mainLauncher {
                 try {
                     registerChoice = Integer.parseInt(input.trim());
                 }catch(Exception exp){
-                    System.out.println("Invalid Input! Please retry.");
+                    errorOUT("Invalid Input! Please retry.");
                 }
             }
 
         }while(registerChoice < 1 || registerChoice > CustomerType.values().length);
         CustomerType type = CustomerType.values()[registerChoice - 1];
-        System.out.println("Registering as "+type+"\nPlease Enter Details Below");
+        successSOUT("Registering as "+type+"\nPlease Enter Details Below");
 
         //Start taking all the values to register in the portal
         String[] requiredDetails = {"Name", "Email", "Password", "Phone No.", "Address", "Gender (Male/Female/TransGender)", "DOB (eg: 21/11/1991)", "Nationality", "Income"};
@@ -124,6 +127,8 @@ public class mainLauncher {
     }
 
     private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException {
+
+        System.out.println("");
         System.out.println("Please Enter Your Registered Email ID and Password to Login! ");
         System.out.print("Email: ");
         String email = scanChoice.nextLine();
@@ -140,7 +145,7 @@ public class mainLauncher {
 
             if(!loggedin){
 //                throw new SERException("Username You Entered is not Valid");
-                System.out.println("\u001B[31m" + "Invalid Credentials! Please Retry" + "\u001B[0m");
+                errorOUT("Invalid Credentials! Please Retry");
                 login(scanChoice, loginType, model);
             }else{
                 if(loginType == 0)
@@ -150,19 +155,20 @@ public class mainLauncher {
 
             }
         }else{
-            System.out.println("You Left ID Pass Blank, Redirecting Back to Menu");
+            errorOUT("You Left ID Pass Blank, Redirecting Back to Menu");
             renderMainMenu(model);
         }
     }
 
     private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
         Employee currentEmp = (Employee) model.getUserByUsername(email);
-
-        System.out.println("Welcome "+ currentEmp.getName() +" to S&E Real Estate" + currentEmp.getEmpRole());
+        System.out.println("");
+        successSOUT("Welcome "+ currentEmp.getName() +" to S&E Real Estate" + currentEmp.getEmpRole());
+        System.out.println("");
 
         int choiceLoggedInMenu = 0;
         //All LoggedInMenus
-        String[] salesPropertyManager = {"LIST PROPERTIES", "VIEW APPLICATIONS","CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION","UPDATE COMPLETED INSPECTION", "LOGOUT"}; //Sales & Property Menu
+        String[] salesPropertyManager = {"LIST PROPERTIES", "VIEW APPLICATIONS","CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION","UPDATE COMPLETED INSPECTION","UPDATE THE APPLICATION", "LOGOUT"}; //Sales & Property Menu
         String[] branchAdmin = {"LIST PROPERTIES", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL","LIST INSPECTIONS" ,"LOGOUT"}; //Branch Admin Menu
         String[] menu = new String[6];
 
@@ -177,15 +183,17 @@ public class mainLauncher {
             for(int i = 0; i < menu.length; i++){
                 System.out.println(i+1 + ". " + menu[i]);
             }
-            System.out.println("Please press q to quit.");
+            errorOUT("Please press q to quit.");
             String input = scanChoice.nextLine();
-            if(input.equals("q") || input.isEmpty())
+            if(input.equals("q"))
+                quitApp(model);
+            else if(input.isEmpty())
                 renderMainMenu(model);
             else {
                 try {
                     choiceLoggedInMenu = Integer.parseInt(input.trim());
                 }catch(NumberFormatException exp){
-                    System.out.println("Invalid Input! Please retry.");
+                    errorOUT("Invalid Input! Please retry.");
                 }
             }
 
@@ -198,7 +206,8 @@ public class mainLauncher {
                     case 4 -> listInspection(currentEmp, scanChoice, model);//List inspections
                     case 5 -> cancellInspection(currentEmp, scanChoice, model);//cancel inspection
                     case 6 -> completeInspection(currentEmp, scanChoice, model);//complete inspection
-                    case 7 -> renderMainMenu(model); //Logout
+                    case 7 -> updateApplication(currentEmp,scanChoice,model);
+                    case 8 -> renderMainMenu(model); //Logout
                 }
             }else{
                 switch (choiceLoggedInMenu) {
@@ -214,12 +223,30 @@ public class mainLauncher {
 
     }
 
+    private static void updateApplication(Employee currentEmp, Scanner scanChoice, mainModel model) throws UserException, ParseException, PropertyException, IOException, SERException, SQLException, MyException, ApplicationException {
+        model.viewApplicationsByUser(currentEmp);
+            successSOUT("Select the Application ID to Accept");
+            String appID = scanChoice.nextLine();
+            if(model.isApplicationExist(appID))
+                model.setApplication(appID);
+            else
+            {
+                errorOUT("Invalid Application ID");
+                renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+            }
+
+
+        renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+
+
+    }
+
     private static void handlePayroll(String email, Scanner scanChoice, mainModel model) throws MyException, SERException, SQLException, ParseException, IOException, UserException, PropertyException, ApplicationException {
         System.out.println("Enter the Employee id ");
         System.out.println(model.getEmpKeySets());
         String empid = scanChoice.nextLine();
         if (!model.checkEmployeeExists(empid)) {
-            System.out.println("Invaild Employee id");
+            System.out.println("Invalid Employee id");
             renderAdminLoggedInMenu(email, scanChoice, model);
         } else {
 
@@ -231,29 +258,27 @@ public class mainLauncher {
                 Scanner sc = new Scanner(System.in);
                 choice = sc.nextInt();
 
-                switch (choice) {
+                switch(choice) {
                     case 1:
                         System.out.println("Enter the new value for salary");
                         double salary = sc.nextDouble();
                         model.updateSalary(empid, salary, payroll);
-                        //renderAdminLoggedInMenu(email, scanChoice, model);
                         break;
                     case 2:
                         System.out.println("Enter the new value for hour");
                         double hour = sc.nextDouble();
                         model.updateHour(empid, hour, payroll);
-                       // renderAdminLoggedInMenu(email, scanChoice, model);
                         break;
                     case 3:
                         double salary1=model.getSalary(empid, payroll);
                         System.out.println(salary1);
-
-                       // renderAdminLoggedInMenu(email, scanChoice, model);
                         break;
                     case 4:
                         double bonus = 100;
                         model.calBonus(empid,payroll,bonus);
-
+                        break;
+                    default:
+                        errorOUT("Invalid Input!");
 
                 }
 
@@ -265,42 +290,26 @@ public class mainLauncher {
 
     private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
 
-        System.out.println("CREATE INSPECTION");
-        System.out.println("-----------------");
+        System.out.println("");
+        successSOUT("CREATE INSPECTION");
+        System.out.println("");
         System.out.println("available properties:\n" + model.getPropertyDB());
         model.listassignedProperties(currentEmp);
         int pID;
         Property property = null;
         boolean exit = false;
         boolean loop = false;
-        // do{
+
         System.out.println("Please Enter the property details!");
         System.out.println("Property ID:");
         pID = scanChoice.nextInt();
-            /*
-            try {
-                property = model.listProperty(pID);
-            }
-            catch (PropertyException e) {
-                //Invalid ID
-            }
 
-            if(property == null || !property.isEmployeeAssigned()) {
-                exit = true;
-                loop = false;
-                System.out.println("The Property Is Either Not Yet Available or Invalid, Please try Again Later");
-            }*/
-        //}while (loop==false);
-        //if (exit = false) {
         int count = 5;
         String dateSlot = "";
         String date;
-        String date4 = "", date3 = "", date2, date1;
         loop = false;
 
-        //while (exit = false) {
         System.out.println("Enter the Dates to conduct the inspection on:");
-
         do {
             do {
                 System.out.println("Enter " + count + " more dates");
@@ -308,7 +317,7 @@ public class mainLauncher {
                 while (true) {
                     if (date.length() < 11 && !controller.registerController.validateDate(date)) {
                         String errorMsg = "A Valid Date is of dd/MM/yyyy format.\n Example: 21/04/2020\n";
-                        System.out.println("Please enter a valid Date" + errorMsg);
+                        errorOUT("Please enter a valid Date" + errorMsg);
                         date = scanChoice.nextLine();
                     } else {
                         if (count == 5) {
@@ -320,7 +329,7 @@ public class mainLauncher {
                             String[] split = dateSlot.split(";");
                             for (int i = 0; i < split.length; i++) {
                                 if (date.equals(split[i])) {
-                                    System.out.println("Date already entered!!..Add a new date..");
+                                    errorOUT("Date already entered!!..Add a new date..");
                                     loop = true;
                                 } else {
                                     loop = false;
@@ -382,12 +391,8 @@ public class mainLauncher {
         } while (count >= 1);
 
         model.createInspection(pID, currentEmp, dateSlot, timeSlot, "Created");
-    //}
-            renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
-        /*}
-        else{
-            renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
-        }*/
+        renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+
     }
 
 
@@ -513,7 +518,10 @@ public class mainLauncher {
 
         Customer currentUser = (Customer) model.getUserByUsername(username);
 
-        System.out.println("Welcome "+ currentUser.getName() +" to S&E Real Estate");
+        System.out.println("");
+        System.out.println("\u001B[32m" + "Welcome "+ currentUser.getName() +" to S&E Real Estate\u001B[0m");
+        System.out.println("````````````````````````````````````````````````````````");
+        System.out.println("");
         int choiceLoggedInMenu = 0;
 
         //All LoggedInMenus
@@ -540,7 +548,9 @@ public class mainLauncher {
             }
             System.out.println("Please press q to quit.");
             String input = scanChoice.nextLine();
-            if(input.equals("q") || input.isEmpty())
+            if(input.equals("q"))
+                quitApp(model);
+            else if(input.isEmpty())
                 renderMainMenu(model);
             else {
                 try {
@@ -1159,5 +1169,13 @@ public class mainLauncher {
         }
 
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+    }
+
+    private static void successSOUT(String toPrint){
+        System.out.println("\u001B[32m" + toPrint + "\u001B[0m");
+    }
+
+    private static void errorOUT(String toPrint){
+        System.out.println("\u001B[31m" + toPrint + "\u001B[0m");
     }
 }

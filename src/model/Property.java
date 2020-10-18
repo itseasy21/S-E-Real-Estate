@@ -239,7 +239,8 @@ public class Property {
                 "bathroomCount=" + getBathroomCount() + '\n' +
                 "parkingCount=" + getParkingCount() + '\n' +
                 "sellingPrice=" + getSellingPrice() + '\n' +
-                "rentalPrice=" + getRentalPrice()+ '\n';
+                "rentalPrice=" + getRentalPrice()+ '\n'+
+                "propertyStatus=" +getAvailability().toString()+'\n';
 
     }
 }

@@ -8,7 +8,7 @@ public class Negotiation extends SalesMedium {
     private String id;
     private double minPrice;
     private double currentPrice;
-    private final String bidderID;
+    private String bidderID;
 
     public Negotiation(double minPrice, double bidPrice, String customerID, Property property, String date) {
         super(property, date, SaleStatus.ONGOING);
@@ -42,8 +42,23 @@ public class Negotiation extends SalesMedium {
         this.minPrice = minPrice;
     }
 
+    public void setBidderID(String bidderID) {
+        this.bidderID = bidderID;
+    }
+
     @Override
     public void handleBids(Bids bid) {
-        //TODO
+        if(bid != null){
+            if(bid.getValue() > 0
+                    && bid.getPostID().equals(this.getId())
+                    && bid.getValue() >= (this.currentPrice)
+                    && this.getSaleStatus().equals(SaleStatus.ONGOING)
+                    && bid.getResponderID().equals(this.getBidderID())) {
+
+                bidsList.add(bid);
+
+            }
+
+        }
     }
 }
