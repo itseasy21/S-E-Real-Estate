@@ -307,6 +307,25 @@ public class mainLauncher {
         System.out.println("Property ID:");
         pID = scanChoice.nextInt();
 
+            try {
+                property = model.listProperty(pID);
+            }
+            catch (PropertyException e) {
+                //Invalid ID
+            }
+
+            if( model.validpropertyEmployee(pID,currentEmp)==false) {
+                exit = true;
+                loop = false;
+                System.out.println("The Property Is Either Not Yet Available or Invalid, Please try Again Later");
+                System.out.println("available properties:\n");
+                model.listassignedProperties(currentEmp);
+            }
+            else{
+                loop=true;
+            }
+        }while (loop==false);
+        //if (exit = false) {
         int count = 5;
         String dateSlot = "";
         String date;
@@ -334,9 +353,10 @@ public class mainLauncher {
                                 if (date.equals(split[i])) {
                                     errorOUT("Date already entered!!..Add a new date..");
                                     loop = true;
+                                    break;
                                 } else {
                                     loop = false;
-                                    break;
+                                    //break;
                                 }
                             }
                         }
@@ -377,9 +397,10 @@ public class mainLauncher {
                                 if (time.equals(split[i])) {
                                     System.out.println("Time already entered!!..Add a new time..");
                                     loop = true;
+                                    break;
                                 } else {
                                     loop = false;
-                                    break;
+                                    //break;
                                 }
                             }
                         }

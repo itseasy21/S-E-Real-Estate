@@ -164,6 +164,31 @@ public class mainModel {
             throwables.printStackTrace();
         }
 
+        try {
+            Statement stmt1 = this.conn.createStatement();
+            String findinsp = "select * from Inspection;";
+            ResultSet rsEmp = stmt1.executeQuery(findinsp);
+            while(rsEmp.next()) {
+
+                Inspection newinsp= new Inspection(
+                        rsEmp.getString("inspection_id"),
+                        rsEmp.getInt("property_id"),
+                        rsEmp.getString("employee_id"),
+                        rsEmp.getString("customer_id"),
+                        rsEmp.getString("inspection_date"),
+                        rsEmp.getString("status"),
+                        rsEmp.getString("dateslots"),
+                        rsEmp.getString("timeslots"),
+                        rsEmp.getString("inspectionTime")
+                );
+                inspectionDB.add(newinsp);
+            }
+            rsEmp.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
 
 //        userDB.add(new Employee("amanda@mail.comm","11111111","Amanda",
 //                "673 La Trobe","401717860",(new Date()).toString(),"Female",
@@ -195,6 +220,7 @@ public class mainModel {
         stmt.executeUpdate("DELETE FROM Customer;");
         stmt.executeUpdate("DELETE FROM Employee;");
         stmt.executeUpdate("DELETE FROM Property;");
+        stmt.executeUpdate("DELETE FROM Inspection;");
 
         for(User user : userDB){
             if(user instanceof Customer){ //If user is a customer
@@ -229,16 +255,16 @@ public class mainModel {
                 }
             }
         }
-        for( Property property : propertyDB.values()){
-            String empRole = null ;
-            if(property.getEmpRole() != null){
+        for( Property property : propertyDB.values()) {
+            String empRole = null;
+            if (property.getEmpRole() != null) {
                 empRole = property.getEmpRole().toString();
             }
-            try{
+            try {
                 String insertQuery = "insert into Property(property_id, employee_id, name, type, street_address,min_price, suburb, bedroom_count, bathroom_count , parking_count, selling_price, rental_price, availability, customer_id, emp_role, property_category)" +
-                        "VALUES(" + property.getPropertyId() +", '"+ property.getEmployeeId() +"', '"+ property.getPropertyName() +"', '"+ property.getPropertyType().toString() +"', '"+ property.getPropertyAddress() +"', "+ property.getMinPrice() +", '"+ property.getSuburb() +
-                        "', "+ property.getBedroomCount() +", "+ property.getBathroomCount() +", "+ property.getParkingCount() +", "+ property.getSellingPrice() +", "+ property.getRentalPrice() +", '"+ property.getAvailability().toString() +
-                        "', "+ property.getCustomerId() +", '"+ empRole  +"', '"+ property.getPropertyCategory().toString() + "')";
+                        "VALUES(" + property.getPropertyId() + ", '" + property.getEmployeeId() + "', '" + property.getPropertyName() + "', '" + property.getPropertyType().toString() + "', '" + property.getPropertyAddress() + "', " + property.getMinPrice() + ", '" + property.getSuburb() +
+                        "', " + property.getBedroomCount() + ", " + property.getBathroomCount() + ", " + property.getParkingCount() + ", " + property.getSellingPrice() + ", " + property.getRentalPrice() + ", '" + property.getAvailability().toString() +
+                        "', " + property.getCustomerId() + ", '" + empRole + "', '" + property.getPropertyCategory().toString() + "')";
 
                 stmt.executeUpdate(insertQuery);
 
@@ -246,14 +272,23 @@ public class mainModel {
                 throwables.printStackTrace();
             }
 
-
-
-
         }
 
+            for( Inspection ins : inspectionDB) {
+                if(ins.getId() != null) {
+                    try {
+                        String insertQuery = "insert into Inspection(inspection_id,property_id, employee_id, customer_id, inspection_date, status, dateSlots,TimeSlots, InspectionTime)" +
+                                "VALUES('"+ ins.getId() + "', " + ins.getpId() + ", '" + ins.geteId() + "', '" + ins.getcId() + "', '" + ins.getDate() + "', '" + ins.getStatus() + "', '" + ins.getdatesl() +
+                                "', '" + ins.gettimesl() + "','" +ins.getTime() +"')";
 
 
+                        stmt.executeUpdate(insertQuery);
 
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+            }
     }
 
     public boolean isEmailAvailable(String email){
@@ -624,7 +659,7 @@ public class mainModel {
         }return flag;
     }
 
-    public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException {
+    public void createInspection(int propertyID, Employee currentEmployee, String getdateslot, String timeslots1, String status) throws PropertyException, UserException, SQLException {
         Property thisProp = null;
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
             if(set.getValue().getPropertyId() == propertyID){
@@ -638,6 +673,7 @@ public class mainModel {
                 Inspection tempIns = new Inspection(thisProp.getPropertyId(), thisProp.getEmployeeId(), getdateslot, timeslots1, status);
                 inspectionDB.add(tempIns);
                 System.out.println("Inspection has been created sucessfully!");
+
             }else{
                 System.out.println("You are not assigned to this property!");
             }
@@ -1131,7 +1167,7 @@ public class mainModel {
                     if(i.getcId().equals(currentuser.getId()) ||i.geteId().equals(currentuser.getId())){
                         i.setStatus("Completed");
                     }
-                    if(!i.getcId().equals(currentuser.getId()) || !i.geteId().equals(currentuser.getId())){
+                    else {
                         System.out.println("You are not allowed to update this inspection status!!");
                     }
                 }
