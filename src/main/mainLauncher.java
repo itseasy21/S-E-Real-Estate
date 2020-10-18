@@ -1098,7 +1098,10 @@ public class mainLauncher {
         successSOUT("VIEW APPLICATION");
         model.viewApplicationsByUser(currentUser);
 
-        renderAdminLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+        if(currentUser instanceof Employee)
+            renderAdminLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+        else
+            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
 
     }
 

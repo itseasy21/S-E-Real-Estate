@@ -1015,6 +1015,9 @@ public class mainModel {
 
 
     public void viewApplicationsByUser(User currentUser) {
+        if(applicationDB.size() == 0){
+            System.out.println("No applications are available!");
+        }
         for(Application app : applicationDB){
             int totalApp = 0;
             String applications = "";
