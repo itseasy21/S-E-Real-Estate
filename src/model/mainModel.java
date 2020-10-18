@@ -598,6 +598,20 @@ public class mainModel {
         }
     }
 
+    public void listassignedPropertyDetails(Employee currentEmployee) {
+        try {
+            System.out.println(" ");
+            System.out.println("Assigned Properties");
+            propertyDB.values()
+                    .stream()
+                    .filter(i -> i.getEmployeeId().equals(currentEmployee.getId()))
+                    .forEach(p -> System.out.println(p.toString()));
+        } catch(NullPointerException e){
+            //System.out.println("None");
+            return;
+        }
+    }
+
     public boolean validproperty(int propertyID){
         boolean flag=false;
         for (Map.Entry<Integer, Property> set : propertyDB.entrySet()) {
