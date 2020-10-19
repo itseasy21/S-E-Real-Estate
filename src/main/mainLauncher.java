@@ -16,7 +16,7 @@ public class mainLauncher {
 
     private static mainModel model;
 
-    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException {
+    public static void main(String[] args) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
         model = new mainModel(); //Initialize Model
         model.syncDB(); //Synchronize the data into memory from DB
         renderMainMenu(model); //Render Main Menu
@@ -29,7 +29,7 @@ public class mainLauncher {
         System.exit(0);
     }
 
-    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException {
+    private static void renderMainMenu(mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
         int choiceMainMenu = 0;
         Scanner scanChoice = new Scanner(System.in);
 
@@ -66,7 +66,7 @@ public class mainLauncher {
         scanChoice.close();
     }
 
-    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException, ApplicationException {
+    private static void register(Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
         successSOUT("Glad you decided to register with Us!\nPlease Select Your Account Type:");
         String input;
         int registerChoice = 0;
@@ -127,7 +127,7 @@ public class mainLauncher {
 
     }
 
-    private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException {
+    private static void login(Scanner scanChoice,int loginType, mainModel model) throws IOException, SERException, ParseException, SQLException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
         successSOUT("LOGIN");
         System.out.println("");
         infoOUT("Please Enter Your Registered Email ID and Password to Login! ");
@@ -161,7 +161,7 @@ public class mainLauncher {
         }
     }
 
-    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
+    private static void renderAdminLoggedInMenu(String email, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
         Employee currentEmp = (Employee) model.getUserByUsername(email);
         System.out.println("");
         successSOUT("Welcome "+ currentEmp.getName() +" to S&E Real Estate" + currentEmp.getEmpRole());
@@ -224,7 +224,7 @@ public class mainLauncher {
 
     }
 
-    private static void updateApplication(Employee currentEmp, Scanner scanChoice, mainModel model) throws UserException, ParseException, PropertyException, IOException, SERException, SQLException, MyException, ApplicationException {
+    private static void updateApplication(Employee currentEmp, Scanner scanChoice, mainModel model) throws UserException, ParseException, PropertyException, IOException, SERException, SQLException, MyException, ApplicationException, InterruptedException {
             successSOUT("UPDATE APPLICATION");
             model.viewApplicationsByUser(currentEmp);
             infoOUT("Select the Application ID to Accept");
@@ -243,7 +243,7 @@ public class mainLauncher {
 
     }
 
-    private static void handlePayroll(String email, Scanner scanChoice, mainModel model) throws MyException, SERException, SQLException, ParseException, IOException, UserException, PropertyException, ApplicationException {
+    private static void handlePayroll(String email, Scanner scanChoice, mainModel model) throws MyException, SERException, SQLException, ParseException, IOException, UserException, PropertyException, ApplicationException, InterruptedException {
         successSOUT("PAYROLL");
         System.out.println("Enter the Employee id ");
         System.out.println(model.getEmpKeySets());
@@ -291,7 +291,7 @@ public class mainLauncher {
         }
     }
 
-    private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
+    private static void createInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException, InterruptedException {
 
         System.out.println("");
         successSOUT("CREATE INSPECTION");
@@ -421,7 +421,7 @@ public class mainLauncher {
 
 
 
-    private static void cancellInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException {
+    private static void cancellInspection(Employee currentEmp, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, InterruptedException {
 
         System.out.println("---------------------------------------------------------------------------------");
         successSOUT("CANCEL INSPECTION");
@@ -435,7 +435,7 @@ public class mainLauncher {
 
     }
 
-    private static void cancellInspection(Customer currentUser, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException {
+    private static void cancellInspection(Customer currentUser, Scanner scanChoice, mainModel model) throws PropertyException, MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, InterruptedException {
         successSOUT("CANCEL INSPECTION");
         System.out.println("-----------------");
         model.listInspectionIDCustomer(currentUser);
@@ -443,11 +443,12 @@ public class mainLauncher {
         String id=scanChoice.nextLine();
 
         model.cancellInspectionCustomer(id,currentUser);
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
 
     }
 
-    private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+    private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException, InterruptedException {
         successSOUT("BOOK INSPECTION");
         System.out.println("-----------------");
         String id="";
@@ -498,13 +499,15 @@ public class mainLauncher {
 
             model.bookInspection(currentUser, id, date, time, "Scheduled");
         }
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void listInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+    private static void listInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException, InterruptedException {
        successSOUT("LIST INSPECTION");
         if(currentUser instanceof Customer){
            model.listInspectionCustomer(currentUser);
+           Thread.sleep(2000);
            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
        }
        else if(currentUser instanceof Employee){
@@ -513,7 +516,7 @@ public class mainLauncher {
        }
     }
 
-    private static void listInspectionAdmin(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+    private static void listInspectionAdmin(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException, InterruptedException {
         successSOUT("LIST INSPECTION");
          if(currentUser instanceof Employee){
             model.listInspection();
@@ -521,7 +524,7 @@ public class mainLauncher {
         }
     }
 
-    private static void completeInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+    private static void completeInspection(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException, InterruptedException {
         successSOUT("UPDATE INSPECTION");
         if(currentUser instanceof Customer){
             model.listInspectionCustomer(currentUser);
@@ -541,7 +544,7 @@ public class mainLauncher {
         }
     }
 
-    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException, ApplicationException {
+    private static void renderLoggedInMenu(String username, Scanner scanChoice,mainModel model) throws ParseException, IOException, SERException, SQLException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
 
         Customer currentUser = (Customer) model.getUserByUsername(username);
 
@@ -569,8 +572,9 @@ public class mainLauncher {
         }
 
         do {
-            System.out.println("Pick an option.");
-            successSOUT("MENU");
+            successSOUT(currentUser.getType() + " MENU");
+            System.out.println("Pick an option to continue.");
+            System.out.println("");
             for(int i = 0; i < menu.length; i++){
                 System.out.println(i+1 + ". " + menu[i]);
             }
@@ -578,8 +582,8 @@ public class mainLauncher {
             String input = scanChoice.nextLine();
             if(input.equals("q"))
                 quitApp(model);
-            else if(input.isEmpty())
-                renderMainMenu(model);
+            //else if(input.isEmpty())
+             //   renderMainMenu(model);
             else {
                 try {
                     choiceLoggedInMenu = Integer.parseInt(input.trim());
@@ -639,7 +643,7 @@ public class mainLauncher {
 
     }
 
-    private static void searchProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
+    private static void searchProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
         infoOUT("Search Property by");
         System.out.println("1. Suburb");
         System.out.println("2. Price");
@@ -656,14 +660,22 @@ public class mainLauncher {
                     System.out.println("Enter Suburb Name");
                     scanChoice.nextLine();
                     String suburb = scanChoice.nextLine();
-                    model.searchPropertyByName("Name", suburb);
+                    model.searchPropertyByName("Suburb", suburb);
                     break;
                 case 2:
-                    System.out.println("Enter Min Price ");
-                    double minPrice = scanChoice.nextDouble();
-                    System.out.println("Enter Max Price");
-                    double maxPrice = scanChoice.nextDouble();
-                    model.searchPropertyByPrice(minPrice,maxPrice);
+                    double minPrice = 0;
+                    double maxPrice = 0;
+                    try {
+                        System.out.println("Enter Min Price ");
+                        minPrice = scanChoice.nextDouble();
+                        System.out.println("Enter Max Price");
+                        maxPrice = scanChoice.nextDouble();
+                        model.searchPropertyByPrice(minPrice, maxPrice);
+                    }
+                    catch(Exception e){
+                        errorOUT("Invalid Inputs");
+                        break;
+                    }
                     break;
                 case 3:
                     System.out.println("Select Property Category");
@@ -698,9 +710,10 @@ public class mainLauncher {
             }
         }
         scanChoice.reset();
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
-    private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+    private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException, InterruptedException {
         successSOUT("CREATE AUCTION");
         salesMediumController auctionValidator = new salesMediumController();
         auctionValidator.initializeModel("",model);
@@ -743,11 +756,12 @@ public class mainLauncher {
             model.createAuction(auctionDate, property);
         }
 
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
 
     }
 
-    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
+    private static void listSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
         successSOUT("LIST SUBURB");
         ArrayList<String> suburbs = currentUser.getInterestedSuburbs();
         int loopCounter = 1;
@@ -755,23 +769,23 @@ public class mainLauncher {
             System.out.println(loopCounter + ". " + suburb);
             loopCounter++;
         }
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
+    private static void updateSuburb(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
         successSOUT("UPDATE SUBURB");
         do {
             System.out.print("Suburb Name to Add (press q to go Back): ");
             String input = scanChoice.nextLine();
             if(input.equals("q"))
                 renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
-            else {
+            else
                 model.addSuburb(currentUser, input);
-            }
         }while(true);
     }
 
-    private static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
+    private static void addProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
         successSOUT("ADD PROPERTY");
         infoOUT("Please Enter the property details !");
 
@@ -881,10 +895,11 @@ public class mainLauncher {
         property.setCustomerId(currentUser.getId());
         model.addProperty(property);
         successSOUT("Property has been successfully added!");
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void listProperty(User someuser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException {
+    private static void listProperty(User someuser, Scanner scanChoice, mainModel model) throws SERException, SQLException, ParseException, IOException, PropertyException, UserException, MyException, ApplicationException, InterruptedException {
         successSOUT("LIST PROPERTY");
         if(someuser instanceof Customer) {
             Customer currentUser = (Customer) someuser;
@@ -929,13 +944,13 @@ public class mainLauncher {
         renderLoggedInMenu(someuser.getEmail(), scanChoice, model);
     }
 
-    private static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
+    private static void listProperties(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException, InterruptedException {
         model.listAvailableProperties();
         renderAdminLoggedInMenu(email,scanChoice,model);
 
     }
 
-    private static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
+    private static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException, InterruptedException {
             successSOUT("VIEW PROPERTY DETAILS");
             infoOUT("Select the Property id");
             int choice = scanChoice.nextInt();
@@ -945,7 +960,7 @@ public class mainLauncher {
 
         }
 
-    private static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException {
+    private static void addEmpToProperty(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException, InterruptedException {
         successSOUT("ASSIGN EMPLOYEE TO PROPERTY");
         while (true) {
                 infoOUT("Select the Property id");
@@ -1023,7 +1038,7 @@ public class mainLauncher {
                 renderAdminLoggedInMenu(email, scanChoice, model);
             }
 
-    private static void rentBuyProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException {
+    private static void rentBuyProperty(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException, InterruptedException {
 
         infoOUT("Enter a Property ID you wish to apply for:");
         String propID = scanChoice.nextLine();
@@ -1090,22 +1105,24 @@ public class mainLauncher {
                 errorOUT("An Error Occurred!");
             }
         }
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
 
-    private static void viewApplications(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+    private static void viewApplications(User currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException, InterruptedException {
         successSOUT("VIEW APPLICATION");
         model.viewApplicationsByUser(currentUser);
 
         if(currentUser instanceof Employee)
             renderAdminLoggedInMenu(currentUser.getEmail(), scanChoice, model);
         else
-            renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
+            Thread.sleep(2000);
+        renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
 
     }
 
-    private static void submitBid(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+    private static void submitBid(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException, InterruptedException {
         successSOUT("SUBMIT BID");
         System.out.println("Enter the Auction ID");
         String auctID = scanChoice.nextLine();
@@ -1133,22 +1150,25 @@ public class mainLauncher {
 
         model.addBid(auctID, bid, currentUser);
 
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void listAuction(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+    private static void listAuction(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException, InterruptedException {
         successSOUT("LIST AUCTION");
         model.listAuctions();
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void listNegotiation(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+    private static void listNegotiation(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException, InterruptedException {
         successSOUT("LIST NEGOTIATION");
         model.listNegotiation(currentUser);
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 
-    private static void startNegotiation(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
+    private static void startNegotiation(Customer currentUser, Scanner scanChoice, mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException, InterruptedException {
         successSOUT("START NEGOTIATION");
         salesMediumController auctionValidator = new salesMediumController();
         auctionValidator.initializeModel("",model);
@@ -1206,6 +1226,7 @@ public class mainLauncher {
             model.createNegotiation(currentUser, negDate, property, bidPrice);
         }
 
+        Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
 

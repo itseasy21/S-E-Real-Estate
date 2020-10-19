@@ -1,6 +1,10 @@
 package model;
 import config.*;
 
+import javax.mail.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -429,7 +433,7 @@ public class mainModel {
                     propertyDB.values()
                            .stream()
                            .filter(e -> (e.getSuburb().equalsIgnoreCase(filter) && e.isEmployeeAssigned()))
-                        .forEach(p -> System.out.println(p.toString()));
+                            .forEach(p -> System.out.println(p.toString()));
                 } catch (NullPointerException e) {
                    System.out.println("None");
                 return;
@@ -553,6 +557,11 @@ public class mainModel {
         if(!String.valueOf(newCustomer.getId()).isEmpty()){
             customerID = String.valueOf(newCustomer.getId());
             userDB.add(newCustomer);
+            sendNotification(email, "Welcome to S&E Real Estate", "Hi There!\n" +
+                    "Welcome to S&E Real Estate System\n\n" +
+                    "You have registered as a " + type.toString() + "\n" +
+                    "and your official ID with us is " + customerID + "\n\n" +
+                    "Below are you full details:\n" + newCustomer.showDetails());
         }
         return customerID;
     }
@@ -574,7 +583,6 @@ public class mainModel {
     }
 
     public void listInspectionCustomer(User currentCustomer){
-        System.out.println("LIST INSPECTION");
         System.out.println("---------------");
         if(inspectionDB.size() == 0) {
             System.out.println("No inspection available!");
@@ -1102,16 +1110,19 @@ public class mainModel {
         thisProperty.setAuctionStatus(true);
         thisProperty.setAvailability(PropertyState.UNDER_CONTRACT);
         System.out.println("Auction Created with ID " + newAuc.getId() + " for Property " + thisProperty.getPropertyName() + " on date: "+auctionDate);
+        sendNotification(getUserByID(thisProperty.getEmployeeId()).getEmail(), "Auction Created | S&E Real Estate", "Auction Created with ID " + newAuc.getId() + " for Property " + thisProperty.getPropertyName() + " on date: "+auctionDate);
+
     }
 
     public void listAuctions(){
+        System.out.println("");
         if(contractDB.size() > 0) {
             for (SalesMedium contract : contractDB) {
                 if(contract instanceof Auction) {
                     Auction auction = (Auction) contract;
                     System.out.println("Auction ID:" + auction.getId() + "\n" +
                             "Property: " + auction.getProperty().getPropertyName() + "(" + auction.getProperty().getPropertyId() + ")\n" +
-                            "Auction Date: " + auction.getContractDate());
+                            "Auction Date: " + auction.getContractDate() + "\n");
                 }
             }
         }else{
@@ -1130,6 +1141,8 @@ public class mainModel {
                         auction.getProperty().setAvailability(PropertyState.SOLD);
                         this.saleApplication(auction.getProperty(), (Customer) this.getUserByID(auction.getHighestBidder()), auction.getHighestBid(), "auction");
                     }
+                    sendNotification(currentUser.getEmail(), "Big Submitted","You have successfully submitted a bit of $" + bid + " on auction for " + auction.getProperty().getPropertyName());
+                    sendNotification(getUserByID(auction.getProperty().getEmployeeId()).getEmail(), "New Bid on Auction | S&E Real Estate","New Bid has been submitted by a potential buyer, please check!");
                 }
             }else if(contract instanceof Negotiation) {
                 Negotiation thisNegotiation = (Negotiation) contract;
@@ -1219,7 +1232,8 @@ public class mainModel {
                         System.out.println("Negotiation ID:" + thisNegotiation.getId() + "\n" +
                                 "Property: " + thisNegotiation.getProperty().getPropertyName() + "(" + thisNegotiation.getProperty().getPropertyId() + ")\n" +
                                 "Reserve Price: " + thisNegotiation.getMinPrice() +
-                                "Current Bid: " + thisNegotiation.getCurrentPrice());
+                                "\nCurrent Bid: " + thisNegotiation.getCurrentPrice() +
+                                "\nStatus: " + thisNegotiation.getSaleStatus());
                     }
                 }
             }
@@ -1238,7 +1252,8 @@ public class mainModel {
         this.addBid(newNegotiation.getId(), bidPrice, customer);
 
         System.out.println("Negotiation Created with ID " + newNegotiation.getId() + " for Property " + thisProperty.getPropertyName() + " with first Bid of $" +bidPrice);
-
+        sendNotification(customer.getEmail(), "Negotiation Created | S&E Real Estate", "Negotiation Created with ID " + newNegotiation.getId() + " for Property " + thisProperty.getPropertyName() + " with first Bid of $" +bidPrice);
+        sendNotification(getUserByID(thisProperty.getEmployeeId()).getEmail(), "Negotiation Created | S&E Real Estate", "A new Negotiation has been Created with ID " + newNegotiation.getId() + " for Property " + thisProperty.getPropertyName() + " with first Bid of $" +bidPrice + " by Customer " + customer.getName());
     }
 
     public void setApplication(String appID) {
@@ -1252,4 +1267,42 @@ public class mainModel {
         }
         System.out.println("done");
     }
+
+    public void sendNotification(String to, String subject, String textToSend) {
+        String host = "smtp.gmail.com";
+        final String user = "s3801882@student.rmit.edu.au";
+
+        byte[] decodedBytes = Base64.getDecoder().decode("MTU5MzU3QExvTA==");
+        final String password = new String(decodedBytes);
+
+        //Get the session object
+        Properties props = new Properties();
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+
+        Session session = Session.getDefaultInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(user, password);
+                    }
+                });
+
+        //compose the message
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(user));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.setSubject(subject);
+            message.setText(textToSend);
+
+            // Send message
+            Transport.send(message);
+
+        } catch (MessagingException mex) {
+            //mex.printStackTrace();
+        }
+    }
+
 }

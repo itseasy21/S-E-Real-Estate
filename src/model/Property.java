@@ -226,21 +226,24 @@ public class Property {
 
     @Override
     public String toString() {
-        return "-----------------------Property Details------------------------" + '\n' +'\n'+
-                "propertyId=" + getPropertyId() + '\n'+
-                "propertyName=" + getPropertyName() + '\n' +
-                "propertyType=" +propertyType + '\n' +
-                "propertyAddress=" + getPropertyAddress() + '\n' +
-                "Employee Assigned = "+isEmployeeAssigned()+'\n' +
-                "minPrice=" + getMinPrice() + '\n'+
-                "suburb=" + getSuburb() + '\n' +
-                "propertyCategory="+ getPropertyCategory()+ '\n' +
-                "bedroomCount=" + getBedroomCount() + '\n' +
-                "bathroomCount=" + getBathroomCount() + '\n' +
-                "parkingCount=" + getParkingCount() + '\n' +
-                "sellingPrice=" + getSellingPrice() + '\n' +
-                "rentalPrice=" + getRentalPrice()+ '\n'+
-                "propertyStatus=" +getAvailability().toString()+'\n';
-
+        String toReturn = "";
+        toReturn = "\u001B[32m" + "-----------------------Property Details------------------------" + "\u001B[0m" + '\n' +'\n'+
+                "Property ID: \t" + getPropertyId() + '\n'+
+                "Name: \t" + getPropertyName() + '\n' +
+                "Property Available For: \t" +propertyType + '\n' +
+                "Address: \t" + getPropertyAddress() + '\n' +
+                "Employee Assigned: \t "+ (isEmployeeAssigned() ? "Yes" : "No")  +'\n' +
+                "Minimum Price: \t" + getMinPrice() + '\n'+
+                "Suburb: \t" + getSuburb() + '\n' +
+                "Category: \t"+ getPropertyCategory()+ '\n' +
+                "Bedrooms: \t" + getBedroomCount() + '\n' +
+                "Bathrooms: \t" + getBathroomCount() + '\n' +
+                "Parking Count: \t" + getParkingCount() + '\n';
+                if(getSellingPrice() > 0)
+                    toReturn += "Selling Price: \t" + getSellingPrice() + '\n';
+                else
+                    toReturn += "Rental Price: \t" + getRentalPrice()+ '\n';
+                toReturn += "Availability Status: \t" +getAvailability().toString()+'\n';
+            return toReturn;
     }
 }

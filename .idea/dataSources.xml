@@ -7,16 +7,5 @@
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:E:\Java-Eclipseworkspace\S-E-Real-Estate\sereal.db</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="sereal [2]" uuid="0f05fccd-e1ae-46b2-b8c4-d36021b0105a">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\software eng assignment\S-E-Real-Estate\sereal.db</jdbc-url>
-      <libraries>
-        <library>
-          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
-        </library>
-      </libraries>
-    </data-source>
   </component>
 </project>
