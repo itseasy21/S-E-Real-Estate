@@ -476,7 +476,7 @@ public class mainModel {
     public void listPropertiesForSale() {
         try {
             System.out.println(" ");
-            System.out.println("***********Properties For Sale*********");
+            System.out.println("\u001B[32m" + "SHOWING PROPERTIES FOR SALE" + "\u001B[0m");
             System.out.println(" ");
             //lists only properties that are assigned with single employee
             propertyDB.values()
@@ -492,7 +492,7 @@ public class mainModel {
     public void listPropertiesForRent() {
         try {
             System.out.println(" ");
-            System.out.println("******Properties For Rent*******:");
+            System.out.println("\u001B[32m" + "SHOWING PROPERTIES FOR RENT" + "\u001B[0m");
             System.out.println(" ");
             propertyDB.values()
                     .stream()
@@ -506,7 +506,7 @@ public class mainModel {
     public void listUnassignedProperties() {
         try {
             System.out.println(" ");
-            System.out.println("Unassigned Properties");
+            System.out.println("\u001B[32m" + "PROPERTIES WITH NO EMPLOYEES ASSIGNED" + "\u001B[0m");
             propertyDB.values()
                     .stream()
                     .filter(i -> !i.isEmployeeAssigned())

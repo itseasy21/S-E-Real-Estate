@@ -332,6 +332,7 @@ public class mainLauncher {
         loop = false;
 
         infoOUT("Enter the Dates to conduct the inspection on:");
+
         do {
             do {
              infoOUT("Enter " + count + " more dates");
@@ -569,12 +570,13 @@ public class mainLauncher {
         }
 
         do {
-            System.out.println("Pick an option.");
+            infoOUT("Pick an option.");
             successSOUT("MENU");
             for(int i = 0; i < menu.length; i++){
                 System.out.println(i+1 + ". " + menu[i]);
             }
             infoOUT("Please press q to quit.");
+            scanChoice.reset();
             String input = scanChoice.nextLine();
             if(input.equals("q"))
                 quitApp(model);
@@ -646,7 +648,10 @@ public class mainLauncher {
         System.out.println("3. Property Category: (Flat/House/Studio/Unit/TownHouse)");
         System.out.println("4. Property Name");
         System.out.println("5. Property Type: (Sale/Rent) ");
-        int choice = scanChoice.nextInt();
+        try {
+            int choice = scanChoice.nextInt();
+            scanChoice.nextLine();
+
         if (choice < 0 || choice > 5){
             errorOUT("Invalid option!");
             return;
@@ -656,13 +661,14 @@ public class mainLauncher {
                     System.out.println("Enter Suburb Name");
                     scanChoice.nextLine();
                     String suburb = scanChoice.nextLine();
-                    model.searchPropertyByName("Name", suburb);
+                    model.searchPropertyByName("Suburb", suburb);
                     break;
                 case 2:
                     System.out.println("Enter Min Price ");
                     double minPrice = scanChoice.nextDouble();
                     System.out.println("Enter Max Price");
                     double maxPrice = scanChoice.nextDouble();
+                    scanChoice.nextLine();
                     model.searchPropertyByPrice(minPrice,maxPrice);
                     break;
                 case 3:
@@ -673,11 +679,11 @@ public class mainLauncher {
                     System.out.println("4. Studio");
                     System.out.println("5. Townhouse");
                     int category = scanChoice.nextInt();
+                    scanChoice.nextLine();
                     model.searchPropertyByCategory(PropertyCategory.values()[category-1]);
                     break;
                 case 4:
                     System.out.println("Enter Property Name");
-                    scanChoice.nextLine();
                     String name = scanChoice.nextLine();
                     model.searchPropertyByName("Name", name);
                     break;
@@ -686,6 +692,7 @@ public class mainLauncher {
                     System.out.println("1. Sale");
                     System.out.println("2. Rent");
                     int type = scanChoice.nextInt();
+                    scanChoice.nextLine();
                     if(type == 1){
                         model.listPropertiesForSale();
                     }else if(type == 2){
@@ -697,7 +704,9 @@ public class mainLauncher {
 
             }
         }
-        scanChoice.reset();
+        }catch( InputMismatchException e){
+            errorOUT("Invalid Input");
+        }
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
     }
     private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException {
@@ -792,7 +801,7 @@ public class mainLauncher {
         }
 
         int choice = scanChoice.nextInt();
-
+        scanChoice.nextLine();
         while(true){
             if(choice > PropertyType.values().length){
                 errorOUT("Invalid Property Type! Try again");
@@ -803,6 +812,7 @@ public class mainLauncher {
         }
 
         PropertyType pType = PropertyType.values()[choice-1];
+
 
         System.out.println("Address:");
         String pAddress = scanChoice.nextLine();
@@ -826,6 +836,7 @@ public class mainLauncher {
               break;
           }
         }
+        scanChoice.nextLine();
         System.out.println("Suburb:");
         String suburb = scanChoice.nextLine();
         while (true){
@@ -841,6 +852,9 @@ public class mainLauncher {
         while(true){
          String[] values = count.split("/");
          try {
+             if(values.length <3){
+                 throw new NumberFormatException();
+             }
              for (String value : values) {
 
                  Integer.parseInt(value);
@@ -868,6 +882,7 @@ public class mainLauncher {
             System.out.println((i+1)+ "." + PropertyCategory.values()[i]);
         }
         choice = scanChoice.nextInt();
+        scanChoice.nextLine();
         while(true){
             if(choice > PropertyCategory.values().length){
                 errorOUT("Invalid Property Type! Try again");
@@ -916,7 +931,6 @@ public class mainLauncher {
 
         }else if(someuser instanceof Employee) {
             Employee currentUser = (Employee) someuser;
-            System.out.println(currentUser.getEmpType());
             if (currentUser.getEmpRole().equals(EmployeeType.BranchAdmin)) {
                 model.listAvailableProperties();
             }else if((currentUser.getEmpRole().equals(EmployeeType.SalesConsultant)) ||(currentUser.getEmpRole().equals(EmployeeType.PropertyManager)) ){
@@ -939,6 +953,7 @@ public class mainLauncher {
             successSOUT("VIEW PROPERTY DETAILS");
             infoOUT("Select the Property id");
             int choice = scanChoice.nextInt();
+            scanChoice.nextLine();
             Property property = model.listProperty(choice);
             System.out.println(property.toString());
             renderLoggedInMenu(email, scanChoice, model);

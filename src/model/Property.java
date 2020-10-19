@@ -227,20 +227,19 @@ public class Property {
     @Override
     public String toString() {
         return "-----------------------Property Details------------------------" + '\n' +'\n'+
-                "propertyId=" + getPropertyId() + '\n'+
-                "propertyName=" + getPropertyName() + '\n' +
-                "propertyType=" +propertyType + '\n' +
-                "propertyAddress=" + getPropertyAddress() + '\n' +
-                "Employee Assigned = "+isEmployeeAssigned()+'\n' +
-                "minPrice=" + getMinPrice() + '\n'+
-                "suburb=" + getSuburb() + '\n' +
-                "propertyCategory="+ getPropertyCategory()+ '\n' +
-                "bedroomCount=" + getBedroomCount() + '\n' +
-                "bathroomCount=" + getBathroomCount() + '\n' +
-                "parkingCount=" + getParkingCount() + '\n' +
-                "sellingPrice=" + getSellingPrice() + '\n' +
-                "rentalPrice=" + getRentalPrice()+ '\n'+
-                "propertyStatus=" +getAvailability().toString()+'\n';
+                "                      Property ID : " + getPropertyId() + '\n'+
+                "                      Property Name : " + getPropertyName() + '\n' +
+                "                      Property Type : " +propertyType + '\n' +
+                "                      Property Address :" + getPropertyAddress() + '\n' +
+                "                      Employee Assigned : "+isEmployeeAssigned()+'\n' +
+                "                      Min Price :" + getMinPrice() + '\n'+
+                "                      Suburb :" + getSuburb() + '\n' +
+                "                      Property Category :"+ getPropertyCategory()+ '\n' +
+                "                      Bedroom Count :" + getBedroomCount() + '\n' +
+                "                      Bathroom Count :" + getBathroomCount() + '\n' +
+                "                      Parking Count :" + getParkingCount() + '\n' +
+                "                      Price :" + getPropertyPrice() + '\n' +
+                "                      Status :" +getAvailability().toString()+'\n';
 
     }
 }
