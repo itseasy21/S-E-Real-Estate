@@ -226,20 +226,24 @@ public class Property {
 
     @Override
     public String toString() {
-        return "-----------------------Property Details------------------------" + '\n' +'\n'+
-                "                      Property ID : " + getPropertyId() + '\n'+
-                "                      Property Name : " + getPropertyName() + '\n' +
-                "                      Property Type : " +propertyType + '\n' +
-                "                      Property Address :" + getPropertyAddress() + '\n' +
-                "                      Employee Assigned : "+isEmployeeAssigned()+'\n' +
-                "                      Min Price :" + getMinPrice() + '\n'+
-                "                      Suburb :" + getSuburb() + '\n' +
-                "                      Property Category :"+ getPropertyCategory()+ '\n' +
-                "                      Bedroom Count :" + getBedroomCount() + '\n' +
-                "                      Bathroom Count :" + getBathroomCount() + '\n' +
-                "                      Parking Count :" + getParkingCount() + '\n' +
-                "                      Price :" + getPropertyPrice() + '\n' +
-                "                      Status :" +getAvailability().toString()+'\n';
-
+        String toReturn = "";
+        toReturn = "\u001B[32m" + "-----------------------Property Details------------------------" + "\u001B[0m" + '\n' +'\n'+
+                "Property ID: \t" + getPropertyId() + '\n'+
+                "Name: \t" + getPropertyName() + '\n' +
+                "Property Available For: \t" +propertyType + '\n' +
+                "Address: \t" + getPropertyAddress() + '\n' +
+                "Employee Assigned: \t "+ (isEmployeeAssigned() ? "Yes" : "No")  +'\n' +
+                "Minimum Price: \t" + getMinPrice() + '\n'+
+                "Suburb: \t" + getSuburb() + '\n' +
+                "Category: \t"+ getPropertyCategory()+ '\n' +
+                "Bedrooms: \t" + getBedroomCount() + '\n' +
+                "Bathrooms: \t" + getBathroomCount() + '\n' +
+                "Parking Count: \t" + getParkingCount() + '\n';
+                if(getSellingPrice() > 0)
+                    toReturn += "Selling Price: \t" + getSellingPrice() + '\n';
+                else
+                    toReturn += "Rental Price: \t" + getRentalPrice()+ '\n';
+                toReturn += "Availability Status: \t" +getAvailability().toString()+'\n';
+            return toReturn;
     }
 }

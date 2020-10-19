@@ -90,7 +90,7 @@ public class registerController extends baseController{
             String custID = model.registerCustomer(name, email, password, phoneNo, address, gender, dob, nationality, income, type);
 
             if (!custID.isEmpty() || custID != null) {
-                System.out.println("\u001B[32m" + "Registration Successful with Customer ID: CUST-" + custID + "\nYou could proceed to login now!\u001B[0m");
+                System.out.println("\u001B[32m" + "Registration Successful with Customer ID: CUST-" + custID + "\n");
                 return true;
             }
         }else{
