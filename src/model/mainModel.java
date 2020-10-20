@@ -1043,7 +1043,7 @@ public class mainModel {
                 }
             }else{
                 if(currentUser.getId().equals(app.getEmpID())){
-                    applications += app.getDetails()+"\n-----------------------------\n";
+                    applications += app.getDetails() + "\n----------------\n Applicant Details:\n" + getUserByID(app.getCustID()).showDetails() +"\n-----------------------------\n";
                     totalApp++;
                 }
             }
@@ -1267,6 +1267,7 @@ public class mainModel {
         for (Application app : applicationDB) {
             if (app.getId().equals(appID)) {
                 app.completeApplication();
+                sendNotification(getUserByID(app.getCustID()).getEmail(),"Application Outcome Update | S&E Real Estate","Hi there!\n There has been an update on your application with ID : " + app.getId() + ". \n Please visit the app to check more!");
                 System.out.println(app.getStatus());
 
             }
