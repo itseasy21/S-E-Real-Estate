@@ -981,10 +981,10 @@ public class mainModel {
             msg += "You are not allowed to rent.\n";
         }
 
-        if(isInspectionDone(applyingUser, selectedProperty)){
-            error = 1;
-            msg += "You need to inspect the property before applying.\n";
-        }
+//        if(isInspectionDone(applyingUser, selectedProperty)){
+//            error = 1;
+//            msg += "You need to inspect the property before applying.\n";
+//        }
 
         if(hasAlreadyApplied(applyingUser, selectedProperty)){
             error = 1;
@@ -1001,6 +1001,8 @@ public class mainModel {
             System.out.println("Your Application for Rental of " + selectedProperty.getPropertyName() + " is submitted with ID: " + newRental.getId() + "\n" +
                     "The Property Manager will be in touch with you!");
             applicationDB.add(newRental);
+            sendNotification(applyingUser.getEmail(), "New Rental Application | S&E Real Estate", "Your Application for Rental of " + selectedProperty.getPropertyName() + " is submitted with ID: " + newRental.getId() + "\n" + "The Property Manager will be in touch with you!");
+            sendNotification(getUserByID(selectedProperty.getEmployeeId()).getEmail(),"New Application Received", "You have a new application with ID: " + newRental.getId() + " for the rental of property " + selectedProperty.getPropertyName() + " for $" +weeklyRent);
         }else{
             throw new ApplicationException(msg);
         }
