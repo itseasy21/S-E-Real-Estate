@@ -819,21 +819,26 @@ public class mainModel {
         return time;
     }
 
-    public void listInspectionBook(){
-        System.out.println("Available inspections:");
+    public int listInspectionBook(int pid){
+        int count = 0;
+        System.out.println("Available inspections for Property : " + pid);
         if(inspectionDB.size()==0) {
-            System.out.println("No inspections available!");
+            System.out.println(" No inspections available!");
         }
         else {
             for (Inspection a : inspectionDB) {
-                if (a.getStatus().equals("Created")) {
-                    System.out.println("Inspecion ID:" + a.getId() + "\tProperty ID:" + a.getpId());
+                if(a.getpId() == pid) {
+                    if (a.getStatus().equals("Created")) {
+                        System.out.println("Inspection ID:" + a.getId() + "\tProperty ID:" + a.getpId());
+                        count++;
+                    }
                 }
                 if (a.getId().equals(null)) {
-                    System.out.println("No inpections are available");
+                    System.out.println("No inspections are available");
                 }
             }
         }
+        return count;
     }
 
     public boolean validateInspection(String id){

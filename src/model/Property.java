@@ -240,9 +240,9 @@ public class Property {
                 "Bathrooms: \t" + getBathroomCount() + '\n' +
                 "Parking Count: \t" + getParkingCount() + '\n';
                 if(getSellingPrice() > 0)
-                    toReturn += "Selling Price: \t" + getSellingPrice() + '\n';
+                    toReturn += "Selling Price: \t$" + getSellingPrice() + '\n';
                 else
-                    toReturn += "Rental Price: \t" + getRentalPrice()+ '\n';
+                    toReturn += "Rental Price: \t$" + getRentalPrice()+ '\n';
                 toReturn += "Availability Status: \t" +getAvailability().toString()+'\n';
             return toReturn;
     }

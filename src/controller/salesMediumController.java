@@ -10,7 +10,7 @@ public class salesMediumController extends baseController{
      * @source https://beginnersbook.com/2013/05/java-date-format-validation/
      * @return true/false
      */
-    public static boolean validateJavaDate(String strDate)
+    public boolean validateJavaDate(String strDate)
     {
         /*
          * Set preferred date format,
@@ -23,7 +23,12 @@ public class salesMediumController extends baseController{
         try
         {
             Date javaDate = sdfrmt.parse(strDate);
-//		        System.out.println(strDate+" is valid date format");
+            Date todayDate = new Date();
+
+            if(javaDate.before(todayDate)){
+                return false;
+            }
+
         }
         /* Date format is invalid */
         catch (ParseException e)

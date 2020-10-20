@@ -452,53 +452,71 @@ public class mainLauncher {
     private static void bookInspection(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, PropertyException, ApplicationException, InterruptedException {
         successSOUT("BOOK INSPECTION");
         System.out.println("-----------------");
+
+        infoOUT("Enter the property ID to find Inspection Timings for:");
+        System.out.println(model.getPropertyDB());
+        String propID = scanChoice.nextLine();
+        while (true){
+            if(propID.length()>2){
+                errorOUT("Please enter a valid Property ID");
+                propID = scanChoice.nextLine();
+            }else{
+                break;
+            }
+        }
+
         String id="";
-        do {
-            model.listInspectionBook();
-            infoOUT("Enter the inspection ID you want to book. (Example: INS1)");
-            id = scanChoice.nextLine();
-            model.validateInspection(id);
-        }while(model.validateInspection(id)==false);
-
-        //setting date
-        String date,time = null;
-        boolean flag=true;
-        int option = 0;
-        if(model.validateInspection(id)==true) {
+        int count = 0;
+        count = model.listInspectionBook(Integer.parseInt(propID));
+        if(count == 0) {
+            errorOUT("No Inspection Timings Available for this Property!");
+        }else {
             do {
-                try {
-                    model.availableDates(id);
-                    option = scanChoice.nextInt();
-                    if (option == 1 || option == 2 || option == 3 || option == 4 || option == 5) {
-                        flag = true;
-                    } else {
-                        infoOUT("select one of the options(1 to 5)");
-                        flag = false;
+                infoOUT("Enter the inspection ID you want to book. (Example: INS1)");
+                id = scanChoice.nextLine();
+                model.validateInspection(id);
+            } while (!model.validateInspection(id));
+
+            //setting date
+            String date, time = null;
+            boolean flag = true;
+            int option = 0;
+            if (model.validateInspection(id)) {
+                do {
+                    try {
+                        model.availableDates(id);
+                        option = scanChoice.nextInt();
+                        if (option == 1 || option == 2 || option == 3 || option == 4 || option == 5) {
+                            flag = true;
+                        } else {
+                            infoOUT("select one of the options(1 to 5)");
+                            flag = false;
+                        }
+                    } catch (Exception i) {
                     }
-                }
-                catch(Exception i){};
-            } while (flag = false);
-            date = model.validateDate(option, id);
+                    ;
+                } while (flag = false);
+                date = model.validateDate(option, id);
 
-            //setting time
-            do {
-                try {
-                    model.availableTimes(id);
-                    option = scanChoice.nextInt();
-                    if (option == 1 || option == 2 || option == 3 || option == 4 || option == 5) {
-                        flag = true;
-                    } else {
-                        infoOUT("select one of the options(1 to 5)");
-                        flag = false;
+                //setting time
+                do {
+                    try {
+                        model.availableTimes(id);
+                        option = scanChoice.nextInt();
+                        if (option == 1 || option == 2 || option == 3 || option == 4 || option == 5) {
+                            flag = true;
+                        } else {
+                            infoOUT("select one of the options(1 to 5)");
+                            flag = false;
+                        }
+                    } catch (Exception i) {
+
                     }
-                }
-                catch(Exception i){
+                } while (flag == false);
+                time = model.validateTime(option, id);
 
-                }
-            } while (flag==false);
-            time = model.validateTime(option, id);
-
-            model.bookInspection(currentUser, id, date, time, "Scheduled");
+                model.bookInspection(currentUser, id, date, time, "Scheduled");
+            }
         }
         Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
@@ -663,7 +681,6 @@ public class mainLauncher {
             switch (choice) {
                 case 1:
                     System.out.println("Enter Suburb Name");
-                    scanChoice.nextLine();
                     String suburb = scanChoice.nextLine();
                     model.searchPropertyByName("Suburb", suburb);
                     break;
@@ -724,21 +741,25 @@ public class mainLauncher {
     }
     private static void createAuction(Customer currentUser,Scanner scanChoice,mainModel model) throws MyException, ParseException, IOException, SERException, SQLException, UserException, ApplicationException, PropertyException, InterruptedException {
         successSOUT("CREATE AUCTION");
+        successSOUT("`````````````````");
         salesMediumController auctionValidator = new salesMediumController();
         auctionValidator.initializeModel("",model);
 
         System.out.println("Enter date for auction: eg. dd/MM/yyyy");
         String auctionDate = scanChoice.nextLine();
         while (true){
-            if(auctionDate.length()<10 && !auctionValidator.validateJavaDate(auctionDate)){
+            if(auctionDate.length()<10){
                 errorOUT("Please enter a valid Date");
                 auctionDate = scanChoice.nextLine();
-            }else{
+            }else if(auctionValidator.validateJavaDate(auctionDate) == false){
+                errorOUT("Please Enter a Date Greater then current date!");
+                auctionDate = scanChoice.nextLine();
+            } else{
                 break;
             }
         }
 
-        System.out.println("Enter the property ID for Auction.");
+        infoOUT("Enter the property ID for Auction.");
         System.out.println(model.getPropertyDB());
         String propID = scanChoice.nextLine();
         while (true){
