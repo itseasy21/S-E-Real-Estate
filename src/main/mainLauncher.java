@@ -761,11 +761,22 @@ public class mainLauncher {
 
         infoOUT("Enter the property ID for Auction.");
         System.out.println(model.getPropertyDB());
+        int intPropId = 0;
         String propID = scanChoice.nextLine();
+        try{
+            intPropId = Integer.parseInt(propID);
+        }catch (Exception e){
+            System.out.println("Invalid Input!");
+        }
         while (true){
             if(propID.length()>2){
                 errorOUT("Please enter a valid Property ID");
                 propID = scanChoice.nextLine();
+                try{
+                    intPropId = Integer.parseInt(propID);
+                }catch (Exception e){
+                    System.out.println("Invalid Input!");
+                }
             }else{
                 break;
             }
@@ -774,7 +785,7 @@ public class mainLauncher {
         Property property = null;
 
         try {
-            property = model.listProperty(Integer.parseInt(propID));
+            property = model.listProperty(intPropId);
         }
         catch (PropertyException e) {
             //Invalid ID
@@ -1162,11 +1173,11 @@ public class mainLauncher {
         successSOUT("SUBMIT BID");
         System.out.println("Enter the Auction ID");
         String auctID = scanChoice.nextLine();
-        while (true){
-            if(auctID.length()<2 && model.isValidAuction(auctID)){
+        while (true) {
+            if (auctID.length() < 2 && model.isValidAuction(auctID)) {
                 errorOUT("Please enter a valid Auction ID");
                 auctID = scanChoice.nextLine();
-            }else{
+            } else {
                 break;
             }
         }
@@ -1174,11 +1185,22 @@ public class mainLauncher {
         System.out.println("Auction Details:\n" + model.getAuctionDetailsByID(auctID));
 
         System.out.println("Enter the bid");
-        double bid = scanChoice.nextDouble();
+        double bid = 0;
+        try{
+            bid = scanChoice.nextDouble();
+        }
+        catch(Exception e){
+            errorOUT("Invalid Input!");
+        }
         while (true){
             if(bid < model.getNextValidBid(auctID)){
                 errorOUT("Please enter a valid Bid Amount");
-                bid = scanChoice.nextDouble();
+                try{
+                    bid = scanChoice.nextDouble();
+                }
+                catch(Exception e){
+                    errorOUT("Invalid Input!");
+                }
             }else{
                 break;
             }
@@ -1214,11 +1236,22 @@ public class mainLauncher {
         String negDate = formatter.format(date);
 
         System.out.println("Enter the property ID to Start Negotiating On.");
+        int intPropId = 0;
         String propID = scanChoice.nextLine();
+        try{
+            intPropId = Integer.parseInt(propID);
+        }catch (Exception e){
+            System.out.println("Invalid Input!");
+        }
         while (true){
             if(propID.length()>2){
                 errorOUT("Please enter a valid Property ID");
                 propID = scanChoice.nextLine();
+                try{
+                    intPropId = Integer.parseInt(propID);
+                }catch (Exception e){
+                    System.out.println("Invalid Input!");
+                }
             }else{
                 break;
             }
@@ -1227,7 +1260,7 @@ public class mainLauncher {
         Property property = null;
 
         try {
-            property = model.listProperty(Integer.parseInt(propID));
+            property = model.listProperty(intPropId);
         }
         catch (PropertyException e) {
             //Invalid ID
