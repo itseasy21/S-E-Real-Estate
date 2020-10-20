@@ -169,7 +169,7 @@ public class mainLauncher {
         successSOUT("MENU");
         int choiceLoggedInMenu = 0;
         //All LoggedInMenus
-        String[] salesPropertyManager = {"LIST PROPERTIES", "VIEW APPLICATIONS","CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION","UPDATE COMPLETED INSPECTION","UPDATE THE APPLICATION", "LOGOUT"}; //Sales & Property Menu
+        String[] salesPropertyManager = {"LIST PROPERTIES", "VIEW APPLICATIONS","CREATE INSPECTION TIMES","LIST INSPECTION","CANCELL INSPECTION","UPDATE COMPLETED INSPECTION","ACCEPT APPLICATION","DENY APPLICATION", "LOGOUT"}; //Sales & Property Menu
         String[] branchAdmin = {"LIST PROPERTIES", "ADD EMPLOYEE TO PROPERTY","RUN PAYROLL","LIST INSPECTIONS" ,"LOGOUT"}; //Branch Admin Menu
         String[] menu = new String[6];
 
@@ -208,7 +208,8 @@ public class mainLauncher {
                     case 5 -> cancellInspection(currentEmp, scanChoice, model);//cancel inspection
                     case 6 -> completeInspection(currentEmp, scanChoice, model);//complete inspection
                     case 7 -> updateApplication(currentEmp,scanChoice,model);
-                    case 8 -> renderMainMenu(model); //Logout
+                    case 8 -> denyApplication(currentEmp,scanChoice,model);
+                    case 9 -> renderMainMenu(model); //Logout
                 }
             }else{
                 switch (choiceLoggedInMenu) {
@@ -230,12 +231,31 @@ public class mainLauncher {
             infoOUT("Select the Application ID to Accept");
             String appID = scanChoice.nextLine();
             if(model.isApplicationExist(appID))
-                model.setApplication(appID);
+                model.setApplication(appID, true);
             else
             {
                 errorOUT("Invalid Application ID");
                 renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
             }
+
+
+        renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+
+
+    }
+
+    private static void denyApplication(Employee currentEmp, Scanner scanChoice, mainModel model) throws UserException, ParseException, PropertyException, IOException, SERException, SQLException, MyException, ApplicationException, InterruptedException {
+        successSOUT("DENY APPLICATION");
+        model.viewApplicationsByUser(currentEmp);
+        infoOUT("Select the Application ID to Deny");
+        String appID = scanChoice.nextLine();
+        if(model.isApplicationExist(appID))
+            model.setApplication(appID, false);
+        else
+        {
+            errorOUT("Invalid Application ID");
+            renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);
+        }
 
 
         renderAdminLoggedInMenu(currentEmp.getEmail(), scanChoice, model);

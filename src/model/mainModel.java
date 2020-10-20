@@ -991,7 +991,7 @@ public class mainModel {
             msg += "You have already applied for this property.\n";
         }
 
-        if(weeklyRent < selectedProperty.getPropertyPrice()){
+        if(weeklyRent < selectedProperty.getMinPrice()){
             error = 1;
             msg += "The weekly rent should be more then the specified rent.\n";
         }
@@ -1263,13 +1263,17 @@ public class mainModel {
         sendNotification(getUserByID(thisProperty.getEmployeeId()).getEmail(), "Negotiation Created | S&E Real Estate", "A new Negotiation has been Created with ID " + newNegotiation.getId() + " for Property " + thisProperty.getPropertyName() + " with first Bid of $" +bidPrice + " by Customer " + customer.getName());
     }
 
-    public void setApplication(String appID) {
+    public void setApplication(String appID, boolean todo) {
         for (Application app : applicationDB) {
             if (app.getId().equals(appID)) {
-                app.completeApplication();
-                sendNotification(getUserByID(app.getCustID()).getEmail(),"Application Outcome Update | S&E Real Estate","Hi there!\n There has been an update on your application with ID : " + app.getId() + ". \n Please visit the app to check more!");
-                System.out.println(app.getStatus());
+                
+                if(todo)
+                    app.completeApplication();
+                else
+                    app.setStatus(ApplicationStatus.DENIED);
 
+                sendNotification(getUserByID(app.getCustID()).getEmail(),"Application Outcome Update | S&E Real Estate","Hi there!\n There has been an update on your application with ID : " + app.getId() + ". \n Please visit the portal to check more!");
+//                System.out.println(app.getStatus());
             }
 
         }
