@@ -999,7 +999,13 @@ public class mainLauncher {
     private static void viewPropertyDetails(String email, Scanner scanChoice, mainModel model) throws PropertyException, SERException, SQLException, ParseException, IOException, UserException, MyException, ApplicationException, InterruptedException {
             successSOUT("VIEW PROPERTY DETAILS");
             infoOUT("Select the Property id");
-            int choice = scanChoice.nextInt();
+            int choice = 0;
+            try {
+                choice = scanChoice.nextInt();
+            }
+            catch (Exception e){
+                errorOUT("Invalid Input!");
+            }
             scanChoice.nextLine();
             Property property = model.listProperty(choice);
             System.out.println(property.toString());
