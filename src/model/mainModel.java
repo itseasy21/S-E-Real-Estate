@@ -1129,7 +1129,8 @@ public class mainModel {
                     Auction auction = (Auction) contract;
                     System.out.println("Auction ID:" + auction.getId() + "\n" +
                             "Property: " + auction.getProperty().getPropertyName() + "(" + auction.getProperty().getPropertyId() + ")\n" +
-                            "Auction Date: " + auction.getContractDate() + "\n");
+                            "Auction Date: " + auction.getContractDate() + "\n" +
+                            "Highest Bid: " +auction.getHighestBid());
                 }
             }
         }else{
@@ -1148,7 +1149,7 @@ public class mainModel {
                         auction.getProperty().setAvailability(PropertyState.SOLD);
                         this.saleApplication(auction.getProperty(), (Customer) this.getUserByID(auction.getHighestBidder()), auction.getHighestBid(), "auction");
                     }
-                    sendNotification(currentUser.getEmail(), "Big Submitted","You have successfully submitted a bit of $" + bid + " on auction for " + auction.getProperty().getPropertyName());
+                    sendNotification(currentUser.getEmail(), "Bid Submitted","You have successfully submitted a bit of $" + bid + " on auction for " + auction.getProperty().getPropertyName());
                     sendNotification(getUserByID(auction.getProperty().getEmployeeId()).getEmail(), "New Bid on Auction | S&E Real Estate","New Bid has been submitted by a potential buyer, please check!");
                 }
             }else if(contract instanceof Negotiation) {
@@ -1266,7 +1267,7 @@ public class mainModel {
     public void setApplication(String appID, boolean todo) {
         for (Application app : applicationDB) {
             if (app.getId().equals(appID)) {
-                
+
                 if(todo)
                     app.completeApplication();
                 else

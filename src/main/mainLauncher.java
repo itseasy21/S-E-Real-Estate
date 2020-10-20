@@ -1233,6 +1233,7 @@ public class mainLauncher {
         }
 
         model.addBid(auctID, bid, currentUser);
+        successSOUT("Bid Processed!");
 
         Thread.sleep(2000);
         renderLoggedInMenu(currentUser.getEmail(), scanChoice, model);
